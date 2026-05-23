@@ -29,6 +29,7 @@ export default function AuthModal() {
         completedEpochs: [],
         achievements: [],
         languagesUsed: ['EN'],
+        quizAttempts: {},
       });
       setLoading(false);
       setShowAuthModal(false);

@@ -1,20 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Languages, Zap, BookOpen, CheckCircle, Volume2 } from 'lucide-react';
-import { useApp } from '@/context/AppContext';
+import { Languages, Zap, BookOpen, CheckCircle, Volume2, Lock } from 'lucide-react';
+import { useApp, MAX_QUIZ_ATTEMPTS } from '@/context/AppContext';
 import { useLanguage } from '@/LanguageContext';
 import { epochs } from '@/data/epochs';
 import { getArticleData } from '@/data/articles';
 import QuizModule from '@/components/QuizModule';
 
+// XP granted once, only after passing the quiz 3/3: reading + test.
+const READING_XP = 10;
+const TEST_XP = 25;
+const TOPIC_REWARD = READING_XP + TEST_XP;
+
 export default function ArticlePage() {
   const { topicId } = useParams();
   const navigate = useNavigate();
-  const { bilingualMode, setBilingualMode, addXP, completeTopics, user } = useApp();
-  const { t, localize, language, showRussianSubtitles } = useLanguage();
-  const [articleRead, setArticleRead] = useState(false);
+  const { passQuiz, failQuiz, user, bilingualMode, setBilingualMode } = useApp();
+  const { t, localize, showRussianSubtitles } = useLanguage();
   const [showQuiz, setShowQuiz] = useState(false);
-  const [xpAwarded, setXpAwarded] = useState(false);
 
   // Find topic
   let topic: any = null;
@@ -29,16 +32,10 @@ export default function ArticlePage() {
   }
 
   const article = topic ? getArticleData(topicId!, topic) : null;
-  const isCompleted = user?.completedTopics.includes(topicId || '');
-
-  useEffect(() => {
-    if (!articleRead) return;
-    if (!xpAwarded) {
-      addXP(10);
-      setXpAwarded(true);
-      if (topicId) completeTopics(topicId);
-    }
-  }, [articleRead]);
+  const isCompleted = !!(topicId && user?.completedTopics.includes(topicId));
+  const attemptsUsed = (topicId && user?.quizAttempts?.[topicId]) || 0;
+  const attemptsLeft = Math.max(0, MAX_QUIZ_ATTEMPTS - attemptsUsed);
+  const canTakeTest = !isCompleted && attemptsLeft > 0;
 
   if (!topic || !article) {
     return (
@@ -165,42 +162,62 @@ export default function ArticlePage() {
                 </div>
               ))}
 
-              {/* Article Complete Button */}
-              {!articleRead && !isCompleted && (
+              {/* Completed state — earned once */}
+              {isCompleted && !showQuiz && (
                 <div className="mt-8 pt-6 border-t border-[#EEF1F7]">
-                  <button
-                    onClick={() => setArticleRead(true)}
-                    className="w-full py-3.5 bg-[#2F5D9F] text-white rounded-xl font-medium font-ui hover:bg-[#264d8a] transition-all btn-press shadow-lg shadow-[#2F5D9F]/20 flex items-center justify-center gap-2"
-                  >
-                    <CheckCircle className="w-5 h-5" />
-                    {t('mark_as_read')}
-                  </button>
-                </div>
-              )}
-
-              {(articleRead || isCompleted) && !showQuiz && (
-                <div className="mt-8 pt-6 border-t border-[#EEF1F7]">
-                  <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3 mb-4">
+                  <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3">
                     <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
                     <div>
                       <div className="text-sm font-semibold text-green-800 font-ui">{t('article_completed')}</div>
-                      <div className="text-xs text-green-600 font-ui">{t('xp_earned_10')}</div>
+                      <div className="text-xs text-green-600 font-ui">+{TOPIC_REWARD} XP</div>
                     </div>
                   </div>
+                </div>
+              )}
+
+              {/* Take the test — XP only on a perfect 3/3 result */}
+              {!isCompleted && !showQuiz && canTakeTest && (
+                <div className="mt-8 pt-6 border-t border-[#EEF1F7]">
+                  <p className="text-sm text-[#7A8499] font-ui mb-3 text-center">{t('quiz_pass_hint')}</p>
                   <button
                     onClick={() => setShowQuiz(true)}
                     className="w-full py-3.5 bg-[#C94B4B] text-white rounded-xl font-medium font-ui hover:bg-[#b03d3d] transition-all btn-press shadow-lg shadow-[#C94B4B]/20 flex items-center justify-center gap-2"
                   >
                     <Zap className="w-5 h-5" />
-                    {t('test_knowledge')}
+                    {t('quiz_take_test')} (+{TOPIC_REWARD} XP)
                   </button>
+                  <p className="text-xs text-[#9AA3B2] font-ui mt-2 text-center">
+                    {t('quiz_attempt')} {attemptsUsed + 1}/{MAX_QUIZ_ATTEMPTS}
+                  </p>
+                </div>
+              )}
+
+              {/* Locked — all attempts used without passing */}
+              {!isCompleted && !showQuiz && !canTakeTest && (
+                <div className="mt-8 pt-6 border-t border-[#EEF1F7]">
+                  <div className="bg-[#F5F7FA] border border-[#EEF1F7] rounded-xl p-4 flex items-center gap-3">
+                    <Lock className="w-5 h-5 text-[#7A8499] flex-shrink-0" />
+                    <div>
+                      <div className="text-sm font-semibold text-[#2A2A2A] font-ui">{t('quiz_no_attempts_title')}</div>
+                      <div className="text-xs text-[#7A8499] font-ui">{t('quiz_no_attempts_msg')}</div>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
 
             {/* Quiz Module */}
             {showQuiz && (
-              <QuizModule topicId={topicId!} articleTitle={localize(article.title)} onComplete={() => setShowQuiz(false)} />
+              <QuizModule
+                topicId={topicId!}
+                articleTitle={localize(article.title)}
+                attemptsUsed={attemptsUsed}
+                maxAttempts={MAX_QUIZ_ATTEMPTS}
+                rewardXP={TOPIC_REWARD}
+                onPass={() => passQuiz(topicId!, TOPIC_REWARD)}
+                onFail={() => failQuiz(topicId!)}
+                onClose={() => setShowQuiz(false)}
+              />
             )}
 
             {/* Related Topics */}
