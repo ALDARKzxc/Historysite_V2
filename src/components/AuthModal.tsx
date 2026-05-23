@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { X, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { useLanguage } from '@/LanguageContext';
 
 export default function AuthModal() {
   const { showAuthModal, setShowAuthModal, authMode, setAuthMode, setUser } = useApp();
+  const { t } = useLanguage();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -47,10 +49,10 @@ export default function AuthModal() {
           />
           <div className="relative z-10">
             <h2 className="font-display text-2xl font-bold text-white">
-              {authMode === 'login' ? 'Welcome Back' : 'Join RusHistory'}
+              {authMode === 'login' ? t('auth_welcome_back') : t('auth_join')}
             </h2>
             <p className="text-white/70 text-sm font-ui mt-0.5">
-              {authMode === 'login' ? 'Continue your history journey' : 'Begin your journey through Russian history'}
+              {authMode === 'login' ? t('auth_login_sub') : t('auth_register_sub')}
             </p>
           </div>
           <button
@@ -75,7 +77,7 @@ export default function AuthModal() {
                     : 'text-[#7A8499] hover:text-[#2A2A2A]'
                 }`}
               >
-                {mode === 'login' ? 'Sign In' : 'Register'}
+                {mode === 'login' ? t('auth_signin') : t('auth_register_tab')}
               </button>
             ))}
           </div>
@@ -86,7 +88,7 @@ export default function AuthModal() {
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#7A8499]" />
                 <input
                   type="text"
-                  placeholder="Username"
+                  placeholder={t('auth_username')}
                   value={username}
                   onChange={e => setUsername(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 bg-[#F5F7FA] border border-[#EEF1F7] rounded-xl text-sm font-ui focus:outline-none focus:border-[#2F5D9F] focus:ring-2 focus:ring-[#2F5D9F]/20 transition-all"
@@ -98,7 +100,7 @@ export default function AuthModal() {
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#7A8499]" />
               <input
                 type="email"
-                placeholder="Email address"
+                placeholder={t('auth_email_ph')}
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 bg-[#F5F7FA] border border-[#EEF1F7] rounded-xl text-sm font-ui focus:outline-none focus:border-[#2F5D9F] focus:ring-2 focus:ring-[#2F5D9F]/20 transition-all"
@@ -109,7 +111,7 @@ export default function AuthModal() {
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#7A8499]" />
               <input
                 type={showPassword ? 'text' : 'password'}
-                placeholder="Password"
+                placeholder={t('auth_password_ph')}
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 className="w-full pl-10 pr-12 py-3 bg-[#F5F7FA] border border-[#EEF1F7] rounded-xl text-sm font-ui focus:outline-none focus:border-[#2F5D9F] focus:ring-2 focus:ring-[#2F5D9F]/20 transition-all"
@@ -132,22 +134,22 @@ export default function AuthModal() {
               {loading ? (
                 <div className="flex items-center justify-center gap-2">
                   <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-                  <span>Processing...</span>
+                  <span>{t('auth_processing')}</span>
                 </div>
               ) : (
-                authMode === 'login' ? 'Sign In' : 'Create Account'
+                authMode === 'login' ? t('auth_signin') : t('auth_create_account')
               )}
             </button>
           </form>
 
           {authMode === 'login' && (
             <p className="text-center text-sm text-[#7A8499] mt-4 font-ui">
-              New to RusHistory?{' '}
+              {t('auth_new_here')}{' '}
               <button
                 onClick={() => setAuthMode('register')}
                 className="text-[#2F5D9F] font-medium hover:underline"
               >
-                Create an account
+                {t('auth_create_link')}
               </button>
             </p>
           )}

@@ -2,11 +2,13 @@ import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { epochs, timelineEvents } from '@/data/epochs';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useLanguage } from '@/LanguageContext';
 
 export default function Timeline() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeEvent, setActiveEvent] = useState<number | null>(null);
   const navigate = useNavigate();
+  const { t, localize } = useLanguage();
 
   const scroll = (dir: 'left' | 'right') => {
     if (!scrollRef.current) return;
@@ -25,11 +27,11 @@ export default function Timeline() {
           <div>
             <div className="inline-flex items-center gap-2 bg-[#EEF1F7] rounded-full px-3 py-1 mb-3">
               <span className="w-1.5 h-1.5 bg-[#2F5D9F] rounded-full" />
-              <span className="text-xs font-medium text-[#2F5D9F] font-ui tracking-wide uppercase">Interactive</span>
+              <span className="text-xs font-medium text-[#2F5D9F] font-ui tracking-wide uppercase">{t('timeline_badge')}</span>
             </div>
-            <h2 className="font-display text-4xl font-bold text-[#2A2A2A]">History Timeline</h2>
+            <h2 className="font-display text-4xl font-bold text-[#2A2A2A]">{t('timeline_home_title')}</h2>
             <p className="text-[#7A8499] font-ui mt-2">
-              862 AD to Present — 1,200 years of Russian history
+              {t('timeline_home_subtitle')}
             </p>
           </div>
           <div className="hidden sm:flex gap-2">
@@ -106,7 +108,7 @@ export default function Timeline() {
                 >
                   <div className={`bg-white border rounded-xl px-3 py-2 shadow-lg border-[#EEF1F7] transition-all duration-200 ${isActive ? 'opacity-100 scale-100' : 'opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100'}`}>
                     <div className="font-mono-accent text-xs font-bold" style={{ color }}>{event.year}</div>
-                    <div className="text-xs text-[#2A2A2A] font-ui font-medium max-w-[120px] text-center leading-tight mt-0.5">{event.title}</div>
+                    <div className="text-xs text-[#2A2A2A] font-ui font-medium max-w-[120px] text-center leading-tight mt-0.5">{localize(event.title)}</div>
                   </div>
                   {/* Connector line */}
                   <div

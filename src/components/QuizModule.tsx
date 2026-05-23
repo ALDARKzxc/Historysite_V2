@@ -1,72 +1,118 @@
 import { useState } from 'react';
 import { CheckCircle, XCircle, ChevronRight, Zap } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { useLanguage, Localized } from '@/LanguageContext';
 
 interface Question {
   id: string;
-  question: string;
-  options: string[];
+  question: Localized;
+  options: Localized[];
   correct: number;
 }
 
 const QUIZ_QUESTIONS: Record<string, Question[]> = {
-  'default': [
+  default: [
     {
       id: 'q1',
-      question: 'In what year was the Baptism of Rus?',
-      options: ['882', '988', '1054', '1240'],
+      question: { en: 'In what year was the Baptism of Rus?', ru: 'В каком году произошло Крещение Руси?', ar: 'في أي عام جرى تعميد روس؟', zh: '罗斯受洗发生在哪一年？' },
+      options: [
+        { en: '882', ru: '882', ar: '882', zh: '882' },
+        { en: '988', ru: '988', ar: '988', zh: '988' },
+        { en: '1054', ru: '1054', ar: '1054', zh: '1054' },
+        { en: '1240', ru: '1240', ar: '1240', zh: '1240' },
+      ],
       correct: 1,
     },
     {
       id: 'q2',
-      question: 'Which prince ordered the mass baptism of Kiev?',
-      options: ['Rurik', 'Oleg the Prophetic', 'Vladimir the Great', 'Yaroslav the Wise'],
+      question: { en: 'Which prince ordered the mass baptism of Kiev?', ru: 'Какой князь приказал массовое крещение Киева?', ar: 'أي أمير أمر بالتعميد الجماعي لكييف؟', zh: '哪位王公下令对基辅进行大规模洗礼？' },
+      options: [
+        { en: 'Rurik', ru: 'Рюрик', ar: 'روريك', zh: '留里克' },
+        { en: 'Oleg the Prophetic', ru: 'Олег Вещий', ar: 'أوليغ النبوي', zh: '先知奥列格' },
+        { en: 'Vladimir the Great', ru: 'Владимир Великий', ar: 'فلاديمير العظيم', zh: '弗拉基米尔大帝' },
+        { en: 'Yaroslav the Wise', ru: 'Ярослав Мудрый', ar: 'ياروسلاف الحكيم', zh: '智者雅罗斯拉夫' },
+      ],
       correct: 2,
     },
     {
       id: 'q3',
-      question: 'What religion did Kievan Rus adopt in 988?',
-      options: ['Roman Catholicism', 'Islam', 'Orthodox Christianity', 'Judaism'],
+      question: { en: 'What religion did Kievan Rus adopt in 988?', ru: 'Какую религию приняла Киевская Русь в 988 году?', ar: 'أي دين اعتنقته روس كييف عام 988؟', zh: '基辅罗斯在988年皈依了哪种宗教？' },
+      options: [
+        { en: 'Roman Catholicism', ru: 'Католицизм', ar: 'الكاثوليكية', zh: '罗马天主教' },
+        { en: 'Islam', ru: 'Ислам', ar: 'الإسلام', zh: '伊斯兰教' },
+        { en: 'Orthodox Christianity', ru: 'Православие', ar: 'الأرثوذكسية', zh: '东正教' },
+        { en: 'Judaism', ru: 'Иудаизм', ar: 'اليهودية', zh: '犹太教' },
+      ],
       correct: 2,
     },
   ],
   'battle-stalingrad': [
     {
       id: 'q1',
-      question: 'What was the name of the Soviet operation that encircled the German 6th Army?',
-      options: ['Operation Bagration', 'Operation Uranus', 'Operation Citadel', 'Operation Mars'],
+      question: { en: 'What was the name of the Soviet operation that encircled the German 6th Army?', ru: 'Как называлась советская операция, окружившая 6-ю немецкую армию?', ar: 'ما اسم العملية السوفيتية التي طوّقت الجيش الألماني السادس؟', zh: '包围德国第六集团军的苏联行动叫什么名字？' },
+      options: [
+        { en: 'Operation Bagration', ru: 'Операция «Багратион»', ar: 'عملية باغراتيون', zh: '巴格拉季昂行动' },
+        { en: 'Operation Uranus', ru: 'Операция «Уран»', ar: 'عملية أورانوس', zh: '天王星行动' },
+        { en: 'Operation Citadel', ru: 'Операция «Цитадель»', ar: 'عملية القلعة', zh: '堡垒行动' },
+        { en: 'Operation Mars', ru: 'Операция «Марс»', ar: 'عملية المريخ', zh: '火星行动' },
+      ],
       correct: 1,
     },
     {
       id: 'q2',
-      question: 'When did Field Marshal Paulus surrender at Stalingrad?',
-      options: ['November 19, 1942', 'January 10, 1943', 'February 2, 1943', 'March 5, 1943'],
+      question: { en: 'When did Field Marshal Paulus surrender at Stalingrad?', ru: 'Когда фельдмаршал Паулюс капитулировал под Сталинградом?', ar: 'متى استسلم المشير باولوس في ستالينغراد؟', zh: '保卢斯元帅何时在斯大林格勒投降？' },
+      options: [
+        { en: 'November 19, 1942', ru: '19 ноября 1942', ar: '19 نوفمبر 1942', zh: '1942年11月19日' },
+        { en: 'January 10, 1943', ru: '10 января 1943', ar: '10 يناير 1943', zh: '1943年1月10日' },
+        { en: 'February 2, 1943', ru: '2 февраля 1943', ar: '2 فبراير 1943', zh: '1943年2月2日' },
+        { en: 'March 5, 1943', ru: '5 марта 1943', ar: '5 مارس 1943', zh: '1943年3月5日' },
+      ],
       correct: 2,
     },
     {
       id: 'q3',
-      question: 'How many men were in the encircled German 6th Army?',
-      options: ['130,000', '200,000', '330,000', '500,000'],
+      question: { en: 'How many men were in the encircled German 6th Army?', ru: 'Сколько человек было в окружённой 6-й немецкой армии?', ar: 'كم عدد الرجال في الجيش الألماني السادس المحاصر؟', zh: '被围困的德国第六集团军有多少人？' },
+      options: [
+        { en: '130,000', ru: '130 000', ar: '130,000', zh: '13万' },
+        { en: '200,000', ru: '200 000', ar: '200,000', zh: '20万' },
+        { en: '330,000', ru: '330 000', ar: '330,000', zh: '33万' },
+        { en: '500,000', ru: '500 000', ar: '500,000', zh: '50万' },
+      ],
       correct: 2,
     },
   ],
-  'gagarin': [
+  gagarin: [
     {
       id: 'q1',
-      question: 'What was Yuri Gagarin\'s famous word at launch?',
-      options: ['Поехали! (Let\'s go!)', 'Вперёд! (Forward!)', 'Готов! (Ready!)', 'Старт! (Start!)'],
+      question: { en: "What was Yuri Gagarin's famous word at launch?", ru: 'Какое знаменитое слово сказал Юрий Гагарин на старте?', ar: 'ما الكلمة الشهيرة التي قالها يوري غاغارين عند الإطلاق؟', zh: '尤里·加加林在发射时说的名言是什么？' },
+      options: [
+        { en: "Поехали! (Let's go!)", ru: 'Поехали!', ar: 'بايخالي! (لننطلق!)', zh: 'Поехали！（我们出发！）' },
+        { en: 'Вперёд! (Forward!)', ru: 'Вперёд!', ar: 'إلى الأمام!', zh: '前进！' },
+        { en: 'Готов! (Ready!)', ru: 'Готов!', ar: 'جاهز!', zh: '准备好了！' },
+        { en: 'Старт! (Start!)', ru: 'Старт!', ar: 'انطلاق!', zh: '起飞！' },
+      ],
       correct: 0,
     },
     {
       id: 'q2',
-      question: 'How long was Gagarin\'s space flight?',
-      options: ['48 minutes', '72 minutes', '108 minutes', '180 minutes'],
+      question: { en: "How long was Gagarin's space flight?", ru: 'Сколько длился космический полёт Гагарина?', ar: 'كم استغرقت رحلة غاغارين الفضائية؟', zh: '加加林的太空飞行持续了多久？' },
+      options: [
+        { en: '48 minutes', ru: '48 минут', ar: '48 دقيقة', zh: '48分钟' },
+        { en: '72 minutes', ru: '72 минуты', ar: '72 دقيقة', zh: '72分钟' },
+        { en: '108 minutes', ru: '108 минут', ar: '108 دقيقة', zh: '108分钟' },
+        { en: '180 minutes', ru: '180 минут', ar: '180 دقيقة', zh: '180分钟' },
+      ],
       correct: 2,
     },
     {
       id: 'q3',
-      question: 'From which cosmodrome did Vostok 1 launch?',
-      options: ['Plesetsk', 'Baikonur', 'Kapustin Yar', 'Vostochny'],
+      question: { en: 'From which cosmodrome did Vostok 1 launch?', ru: 'С какого космодрома стартовал «Восток-1»?', ar: 'من أي قاعدة فضائية أُطلق فوستوك 1؟', zh: '东方1号从哪个航天发射场发射？' },
+      options: [
+        { en: 'Plesetsk', ru: 'Плесецк', ar: 'بليسيتسك', zh: '普列谢茨克' },
+        { en: 'Baikonur', ru: 'Байконур', ar: 'بايكونور', zh: '拜科努尔' },
+        { en: 'Kapustin Yar', ru: 'Капустин Яр', ar: 'كابوستين يار', zh: '卡普斯京亚尔' },
+        { en: 'Vostochny', ru: 'Восточный', ar: 'فوستوتشني', zh: '沃斯托奇内' },
+      ],
       correct: 1,
     },
   ],
@@ -84,6 +130,7 @@ interface Props {
 
 export default function QuizModule({ topicId, articleTitle, onComplete }: Props) {
   const { addXP } = useApp();
+  const { t, localize } = useLanguage();
   const questions = getQuestions(topicId);
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
@@ -127,10 +174,10 @@ export default function QuizModule({ topicId, articleTitle, onComplete }: Props)
       <div className="bg-white rounded-2xl border border-[#EEF1F7] shadow-lg p-8 mb-6 text-center">
         <div className="text-5xl mb-4">{perfect ? '🏆' : '✨'}</div>
         <h3 className="font-display text-2xl font-bold text-[#2A2A2A] mb-2">
-          {perfect ? 'Perfect Score!' : 'Quiz Complete!'}
+          {perfect ? t('quiz_perfect') : t('quiz_complete')}
         </h3>
         <p className="text-[#7A8499] font-ui mb-6">
-          {finalScore}/{questions.length} correct answers
+          {finalScore}/{questions.length} {t('quiz_correct_answers')}
         </p>
         <div className="inline-flex items-center gap-2 bg-[#EEF1F7] rounded-xl px-5 py-3 mb-6">
           <Zap className="w-5 h-5 text-[#2F5D9F]" />
@@ -141,7 +188,7 @@ export default function QuizModule({ topicId, articleTitle, onComplete }: Props)
             onClick={onComplete}
             className="px-6 py-3 bg-[#2F5D9F] text-white rounded-xl font-medium font-ui hover:bg-[#264d8a] transition-all btn-press"
           >
-            Continue Learning
+            {t('quiz_continue')}
           </button>
         </div>
       </div>
@@ -153,12 +200,12 @@ export default function QuizModule({ topicId, articleTitle, onComplete }: Props)
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <div className="text-xs text-[#7A8499] font-ui uppercase tracking-wide mb-1">Quiz Time</div>
+          <div className="text-xs text-[#7A8499] font-ui uppercase tracking-wide mb-1">{t('quiz_time')}</div>
           <h3 className="font-display text-lg font-bold text-[#2A2A2A]">{articleTitle}</h3>
         </div>
         <div className="text-right">
           <div className="font-mono-accent text-sm font-bold text-[#2F5D9F]">{current + 1}/{questions.length}</div>
-          <div className="text-xs text-[#7A8499] font-ui">questions</div>
+          <div className="text-xs text-[#7A8499] font-ui">{t('quiz_questions')}</div>
         </div>
       </div>
 
@@ -172,7 +219,7 @@ export default function QuizModule({ topicId, articleTitle, onComplete }: Props)
 
       {/* Question */}
       <div className="mb-6">
-        <p className="text-lg font-display font-bold text-[#2A2A2A] leading-snug">{q.question}</p>
+        <p className="text-lg font-display font-bold text-[#2A2A2A] leading-snug">{localize(q.question)}</p>
       </div>
 
       {/* Options */}
@@ -203,7 +250,7 @@ export default function QuizModule({ topicId, articleTitle, onComplete }: Props)
                    answered && idx === selected && selected !== q.correct ? <XCircle className="w-4 h-4" /> :
                    String.fromCharCode(65 + idx)}
                 </div>
-                <span>{opt}</span>
+                <span>{localize(opt)}</span>
               </div>
             </button>
           );
@@ -215,16 +262,16 @@ export default function QuizModule({ topicId, articleTitle, onComplete }: Props)
         <div className="flex items-center justify-between">
           <div className={`text-sm font-medium font-ui flex items-center gap-2 ${isCorrect ? 'text-green-700' : 'text-red-600'}`}>
             {isCorrect ? (
-              <><CheckCircle className="w-4 h-4" /> Correct! Well done.</>
+              <><CheckCircle className="w-4 h-4" /> {t('quiz_correct_fb')}</>
             ) : (
-              <><XCircle className="w-4 h-4" /> The correct answer was: {q.options[q.correct]}</>
+              <><XCircle className="w-4 h-4" /> {t('quiz_wrong_fb')} {localize(q.options[q.correct])}</>
             )}
           </div>
           <button
             onClick={handleNext}
             className="flex items-center gap-2 px-5 py-2.5 bg-[#2F5D9F] text-white rounded-xl text-sm font-medium font-ui hover:bg-[#264d8a] transition-all btn-press"
           >
-            {current < questions.length - 1 ? 'Next' : 'Finish'}
+            {current < questions.length - 1 ? t('quiz_next') : t('quiz_finish')}
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>

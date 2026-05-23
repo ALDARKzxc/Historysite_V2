@@ -1,12 +1,19 @@
 import { useNavigate } from 'react-router-dom';
 import { epochs } from '@/data/epochs';
 import { Zap, Star } from 'lucide-react';
+import { useLanguage } from '@/LanguageContext';
 
 const DIFF_COLORS = {
   Beginner: 'bg-green-100 text-green-700',
   Intermediate: 'bg-yellow-100 text-yellow-700',
   Advanced: 'bg-red-100 text-red-700',
 };
+
+const DIFF_KEYS = {
+  Beginner: 'difficulty_beginner',
+  Intermediate: 'difficulty_intermediate',
+  Advanced: 'difficulty_advanced',
+} as const;
 
 const FEATURED = [
   { epochId: 'great-patriotic-war', topicId: 'battle-stalingrad' },
@@ -19,10 +26,11 @@ const FEATURED = [
 
 export default function FeaturedTopics() {
   const navigate = useNavigate();
+  const { t, localize, showRussianSubtitles } = useLanguage();
 
   const featuredTopics = FEATURED.map(f => {
     const epoch = epochs.find(e => e.id === f.epochId);
-    const topic = epoch?.topics.find(t => t.id === f.topicId);
+    const topic = epoch?.topics.find(tp => tp.id === f.topicId);
     return topic ? { ...topic, epochColor: epoch?.color, epochTitle: epoch?.title } : null;
   }).filter(Boolean) as any[];
 
@@ -34,10 +42,10 @@ export default function FeaturedTopics() {
           <div>
             <div className="inline-flex items-center gap-2 bg-[#EEF1F7] rounded-full px-3 py-1 mb-3">
               <Star className="w-3.5 h-3.5 text-yellow-500" />
-              <span className="text-xs font-medium text-[#2F5D9F] font-ui tracking-wide uppercase">Featured</span>
+              <span className="text-xs font-medium text-[#2F5D9F] font-ui tracking-wide uppercase">{t('featured_badge')}</span>
             </div>
-            <h2 className="font-display text-4xl font-bold text-[#2A2A2A]">Popular Topics</h2>
-            <p className="text-[#7A8499] font-ui mt-2">Dive into the most compelling moments in Russian history</p>
+            <h2 className="font-display text-4xl font-bold text-[#2A2A2A]">{t('featured_title')}</h2>
+            <p className="text-[#7A8499] font-ui mt-2">{t('featured_subtitle')}</p>
           </div>
         </div>
 
@@ -63,7 +71,7 @@ export default function FeaturedTopics() {
                   className="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-white text-[10px] font-medium font-ui"
                   style={{ backgroundColor: topic.epochColor + 'CC' }}
                 >
-                  {topic.epochTitle}
+                  {localize(topic.epochTitle)}
                 </div>
 
                 {/* XP badge */}
@@ -75,7 +83,7 @@ export default function FeaturedTopics() {
                 {/* Difficulty */}
                 <div className="absolute bottom-3 left-3">
                   <span className={`text-[10px] font-medium px-2.5 py-1 rounded-full font-ui ${DIFF_COLORS[topic.difficulty as keyof typeof DIFF_COLORS]}`}>
-                    {topic.difficulty}
+                    {t(DIFF_KEYS[topic.difficulty as keyof typeof DIFF_KEYS])}
                   </span>
                 </div>
               </div>
@@ -83,11 +91,13 @@ export default function FeaturedTopics() {
               {/* Content */}
               <div className="p-5">
                 <h3 className="font-display text-lg font-bold text-[#2A2A2A] mb-1 leading-tight line-clamp-2">
-                  {topic.title}
+                  {localize(topic.title)}
                 </h3>
-                <p className="text-[#9AA3B2] text-xs font-ui italic mb-2">{topic.titleRu}</p>
+                {showRussianSubtitles && (
+                  <p className="text-[#9AA3B2] text-xs font-ui italic mb-2">{topic.title.ru}</p>
+                )}
                 <p className="text-[#7A8499] text-sm font-ui line-clamp-2 leading-relaxed">
-                  {topic.teaser}
+                  {localize(topic.teaser)}
                 </p>
               </div>
             </div>

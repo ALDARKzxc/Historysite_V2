@@ -1,25 +1,27 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Flame, Globe, ChevronDown, BookOpen, Zap, Menu, X } from 'lucide-react';
-import { useApp, Language, LEVEL_TITLES, getLevelFromXP } from '@/context/AppContext';
+import { useApp } from '@/context/AppContext';
+import { useLanguage, Language } from '@/LanguageContext';
 
 const NAV_LINKS = [
-  { label: 'Timeline', path: '/timeline' },
-  { label: 'Epochs', path: '/epochs' },
-  { label: 'Language Lab', path: '/language-lab' },
-  { label: 'Leaderboard', path: '/leaderboard' },
-  { label: 'About', path: '/about' },
+  { key: 'nav_timeline', path: '/timeline' },
+  { key: 'nav_epochs', path: '/epochs' },
+  { key: 'nav_language_lab', path: '/language-lab' },
+  { key: 'nav_leaderboard', path: '/leaderboard' },
+  { key: 'nav_about', path: '/about' },
 ];
 
 const LANGUAGES: { code: Language; label: string; flag: string }[] = [
-  { code: 'EN', label: 'English', flag: '🇬🇧' },
-  { code: 'RU', label: 'Русский', flag: '🇷🇺' },
-  { code: 'AR', label: 'العربية', flag: '🇸🇦' },
-  { code: 'ZH', label: '中文', flag: '🇨🇳' },
+  { code: 'en', label: 'English', flag: '🇬🇧' },
+  { code: 'ru', label: 'Русский', flag: '🇷🇺' },
+  { code: 'ar', label: 'العربية', flag: '🇸🇦' },
+  { code: 'zh', label: '中文', flag: '🇨🇳' },
 ];
 
 export default function Navbar() {
-  const { user, language, setLanguage, setShowAuthModal, setAuthMode } = useApp();
+  const { user, setShowAuthModal, setAuthMode } = useApp();
+  const { language, setLanguage, t } = useLanguage();
   const [langOpen, setLangOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
@@ -59,7 +61,7 @@ export default function Navbar() {
                     : 'text-[#7A8499] hover:text-[#2A2A2A] hover:bg-[#F5F7FA]'
                 }`}
               >
-                {link.label}
+                {t(link.key)}
               </Link>
             ))}
           </div>
@@ -73,7 +75,7 @@ export default function Navbar() {
                 className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-[#7A8499] hover:text-[#2A2A2A] hover:bg-[#F5F7FA] transition-all"
               >
                 <Globe className="w-4 h-4" />
-                <span className="hidden sm:inline">{currentLang.flag} {currentLang.code}</span>
+                <span className="hidden sm:inline">{currentLang.flag} {currentLang.code.toUpperCase()}</span>
                 <ChevronDown className="w-3 h-3" />
               </button>
               {langOpen && (
@@ -115,7 +117,7 @@ export default function Navbar() {
                 onClick={handleLogin}
                 className="hidden sm:flex items-center gap-2 px-4 py-2 bg-[#2F5D9F] text-white rounded-lg text-sm font-medium hover:bg-[#264d8a] transition-colors btn-press"
               >
-                Sign In
+                {t('nav_login')}
               </button>
             )}
 
@@ -143,7 +145,7 @@ export default function Navbar() {
                     : 'text-[#7A8499] hover:text-[#2A2A2A]'
                 }`}
               >
-                {link.label}
+                {t(link.key)}
               </Link>
             ))}
             {!user && (
@@ -151,7 +153,7 @@ export default function Navbar() {
                 onClick={() => { handleLogin(); setMobileOpen(false); }}
                 className="mt-2 px-4 py-2.5 bg-[#2F5D9F] text-white rounded-lg text-sm font-medium"
               >
-                Sign In
+                {t('nav_login')}
               </button>
             )}
           </div>

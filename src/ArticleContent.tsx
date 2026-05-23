@@ -1,5 +1,5 @@
 import React from "react";
-import { useLanguage } from "../contexts/LanguageContext";
+import { useLanguage } from "./LanguageContext";
 
 /**
  * A single paragraph rendered with optional Russian subtitle below each sentence.

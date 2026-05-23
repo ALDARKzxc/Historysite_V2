@@ -1,5 +1,8 @@
-import { useEffect, useState } from 'react';
-import { useApp, LEVEL_TITLES, getLevelFromXP } from '@/context/AppContext';
+import { useEffect } from 'react';
+import { useApp, getLevelFromXP } from '@/context/AppContext';
+import { useLanguage } from '@/LanguageContext';
+
+const LEVEL_KEYS = ['level_novice', 'level_boyar', 'level_voivode', 'level_knyaz', 'level_tsar', 'level_emperor', 'level_legend'];
 
 function Confetti() {
   const pieces = Array.from({ length: 50 }, (_, i) => ({
@@ -33,6 +36,7 @@ function Confetti() {
 
 export default function LevelUpAnimation() {
   const { levelUpAnimation, setLevelUpAnimation, user } = useApp();
+  const { t } = useLanguage();
 
   useEffect(() => {
     if (!levelUpAnimation) return;
@@ -42,7 +46,7 @@ export default function LevelUpAnimation() {
 
   if (!levelUpAnimation || !user) return null;
 
-  const title = LEVEL_TITLES[getLevelFromXP(user.xp)] || 'Novice';
+  const title = t(LEVEL_KEYS[getLevelFromXP(user.xp)] || 'level_novice');
 
   return (
     <>
@@ -50,8 +54,8 @@ export default function LevelUpAnimation() {
       <div className="fixed inset-0 z-[150] flex items-center justify-center pointer-events-none">
         <div className="bg-white rounded-3xl shadow-2xl p-10 text-center animate-fade-in-up pointer-events-auto">
           <div className="text-6xl mb-4">🎉</div>
-          <h2 className="font-display text-4xl font-black text-[#2A2A2A] mb-2">Level Up!</h2>
-          <p className="text-[#7A8499] font-ui text-lg mb-4">You are now a</p>
+          <h2 className="font-display text-4xl font-black text-[#2A2A2A] mb-2">{t('levelup_title')}</h2>
+          <p className="text-[#7A8499] font-ui text-lg mb-4">{t('levelup_subtitle')}</p>
           <div className="inline-block bg-[#2F5D9F] text-white px-6 py-3 rounded-2xl text-2xl font-display font-bold">
             {title}
           </div>

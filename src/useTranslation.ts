@@ -7,5 +7,5 @@
  *   const { t, language, setLanguage, isRTL, showRussianSubtitles } = useT();
  *   <h1>{t('hero_title')}</h1>
  */
-export { useLanguage as useT } from "../contexts/LanguageContext";
-export type { Language, Translations } from "../contexts/LanguageContext";
+export { useLanguage as useT } from "./LanguageContext";
+export type { Language, Translations } from "./LanguageContext";

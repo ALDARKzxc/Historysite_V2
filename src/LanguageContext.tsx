@@ -2,709 +2,907 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 
 export type Language = "ru" | "en" | "ar" | "zh";
 
-export interface Translations {
+export type Translations = Record<string, string>;
+
+/** A piece of content available in every supported language. */
+export type Localized = Partial<Record<Language, string>>;
+
+const en: Translations = {
   // Navigation
-  nav_home: string;
-  nav_timeline: string;
-  nav_topics: string;
-  nav_about: string;
-  nav_login: string;
-  nav_register: string;
-  nav_profile: string;
-  nav_logout: string;
+  nav_home: "Home",
+  nav_timeline: "Timeline",
+  nav_epochs: "Epochs",
+  nav_language_lab: "Language Lab",
+  nav_leaderboard: "Leaderboard",
+  nav_about: "About",
+  nav_login: "Sign In",
+  nav_register: "Register",
 
   // Hero
-  hero_title: string;
-  hero_subtitle: string;
-  hero_btn_start: string;
-  hero_btn_timeline: string;
+  hero_eyebrow: "220+ Historical Topics · 18 Epochs · 4 Languages",
+  hero_title_pre: "Discover",
+  hero_title_highlight: "Russia's",
+  hero_title_post: "Epic History",
+  hero_subtitle:
+    "An immersive educational journey through 1,200 years of Russian history — with language learning built in.",
+  hero_btn_start: "Start Learning",
+  hero_btn_timeline: "Explore Timeline",
+  hero_scroll: "Explore",
 
-  // Epochs / Sections
-  epoch_ancient: string;
-  epoch_kievan: string;
-  epoch_mongol: string;
-  epoch_moscow: string;
-  epoch_empire: string;
-  epoch_revolution: string;
-  epoch_ussr: string;
-  epoch_modern: string;
+  // Stats
+  stat_topics: "Historical Topics",
+  stat_epochs: "Epochs",
+  stat_epochs_covered: "Epochs Covered",
+  stat_years: "Years of History",
+  stat_languages: "Languages",
 
-  // Topics page
-  topics_title: string;
-  topics_subtitle: string;
-  topics_search: string;
-  topics_filter_all: string;
-  topics_read_more: string;
-  topics_articles: string;
-  topics_tests: string;
+  // Epoch grid (home)
+  home_epochs_badge: "18 Epochs",
+  home_epochs_title: "Explore Russian History",
+  home_epochs_subtitle:
+    "From the founding of Kievan Rus to modern Russia — 1,200 years of civilization, conflict, and culture.",
+  home_view_all_epochs: "View All 18 Epochs",
+  ui_explore: "Explore",
+  ui_topics: "topics",
+
+  // Featured topics (home)
+  featured_badge: "Featured",
+  featured_title: "Popular Topics",
+  featured_subtitle: "Dive into the most compelling moments in Russian history",
+
+  // Timeline (home)
+  timeline_badge: "Interactive",
+  timeline_home_title: "History Timeline",
+  timeline_home_subtitle: "862 AD to Present — 1,200 years of Russian history",
+
+  // Gamification (home)
+  gamification_badge: "Gamification",
+  gamification_title: "Learn Like Never Before",
+  gamification_subtitle:
+    "RusHistory turns serious historical scholarship into an engaging adventure",
+  gamification_cta: "Start Your Journey",
+  level_system_title: "Level System",
+  level_system_subtitle: "Rise through the ranks of Russian history",
+
+  feat_xp_title: "Earn XP",
+  feat_xp_desc:
+    "Read articles and complete quizzes to earn experience points. Level up from Novice to Legend.",
+  feat_streak_title: "Daily Streaks",
+  feat_streak_desc:
+    "Keep your learning streak going. Log in daily and complete activities to maintain your flame.",
+  feat_achievements_title: "Achievements",
+  feat_achievements_desc:
+    '20+ unique badges to unlock. From "First Step" to "Master of History" — collect them all.',
+  feat_bilingual_title: "Bilingual Mode",
+  feat_bilingual_desc:
+    "Read articles in English, Arabic, or Chinese with Russian text below each paragraph.",
+  feat_langlab_title: "Language Lab",
+  feat_langlab_desc:
+    "Practice Russian vocabulary from historical context with flashcards and quizzes.",
+  feat_quizzes_title: "Knowledge Quizzes",
+  feat_quizzes_desc:
+    "Test your understanding after each article with multiple-choice and matching questions.",
+
+  // Levels
+  level_novice: "Novice",
+  level_boyar: "Boyar",
+  level_voivode: "Voivode",
+  level_knyaz: "Knyaz",
+  level_tsar: "Tsar",
+  level_emperor: "Emperor",
+  level_legend: "Legend",
+
+  // HUD
+  hud_streak: "streak",
+  hud_total_xp: "total XP",
+  hud_day_streak: "day streak",
+  hud_topics_done: "topics done",
+  hud_lv: "Lv.",
+  hud_in: "in",
+
+  // Level up
+  levelup_title: "Level Up!",
+  levelup_subtitle: "You are now a",
+
+  // Epochs page
+  epochs_page_title: "Russian History Epochs",
+  epochs_page_subtitle: "1,200 years of history organized into 18 thematic epochs",
+
+  // Epoch detail
+  epoch_not_found: "Epoch not found",
+  all_epochs: "All Epochs",
+  total_topics: "Total Topics",
+  ui_completed: "Completed",
+  max_xp: "Max XP",
+  about_epoch: "About this Epoch",
+  topics_label: "Topics",
+  available: "available",
+  read_article: "Read article",
 
   // Article page
-  article_key_dates: string;
-  article_key_figures: string;
-  article_related: string;
-  article_take_test: string;
-  article_back: string;
-  article_reading_time: string;
-  article_min: string;
-  article_russian_subtitle_hint: string;
+  breadcrumb_home: "Home",
+  breadcrumb_epochs: "Epochs",
+  xp_on_completion: "+10 XP on completion",
+  bilingual_mode: "Bilingual Mode",
+  toggle_on: "ON",
+  toggle_off: "OFF",
+  ai_summary: "AI Summary",
+  mark_as_read: "Mark as Read (+10 XP)",
+  article_completed: "Article completed!",
+  xp_earned_10: "+10 XP earned",
+  test_knowledge: "Test Your Knowledge (+25 XP)",
+  article_key_dates: "Key Dates",
+  russian_vocabulary: "Russian Vocabulary",
+  your_progress: "Your Progress",
+  article_related: "Related Topics",
+  article_not_found: "Article not found",
+  back_to_epochs: "Back to Epochs",
 
-  // Quiz / Tests
-  quiz_title: string;
-  quiz_start: string;
-  quiz_next: string;
-  quiz_finish: string;
-  quiz_result: string;
-  quiz_correct: string;
-  quiz_wrong: string;
-  quiz_score: string;
-  quiz_try_again: string;
-
-  // Progress / Gamification
-  progress_xp: string;
-  progress_level: string;
-  progress_streak: string;
-  progress_days: string;
-  progress_achievements: string;
-  progress_leaderboard: string;
-
-  // Achievements
-  achievement_first_step: string;
-  achievement_first_step_desc: string;
-  achievement_ancient_expert: string;
-  achievement_ancient_expert_desc: string;
-  achievement_history_master: string;
-  achievement_history_master_desc: string;
+  // Quiz
+  quiz_time: "Quiz Time",
+  quiz_questions: "questions",
+  quiz_perfect: "Perfect Score!",
+  quiz_complete: "Quiz Complete!",
+  quiz_correct_answers: "correct answers",
+  quiz_continue: "Continue Learning",
+  quiz_correct_fb: "Correct! Well done.",
+  quiz_wrong_fb: "The correct answer was:",
+  quiz_next: "Next",
+  quiz_finish: "Finish",
 
   // Auth
-  auth_email: string;
-  auth_password: string;
-  auth_name: string;
-  auth_login_title: string;
-  auth_register_title: string;
-  auth_login_btn: string;
-  auth_register_btn: string;
-  auth_no_account: string;
-  auth_has_account: string;
-  auth_forgot_password: string;
+  auth_welcome_back: "Welcome Back",
+  auth_join: "Join RusHistory",
+  auth_login_sub: "Continue your history journey",
+  auth_register_sub: "Begin your journey through Russian history",
+  auth_signin: "Sign In",
+  auth_register_tab: "Register",
+  auth_username: "Username",
+  auth_email_ph: "Email address",
+  auth_password_ph: "Password",
+  auth_processing: "Processing...",
+  auth_create_account: "Create Account",
+  auth_new_here: "New to RusHistory?",
+  auth_create_link: "Create an account",
+
+  // Timeline page
+  timeline_page_title: "Russian History Timeline",
+  timeline_page_subtitle:
+    "862 AD to Present — Drag to explore 1,200 years of history",
+  timeline_epochs: "Epochs",
+
+  // Leaderboard
+  lb_title: "Leaderboard",
+  lb_subtitle: "Top history learners from around the world",
+  lb_weekly: "This Week",
+  lb_alltime: "All Time",
+  lb_you: "You",
 
   // About page
-  about_title: string;
-  about_subtitle: string;
-  about_project_title: string;
-  about_project_desc: string;
-  about_team_title: string;
-  about_university: string;
-  about_group: string;
-  about_mission_title: string;
-  about_mission_desc: string;
-  about_tech_title: string;
+  about_hero_title: "About",
+  about_hero_sub:
+    "Making 1,200 years of Russian history accessible to learners around the world",
+  about_mission_title: "Our Mission",
+  about_mission_p1:
+    "RusHistory was created with a simple but ambitious goal: to make Russian history come alive for international learners. We believe that history is best understood through immersive storytelling, visual richness, and active engagement — not through dry textbooks.",
+  about_mission_p2:
+    "By combining the depth of academic scholarship with the engagement of modern ed-tech design, we've built a platform where a 16-year-old in Cairo or Shanghai can feel genuinely excited to learn about the Battle of Kulikovo, the Siege of Leningrad, or Yuri Gagarin's historic flight.",
+  about_team_title: "Our Team",
+  about_team_sub: "Students of MADI · Group 1bIVTn2",
+  about_sources_title: "Academic Sources",
+  about_sources_intro:
+    "All historical content is based on verified Russian academic scholarship:",
+  about_made_with: "Made with",
+  about_for_lovers: "for history lovers worldwide · MADI University · 2024",
+  about_university: "MADI",
+  about_group: "Group 1bIVTn2",
 
-  // Timeline
-  timeline_title: string;
-  timeline_subtitle: string;
-  timeline_explore: string;
-  timeline_century: string;
-  timeline_bce: string;
-  timeline_ce: string;
+  role_lead_dev: "Lead Developer & Architecture",
+  role_lead_dev_desc:
+    "Responsible for the technical architecture, backend systems, and overall platform development.",
+  role_frontend: "Frontend Development & UI Design",
+  role_frontend_desc:
+    "Crafted the visual identity, user interface design, and interactive frontend components.",
+  role_content: "Content Research & Historical Verification",
+  role_content_desc:
+    "Researched and verified all historical content using primary Russian academic sources.",
 
-  // General UI
-  ui_loading: string;
-  ui_error: string;
-  ui_search: string;
-  ui_close: string;
-  ui_save: string;
-  ui_cancel: string;
-  ui_continue: string;
-  ui_completed: string;
-  ui_locked: string;
-  ui_free: string;
-  ui_premium: string;
-  ui_share: string;
-  ui_copied: string;
-  ui_language: string;
-  ui_dark_mode: string;
-  ui_settings: string;
-  ui_back_to_top: string;
-  ui_show_more: string;
-  ui_show_less: string;
-  ui_all: string;
-  ui_beginner: string;
-  ui_intermediate: string;
-  ui_advanced: string;
-  ui_topics_count: string;
-  ui_articles_count: string;
+  source_karamzin: "History of the Russian State",
+  source_solovyov: "History of Russia from Ancient Times",
+  source_klyuchevsky: "Course of Russian History",
+  source_kostomarov: "Russian History in Biographies of Its Chief Figures",
 
-  // Footer
-  footer_desc: string;
-  footer_links: string;
-  footer_privacy: string;
-  footer_terms: string;
-  footer_contact: string;
-  footer_rights: string;
+  // Language Lab
+  ll_badge: "Language Lab",
+  ll_title: "Russian Language Practice",
+  ll_subtitle: "Master Russian vocabulary from historical context",
+  ll_total_words: "Total Words",
+  ll_correct: "Correct",
+  ll_xp_earned: "XP Earned",
+  ll_flashcards: "Flashcards",
+  ll_quiz: "Quiz",
+  ll_card: "Card",
+  ll_of: "of",
+  ll_translation: "Translation",
+  ll_click_reveal: "Click to reveal translation",
+  ll_prev: "Previous",
+  ll_next: "Next",
+  ll_what_means: "What does this word mean?",
+  ll_correct_xp: "Correct! +5 XP",
+  ll_answer_was: "The answer was:",
+
+  // Difficulty
+  difficulty_beginner: "Beginner",
+  difficulty_intermediate: "Intermediate",
+  difficulty_advanced: "Advanced",
+
+  // Generic UI
+  ui_loading: "Loading...",
+  ui_language: "Language",
 
   // Language names
-  lang_ru: string;
-  lang_en: string;
-  lang_ar: string;
-  lang_zh: string;
-}
-
-const translations: Record<Language, Translations> = {
-  ru: {
-    nav_home: "Главная",
-    nav_timeline: "Хронология",
-    nav_topics: "Темы",
-    nav_about: "О нас",
-    nav_login: "Войти",
-    nav_register: "Регистрация",
-    nav_profile: "Профиль",
-    nav_logout: "Выйти",
-
-    hero_title: "История России",
-    hero_subtitle:
-      "Интерактивная платформа для изучения истории и культуры России. Погрузитесь в тысячелетнее наследие великой страны.",
-    hero_btn_start: "Начать обучение",
-    hero_btn_timeline: "Открыть хронологию",
-
-    epoch_ancient: "Древняя Русь",
-    epoch_kievan: "Киевская Русь",
-    epoch_mongol: "Монгольское нашествие",
-    epoch_moscow: "Московское государство",
-    epoch_empire: "Российская империя",
-    epoch_revolution: "Революция и гражданская война",
-    epoch_ussr: "Советский Союз",
-    epoch_modern: "Современная Россия",
-
-    topics_title: "Все темы",
-    topics_subtitle: "Более 220 тем по истории России",
-    topics_search: "Поиск тем...",
-    topics_filter_all: "Все эпохи",
-    topics_read_more: "Читать статью",
-    topics_articles: "статей",
-    topics_tests: "тестов",
-
-    article_key_dates: "Ключевые даты",
-    article_key_figures: "Ключевые личности",
-    article_related: "Связанные темы",
-    article_take_test: "Пройти тест",
-    article_back: "Назад к темам",
-    article_reading_time: "Время чтения",
-    article_min: "мин",
-    article_russian_subtitle_hint: "Текст на русском языке",
-
-    quiz_title: "Проверь знания",
-    quiz_start: "Начать тест",
-    quiz_next: "Следующий вопрос",
-    quiz_finish: "Завершить",
-    quiz_result: "Результат",
-    quiz_correct: "Верно!",
-    quiz_wrong: "Неверно",
-    quiz_score: "Ваш результат",
-    quiz_try_again: "Попробовать снова",
-
-    progress_xp: "Опыт",
-    progress_level: "Уровень",
-    progress_streak: "Серия",
-    progress_days: "дней",
-    progress_achievements: "Достижения",
-    progress_leaderboard: "Таблица лидеров",
-
-    achievement_first_step: "Первый шаг",
-    achievement_first_step_desc: "Прочитать первую статью",
-    achievement_ancient_expert: "Знаток Руси",
-    achievement_ancient_expert_desc: "Пройти эпоху Древней Руси",
-    achievement_history_master: "Мастер истории",
-    achievement_history_master_desc: "Пройти весь курс",
-
-    auth_email: "Электронная почта",
-    auth_password: "Пароль",
-    auth_name: "Имя",
-    auth_login_title: "Вход в аккаунт",
-    auth_register_title: "Создать аккаунт",
-    auth_login_btn: "Войти",
-    auth_register_btn: "Зарегистрироваться",
-    auth_no_account: "Нет аккаунта? Зарегистрируйтесь",
-    auth_has_account: "Уже есть аккаунт? Войдите",
-    auth_forgot_password: "Забыли пароль?",
-
-    about_title: "О проекте",
-    about_subtitle:
-      "Образовательная платформа по истории России, созданная студентами МАДИ",
-    about_project_title: "О платформе",
-    about_project_desc:
-      "Наша платформа создана для того, чтобы сделать изучение истории России доступным, интересным и интерактивным для иностранных студентов и всех, кто хочет глубже познакомиться с культурой и историей России.",
-    about_team_title: "Команда",
-    about_university: "МАДИ (Московский автомобильно-дорожный государственный технический университет)",
-    about_group: "Группа",
-    about_mission_title: "Наша миссия",
-    about_mission_desc:
-      "Мы стремимся создать лучший образовательный ресурс по истории России, сочетающий академическую достоверность с современными технологиями обучения.",
-    about_tech_title: "Технологии",
-
-    timeline_title: "Хронология истории России",
-    timeline_subtitle: "От Древней Руси до современности",
-    timeline_explore: "Изучить эпоху",
-    timeline_century: "век",
-    timeline_bce: "до н.э.",
-    timeline_ce: "н.э.",
-
-    ui_loading: "Загрузка...",
-    ui_error: "Произошла ошибка",
-    ui_search: "Поиск",
-    ui_close: "Закрыть",
-    ui_save: "Сохранить",
-    ui_cancel: "Отмена",
-    ui_continue: "Продолжить",
-    ui_completed: "Завершено",
-    ui_locked: "Заблокировано",
-    ui_free: "Бесплатно",
-    ui_premium: "Премиум",
-    ui_share: "Поделиться",
-    ui_copied: "Скопировано!",
-    ui_language: "Язык",
-    ui_dark_mode: "Тёмная тема",
-    ui_settings: "Настройки",
-    ui_back_to_top: "Наверх",
-    ui_show_more: "Показать больше",
-    ui_show_less: "Показать меньше",
-    ui_all: "Все",
-    ui_beginner: "Начинающий",
-    ui_intermediate: "Средний",
-    ui_advanced: "Продвинутый",
-    ui_topics_count: "тем",
-    ui_articles_count: "статей",
-
-    footer_desc:
-      "Образовательная платформа по истории России для иностранных студентов",
-    footer_links: "Ссылки",
-    footer_privacy: "Конфиденциальность",
-    footer_terms: "Условия использования",
-    footer_contact: "Контакты",
-    footer_rights: "Все права защищены",
-
-    lang_ru: "Русский",
-    lang_en: "English",
-    lang_ar: "العربية",
-    lang_zh: "中文",
-  },
-
-  en: {
-    nav_home: "Home",
-    nav_timeline: "Timeline",
-    nav_topics: "Topics",
-    nav_about: "About",
-    nav_login: "Sign In",
-    nav_register: "Register",
-    nav_profile: "Profile",
-    nav_logout: "Sign Out",
-
-    hero_title: "History of Russia",
-    hero_subtitle:
-      "An interactive platform for studying Russian history and culture. Immerse yourself in the thousand-year heritage of a great nation.",
-    hero_btn_start: "Start Learning",
-    hero_btn_timeline: "Explore Timeline",
-
-    epoch_ancient: "Ancient Rus",
-    epoch_kievan: "Kievan Rus",
-    epoch_mongol: "Mongol Invasion",
-    epoch_moscow: "Muscovite State",
-    epoch_empire: "Russian Empire",
-    epoch_revolution: "Revolution & Civil War",
-    epoch_ussr: "Soviet Union",
-    epoch_modern: "Modern Russia",
-
-    topics_title: "All Topics",
-    topics_subtitle: "Over 220 topics on Russian history",
-    topics_search: "Search topics...",
-    topics_filter_all: "All Epochs",
-    topics_read_more: "Read Article",
-    topics_articles: "articles",
-    topics_tests: "tests",
-
-    article_key_dates: "Key Dates",
-    article_key_figures: "Key Figures",
-    article_related: "Related Topics",
-    article_take_test: "Take the Test",
-    article_back: "Back to Topics",
-    article_reading_time: "Reading time",
-    article_min: "min",
-    article_russian_subtitle_hint: "Text in Russian",
-
-    quiz_title: "Test Your Knowledge",
-    quiz_start: "Start Quiz",
-    quiz_next: "Next Question",
-    quiz_finish: "Finish",
-    quiz_result: "Result",
-    quiz_correct: "Correct!",
-    quiz_wrong: "Incorrect",
-    quiz_score: "Your Score",
-    quiz_try_again: "Try Again",
-
-    progress_xp: "Experience",
-    progress_level: "Level",
-    progress_streak: "Streak",
-    progress_days: "days",
-    progress_achievements: "Achievements",
-    progress_leaderboard: "Leaderboard",
-
-    achievement_first_step: "First Step",
-    achievement_first_step_desc: "Read your first article",
-    achievement_ancient_expert: "Rus Expert",
-    achievement_ancient_expert_desc: "Complete the Ancient Rus epoch",
-    achievement_history_master: "History Master",
-    achievement_history_master_desc: "Complete the entire course",
-
-    auth_email: "Email",
-    auth_password: "Password",
-    auth_name: "Name",
-    auth_login_title: "Sign In",
-    auth_register_title: "Create Account",
-    auth_login_btn: "Sign In",
-    auth_register_btn: "Register",
-    auth_no_account: "No account? Register",
-    auth_has_account: "Already have an account? Sign in",
-    auth_forgot_password: "Forgot password?",
-
-    about_title: "About the Project",
-    about_subtitle:
-      "An educational platform on Russian history, created by MADI students",
-    about_project_title: "About the Platform",
-    about_project_desc:
-      "Our platform is designed to make studying Russian history accessible, engaging, and interactive for foreign students and anyone who wants to learn more about Russia's culture and history.",
-    about_team_title: "Our Team",
-    about_university:
-      "MADI (Moscow Automobile and Road Construction State Technical University)",
-    about_group: "Group",
-    about_mission_title: "Our Mission",
-    about_mission_desc:
-      "We strive to create the best educational resource on Russian history, combining academic accuracy with modern learning technologies.",
-    about_tech_title: "Technologies",
-
-    timeline_title: "Timeline of Russian History",
-    timeline_subtitle: "From Ancient Rus to the present day",
-    timeline_explore: "Explore Epoch",
-    timeline_century: "century",
-    timeline_bce: "BCE",
-    timeline_ce: "CE",
-
-    ui_loading: "Loading...",
-    ui_error: "An error occurred",
-    ui_search: "Search",
-    ui_close: "Close",
-    ui_save: "Save",
-    ui_cancel: "Cancel",
-    ui_continue: "Continue",
-    ui_completed: "Completed",
-    ui_locked: "Locked",
-    ui_free: "Free",
-    ui_premium: "Premium",
-    ui_share: "Share",
-    ui_copied: "Copied!",
-    ui_language: "Language",
-    ui_dark_mode: "Dark Mode",
-    ui_settings: "Settings",
-    ui_back_to_top: "Back to top",
-    ui_show_more: "Show more",
-    ui_show_less: "Show less",
-    ui_all: "All",
-    ui_beginner: "Beginner",
-    ui_intermediate: "Intermediate",
-    ui_advanced: "Advanced",
-    ui_topics_count: "topics",
-    ui_articles_count: "articles",
-
-    footer_desc:
-      "An educational platform on Russian history for foreign students",
-    footer_links: "Links",
-    footer_privacy: "Privacy Policy",
-    footer_terms: "Terms of Use",
-    footer_contact: "Contact",
-    footer_rights: "All rights reserved",
-
-    lang_ru: "Русский",
-    lang_en: "English",
-    lang_ar: "العربية",
-    lang_zh: "中文",
-  },
-
-  ar: {
-    nav_home: "الرئيسية",
-    nav_timeline: "الجدول الزمني",
-    nav_topics: "المواضيع",
-    nav_about: "حول",
-    nav_login: "تسجيل الدخول",
-    nav_register: "التسجيل",
-    nav_profile: "الملف الشخصي",
-    nav_logout: "تسجيل الخروج",
-
-    hero_title: "تاريخ روسيا",
-    hero_subtitle:
-      "منصة تفاعلية لدراسة تاريخ روسيا وثقافتها. انغمس في الإرث الألفي لأمة عظيمة.",
-    hero_btn_start: "ابدأ التعلم",
-    hero_btn_timeline: "استكشف الجدول الزمني",
-
-    epoch_ancient: "روس القديمة",
-    epoch_kievan: "روس كييف",
-    epoch_mongol: "الغزو المغولي",
-    epoch_moscow: "دولة موسكو",
-    epoch_empire: "الإمبراطورية الروسية",
-    epoch_revolution: "الثورة والحرب الأهلية",
-    epoch_ussr: "الاتحاد السوفيتي",
-    epoch_modern: "روسيا الحديثة",
-
-    topics_title: "جميع المواضيع",
-    topics_subtitle: "أكثر من 220 موضوع في تاريخ روسيا",
-    topics_search: "البحث في المواضيع...",
-    topics_filter_all: "جميع العصور",
-    topics_read_more: "قراءة المقال",
-    topics_articles: "مقالات",
-    topics_tests: "اختبارات",
-
-    article_key_dates: "التواريخ الرئيسية",
-    article_key_figures: "الشخصيات الرئيسية",
-    article_related: "مواضيع ذات صلة",
-    article_take_test: "أداء الاختبار",
-    article_back: "العودة إلى المواضيع",
-    article_reading_time: "وقت القراءة",
-    article_min: "دقيقة",
-    article_russian_subtitle_hint: "النص باللغة الروسية",
-
-    quiz_title: "اختبر معلوماتك",
-    quiz_start: "ابدأ الاختبار",
-    quiz_next: "السؤال التالي",
-    quiz_finish: "إنهاء",
-    quiz_result: "النتيجة",
-    quiz_correct: "صحيح!",
-    quiz_wrong: "خطأ",
-    quiz_score: "نتيجتك",
-    quiz_try_again: "حاول مرة أخرى",
-
-    progress_xp: "الخبرة",
-    progress_level: "المستوى",
-    progress_streak: "السلسلة",
-    progress_days: "أيام",
-    progress_achievements: "الإنجازات",
-    progress_leaderboard: "لوحة المتصدرين",
-
-    achievement_first_step: "الخطوة الأولى",
-    achievement_first_step_desc: "اقرأ مقالك الأول",
-    achievement_ancient_expert: "خبير روسيا",
-    achievement_ancient_expert_desc: "أكمل عصر روس القديمة",
-    achievement_history_master: "سيد التاريخ",
-    achievement_history_master_desc: "أكمل الدورة بأكملها",
-
-    auth_email: "البريد الإلكتروني",
-    auth_password: "كلمة المرور",
-    auth_name: "الاسم",
-    auth_login_title: "تسجيل الدخول",
-    auth_register_title: "إنشاء حساب",
-    auth_login_btn: "دخول",
-    auth_register_btn: "تسجيل",
-    auth_no_account: "ليس لديك حساب؟ سجّل",
-    auth_has_account: "لديك حساب بالفعل؟ سجّل الدخول",
-    auth_forgot_password: "نسيت كلمة المرور؟",
-
-    about_title: "حول المشروع",
-    about_subtitle: "منصة تعليمية لتاريخ روسيا، أنشأها طلاب MADI",
-    about_project_title: "حول المنصة",
-    about_project_desc:
-      "تم تصميم منصتنا لجعل دراسة تاريخ روسيا في متناول الجميع وجذابة وتفاعلية للطلاب الأجانب وكل من يريد التعرف أكثر على ثقافة روسيا وتاريخها.",
-    about_team_title: "فريقنا",
-    about_university:
-      "MADI (الجامعة الحكومية التقنية لبناء السيارات والطرق في موسكو)",
-    about_group: "المجموعة",
-    about_mission_title: "مهمتنا",
-    about_mission_desc:
-      "نسعى إلى إنشاء أفضل مورد تعليمي لتاريخ روسيا، يجمع بين الدقة الأكاديمية وتقنيات التعلم الحديثة.",
-    about_tech_title: "التقنيات",
-
-    timeline_title: "الجدول الزمني لتاريخ روسيا",
-    timeline_subtitle: "من روس القديمة حتى يومنا هذا",
-    timeline_explore: "استكشاف العصر",
-    timeline_century: "قرن",
-    timeline_bce: "قبل الميلاد",
-    timeline_ce: "بعد الميلاد",
-
-    ui_loading: "جارٍ التحميل...",
-    ui_error: "حدث خطأ",
-    ui_search: "بحث",
-    ui_close: "إغلاق",
-    ui_save: "حفظ",
-    ui_cancel: "إلغاء",
-    ui_continue: "متابعة",
-    ui_completed: "مكتمل",
-    ui_locked: "مقفل",
-    ui_free: "مجاني",
-    ui_premium: "مميز",
-    ui_share: "مشاركة",
-    ui_copied: "تم النسخ!",
-    ui_language: "اللغة",
-    ui_dark_mode: "الوضع الداكن",
-    ui_settings: "الإعدادات",
-    ui_back_to_top: "العودة إلى الأعلى",
-    ui_show_more: "عرض المزيد",
-    ui_show_less: "عرض أقل",
-    ui_all: "الكل",
-    ui_beginner: "مبتدئ",
-    ui_intermediate: "متوسط",
-    ui_advanced: "متقدم",
-    ui_topics_count: "موضوعات",
-    ui_articles_count: "مقالات",
-
-    footer_desc: "منصة تعليمية لتاريخ روسيا للطلاب الأجانب",
-    footer_links: "روابط",
-    footer_privacy: "سياسة الخصوصية",
-    footer_terms: "شروط الاستخدام",
-    footer_contact: "التواصل",
-    footer_rights: "جميع الحقوق محفوظة",
-
-    lang_ru: "Русский",
-    lang_en: "English",
-    lang_ar: "العربية",
-    lang_zh: "中文",
-  },
-
-  zh: {
-    nav_home: "首页",
-    nav_timeline: "时间线",
-    nav_topics: "主题",
-    nav_about: "关于我们",
-    nav_login: "登录",
-    nav_register: "注册",
-    nav_profile: "个人资料",
-    nav_logout: "退出",
-
-    hero_title: "俄罗斯历史",
-    hero_subtitle:
-      "学习俄罗斯历史和文化的互动平台。沉浸在这个伟大国家千年的历史遗产中。",
-    hero_btn_start: "开始学习",
-    hero_btn_timeline: "探索时间线",
-
-    epoch_ancient: "古代罗斯",
-    epoch_kievan: "基辅罗斯",
-    epoch_mongol: "蒙古入侵",
-    epoch_moscow: "莫斯科公国",
-    epoch_empire: "俄罗斯帝国",
-    epoch_revolution: "革命与内战",
-    epoch_ussr: "苏维埃联盟",
-    epoch_modern: "现代俄罗斯",
-
-    topics_title: "所有主题",
-    topics_subtitle: "超过220个俄罗斯历史主题",
-    topics_search: "搜索主题...",
-    topics_filter_all: "所有时代",
-    topics_read_more: "阅读文章",
-    topics_articles: "篇文章",
-    topics_tests: "个测试",
-
-    article_key_dates: "关键日期",
-    article_key_figures: "关键人物",
-    article_related: "相关主题",
-    article_take_test: "参加测试",
-    article_back: "返回主题",
-    article_reading_time: "阅读时间",
-    article_min: "分钟",
-    article_russian_subtitle_hint: "俄语原文",
-
-    quiz_title: "测试你的知识",
-    quiz_start: "开始测试",
-    quiz_next: "下一题",
-    quiz_finish: "完成",
-    quiz_result: "结果",
-    quiz_correct: "正确！",
-    quiz_wrong: "错误",
-    quiz_score: "你的得分",
-    quiz_try_again: "再试一次",
-
-    progress_xp: "经验值",
-    progress_level: "等级",
-    progress_streak: "连续",
-    progress_days: "天",
-    progress_achievements: "成就",
-    progress_leaderboard: "排行榜",
-
-    achievement_first_step: "第一步",
-    achievement_first_step_desc: "阅读第一篇文章",
-    achievement_ancient_expert: "罗斯专家",
-    achievement_ancient_expert_desc: "完成古代罗斯时代",
-    achievement_history_master: "历史大师",
-    achievement_history_master_desc: "完成全部课程",
-
-    auth_email: "电子邮件",
-    auth_password: "密码",
-    auth_name: "姓名",
-    auth_login_title: "登录",
-    auth_register_title: "创建账户",
-    auth_login_btn: "登录",
-    auth_register_btn: "注册",
-    auth_no_account: "没有账户？注册",
-    auth_has_account: "已有账户？登录",
-    auth_forgot_password: "忘记密码？",
-
-    about_title: "关于项目",
-    about_subtitle: "由MADI学生创建的俄罗斯历史教育平台",
-    about_project_title: "关于平台",
-    about_project_desc:
-      "我们的平台旨在让外国学生和所有想更深入了解俄罗斯文化和历史的人能够轻松、有趣、互动地学习俄罗斯历史。",
-    about_team_title: "我们的团队",
-    about_university: "MADI（莫斯科汽车公路国立技术大学）",
-    about_group: "班级",
-    about_mission_title: "我们的使命",
-    about_mission_desc:
-      "我们致力于创建最好的俄罗斯历史教育资源，将学术严谨性与现代学习技术相结合。",
-    about_tech_title: "技术栈",
-
-    timeline_title: "俄罗斯历史时间线",
-    timeline_subtitle: "从古代罗斯到现代",
-    timeline_explore: "探索时代",
-    timeline_century: "世纪",
-    timeline_bce: "公元前",
-    timeline_ce: "公元",
-
-    ui_loading: "加载中...",
-    ui_error: "发生错误",
-    ui_search: "搜索",
-    ui_close: "关闭",
-    ui_save: "保存",
-    ui_cancel: "取消",
-    ui_continue: "继续",
-    ui_completed: "已完成",
-    ui_locked: "已锁定",
-    ui_free: "免费",
-    ui_premium: "高级",
-    ui_share: "分享",
-    ui_copied: "已复制！",
-    ui_language: "语言",
-    ui_dark_mode: "深色模式",
-    ui_settings: "设置",
-    ui_back_to_top: "返回顶部",
-    ui_show_more: "显示更多",
-    ui_show_less: "显示更少",
-    ui_all: "全部",
-    ui_beginner: "初级",
-    ui_intermediate: "中级",
-    ui_advanced: "高级",
-    ui_topics_count: "个主题",
-    ui_articles_count: "篇文章",
-
-    footer_desc: "面向外国学生的俄罗斯历史教育平台",
-    footer_links: "链接",
-    footer_privacy: "隐私政策",
-    footer_terms: "使用条款",
-    footer_contact: "联系我们",
-    footer_rights: "版权所有",
-
-    lang_ru: "Русский",
-    lang_en: "English",
-    lang_ar: "العربية",
-    lang_zh: "中文",
-  },
+  lang_ru: "Русский",
+  lang_en: "English",
+  lang_ar: "العربية",
+  lang_zh: "中文",
 };
+
+const ru: Translations = {
+  nav_home: "Главная",
+  nav_timeline: "Хронология",
+  nav_epochs: "Эпохи",
+  nav_language_lab: "Языковая лаборатория",
+  nav_leaderboard: "Рейтинг",
+  nav_about: "О нас",
+  nav_login: "Войти",
+  nav_register: "Регистрация",
+
+  hero_eyebrow: "220+ исторических тем · 18 эпох · 4 языка",
+  hero_title_pre: "Откройте",
+  hero_title_highlight: "великую",
+  hero_title_post: "историю России",
+  hero_subtitle:
+    "Захватывающее образовательное путешествие сквозь 1200 лет истории России — со встроенным изучением языка.",
+  hero_btn_start: "Начать обучение",
+  hero_btn_timeline: "Открыть хронологию",
+  hero_scroll: "Листайте",
+
+  stat_topics: "Исторических тем",
+  stat_epochs: "Эпох",
+  stat_epochs_covered: "Охваченных эпох",
+  stat_years: "Лет истории",
+  stat_languages: "Языка",
+
+  home_epochs_badge: "18 эпох",
+  home_epochs_title: "Исследуйте историю России",
+  home_epochs_subtitle:
+    "От основания Киевской Руси до современной России — 1200 лет цивилизации, конфликтов и культуры.",
+  home_view_all_epochs: "Все 18 эпох",
+  ui_explore: "Подробнее",
+  ui_topics: "тем",
+
+  featured_badge: "Избранное",
+  featured_title: "Популярные темы",
+  featured_subtitle:
+    "Погрузитесь в самые яркие моменты истории России",
+
+  timeline_badge: "Интерактив",
+  timeline_home_title: "Лента времени",
+  timeline_home_subtitle: "С 862 года до наших дней — 1200 лет истории России",
+
+  gamification_badge: "Геймификация",
+  gamification_title: "Учитесь как никогда раньше",
+  gamification_subtitle:
+    "RusHistory превращает серьёзную историческую науку в увлекательное приключение",
+  gamification_cta: "Начать путешествие",
+  level_system_title: "Система уровней",
+  level_system_subtitle: "Поднимайтесь по рангам истории России",
+
+  feat_xp_title: "Зарабатывайте опыт",
+  feat_xp_desc:
+    "Читайте статьи и проходите тесты, чтобы получать очки опыта. Растите от Новичка до Легенды.",
+  feat_streak_title: "Ежедневные серии",
+  feat_streak_desc:
+    "Поддерживайте серию обучения. Заходите каждый день и выполняйте задания, чтобы сохранить огонёк.",
+  feat_achievements_title: "Достижения",
+  feat_achievements_desc:
+    'Более 20 уникальных значков. От «Первого шага» до «Мастера истории» — соберите их все.',
+  feat_bilingual_title: "Двуязычный режим",
+  feat_bilingual_desc:
+    "Читайте статьи на английском, арабском или китайском с русским текстом под каждым абзацем.",
+  feat_langlab_title: "Языковая лаборатория",
+  feat_langlab_desc:
+    "Практикуйте русскую лексику в историческом контексте с карточками и тестами.",
+  feat_quizzes_title: "Тесты на знания",
+  feat_quizzes_desc:
+    "Проверяйте понимание после каждой статьи вопросами с выбором ответа и на сопоставление.",
+
+  level_novice: "Новичок",
+  level_boyar: "Боярин",
+  level_voivode: "Воевода",
+  level_knyaz: "Князь",
+  level_tsar: "Царь",
+  level_emperor: "Император",
+  level_legend: "Легенда",
+
+  hud_streak: "серия",
+  hud_total_xp: "всего опыта",
+  hud_day_streak: "дней подряд",
+  hud_topics_done: "тем пройдено",
+  hud_lv: "Ур.",
+  hud_in: "через",
+
+  levelup_title: "Новый уровень!",
+  levelup_subtitle: "Теперь вы",
+
+  epochs_page_title: "Эпохи истории России",
+  epochs_page_subtitle: "1200 лет истории, разделённые на 18 тематических эпох",
+
+  epoch_not_found: "Эпоха не найдена",
+  all_epochs: "Все эпохи",
+  total_topics: "Всего тем",
+  ui_completed: "Завершено",
+  max_xp: "Макс. опыт",
+  about_epoch: "Об этой эпохе",
+  topics_label: "Темы",
+  available: "доступно",
+  read_article: "Читать статью",
+
+  breadcrumb_home: "Главная",
+  breadcrumb_epochs: "Эпохи",
+  xp_on_completion: "+10 опыта за прохождение",
+  bilingual_mode: "Двуязычный режим",
+  toggle_on: "ВКЛ",
+  toggle_off: "ВЫКЛ",
+  ai_summary: "ИИ-резюме",
+  mark_as_read: "Отметить прочитанным (+10 опыта)",
+  article_completed: "Статья завершена!",
+  xp_earned_10: "+10 опыта получено",
+  test_knowledge: "Проверьте знания (+25 опыта)",
+  article_key_dates: "Ключевые даты",
+  russian_vocabulary: "Русская лексика",
+  your_progress: "Ваш прогресс",
+  article_related: "Связанные темы",
+  article_not_found: "Статья не найдена",
+  back_to_epochs: "Назад к эпохам",
+
+  quiz_time: "Время теста",
+  quiz_questions: "вопросов",
+  quiz_perfect: "Идеальный результат!",
+  quiz_complete: "Тест завершён!",
+  quiz_correct_answers: "правильных ответов",
+  quiz_continue: "Продолжить обучение",
+  quiz_correct_fb: "Верно! Отлично.",
+  quiz_wrong_fb: "Правильный ответ:",
+  quiz_next: "Далее",
+  quiz_finish: "Завершить",
+
+  auth_welcome_back: "С возвращением",
+  auth_join: "Присоединиться к RusHistory",
+  auth_login_sub: "Продолжите своё историческое путешествие",
+  auth_register_sub: "Начните своё путешествие по истории России",
+  auth_signin: "Войти",
+  auth_register_tab: "Регистрация",
+  auth_username: "Имя пользователя",
+  auth_email_ph: "Электронная почта",
+  auth_password_ph: "Пароль",
+  auth_processing: "Обработка...",
+  auth_create_account: "Создать аккаунт",
+  auth_new_here: "Впервые в RusHistory?",
+  auth_create_link: "Создать аккаунт",
+
+  timeline_page_title: "Хронология истории России",
+  timeline_page_subtitle:
+    "С 862 года до наших дней — перетаскивайте, чтобы исследовать 1200 лет истории",
+  timeline_epochs: "Эпохи",
+
+  lb_title: "Рейтинг",
+  lb_subtitle: "Лучшие знатоки истории со всего мира",
+  lb_weekly: "За неделю",
+  lb_alltime: "За всё время",
+  lb_you: "Вы",
+
+  about_hero_title: "О проекте",
+  about_hero_sub:
+    "Делаем 1200 лет истории России доступными для учащихся по всему миру",
+  about_mission_title: "Наша миссия",
+  about_mission_p1:
+    "RusHistory создан с простой, но амбициозной целью: оживить историю России для учащихся всего мира. Мы верим, что историю лучше всего понимать через захватывающие истории, визуальное богатство и активное вовлечение — а не через сухие учебники.",
+  about_mission_p2:
+    "Сочетая глубину академической науки с увлекательностью современного образовательного дизайна, мы создали платформу, где 16-летний подросток в Каире или Шанхае может искренне увлечься Куликовской битвой, блокадой Ленинграда или историческим полётом Юрия Гагарина.",
+  about_team_title: "Наша команда",
+  about_team_sub: "Студенты МАДИ · Группа 1бИВТн2",
+  about_sources_title: "Академические источники",
+  about_sources_intro:
+    "Весь исторический контент основан на проверенной российской академической науке:",
+  about_made_with: "Сделано с",
+  about_for_lovers: "для любителей истории по всему миру · Университет МАДИ · 2024",
+  about_university: "МАДИ",
+  about_group: "Группа 1бИВТн2",
+
+  role_lead_dev: "Ведущий разработчик и архитектура",
+  role_lead_dev_desc:
+    "Отвечает за техническую архитектуру, серверные системы и общую разработку платформы.",
+  role_frontend: "Фронтенд-разработка и UI-дизайн",
+  role_frontend_desc:
+    "Создал визуальный стиль, дизайн интерфейса и интерактивные компоненты фронтенда.",
+  role_content: "Исследование контента и историческая проверка",
+  role_content_desc:
+    "Исследовал и проверял весь исторический контент по первичным российским академическим источникам.",
+
+  source_karamzin: "История государства Российского",
+  source_solovyov: "История России с древнейших времён",
+  source_klyuchevsky: "Курс русской истории",
+  source_kostomarov: "Русская история в жизнеописаниях её главнейших деятелей",
+
+  ll_badge: "Языковая лаборатория",
+  ll_title: "Практика русского языка",
+  ll_subtitle: "Осваивайте русскую лексику в историческом контексте",
+  ll_total_words: "Всего слов",
+  ll_correct: "Верно",
+  ll_xp_earned: "Опыта получено",
+  ll_flashcards: "Карточки",
+  ll_quiz: "Тест",
+  ll_card: "Карточка",
+  ll_of: "из",
+  ll_translation: "Перевод",
+  ll_click_reveal: "Нажмите, чтобы увидеть перевод",
+  ll_prev: "Назад",
+  ll_next: "Далее",
+  ll_what_means: "Что означает это слово?",
+  ll_correct_xp: "Верно! +5 опыта",
+  ll_answer_was: "Правильный ответ:",
+
+  difficulty_beginner: "Начальный",
+  difficulty_intermediate: "Средний",
+  difficulty_advanced: "Продвинутый",
+
+  ui_loading: "Загрузка...",
+  ui_language: "Язык",
+
+  lang_ru: "Русский",
+  lang_en: "English",
+  lang_ar: "العربية",
+  lang_zh: "中文",
+};
+
+const ar: Translations = {
+  nav_home: "الرئيسية",
+  nav_timeline: "الجدول الزمني",
+  nav_epochs: "العصور",
+  nav_language_lab: "مختبر اللغة",
+  nav_leaderboard: "المتصدرون",
+  nav_about: "حول",
+  nav_login: "تسجيل الدخول",
+  nav_register: "التسجيل",
+
+  hero_eyebrow: "أكثر من 220 موضوعًا تاريخيًا · 18 عصرًا · 4 لغات",
+  hero_title_pre: "اكتشف",
+  hero_title_highlight: "تاريخ روسيا",
+  hero_title_post: "العظيم",
+  hero_subtitle:
+    "رحلة تعليمية غامرة عبر 1200 عام من تاريخ روسيا — مع تعلّم اللغة المدمج.",
+  hero_btn_start: "ابدأ التعلم",
+  hero_btn_timeline: "استكشف الجدول الزمني",
+  hero_scroll: "استكشف",
+
+  stat_topics: "موضوع تاريخي",
+  stat_epochs: "عصور",
+  stat_epochs_covered: "العصور المغطاة",
+  stat_years: "عام من التاريخ",
+  stat_languages: "لغات",
+
+  home_epochs_badge: "18 عصرًا",
+  home_epochs_title: "استكشف تاريخ روسيا",
+  home_epochs_subtitle:
+    "من تأسيس روس كييف إلى روسيا الحديثة — 1200 عام من الحضارة والصراع والثقافة.",
+  home_view_all_epochs: "عرض كل العصور الـ18",
+  ui_explore: "استكشف",
+  ui_topics: "مواضيع",
+
+  featured_badge: "مميز",
+  featured_title: "المواضيع الشائعة",
+  featured_subtitle: "انغمس في أكثر اللحظات إثارة في تاريخ روسيا",
+
+  timeline_badge: "تفاعلي",
+  timeline_home_title: "الجدول الزمني للتاريخ",
+  timeline_home_subtitle: "من عام 862 ميلادي حتى اليوم — 1200 عام من تاريخ روسيا",
+
+  gamification_badge: "التلعيب",
+  gamification_title: "تعلّم كما لم يحدث من قبل",
+  gamification_subtitle:
+    "يحوّل RusHistory الدراسة التاريخية الجادة إلى مغامرة شيقة",
+  gamification_cta: "ابدأ رحلتك",
+  level_system_title: "نظام المستويات",
+  level_system_subtitle: "ارتقِ في رتب تاريخ روسيا",
+
+  feat_xp_title: "اكسب نقاط الخبرة",
+  feat_xp_desc:
+    "اقرأ المقالات وأكمل الاختبارات لكسب نقاط الخبرة. ارتقِ من مبتدئ إلى أسطورة.",
+  feat_streak_title: "السلاسل اليومية",
+  feat_streak_desc:
+    "حافظ على سلسلة تعلّمك. سجّل الدخول يوميًا وأكمل الأنشطة للحفاظ على شعلتك.",
+  feat_achievements_title: "الإنجازات",
+  feat_achievements_desc:
+    'أكثر من 20 شارة فريدة لفتحها. من "الخطوة الأولى" إلى "سيد التاريخ" — اجمعها كلها.',
+  feat_bilingual_title: "الوضع ثنائي اللغة",
+  feat_bilingual_desc:
+    "اقرأ المقالات بالإنجليزية أو العربية أو الصينية مع نص روسي أسفل كل فقرة.",
+  feat_langlab_title: "مختبر اللغة",
+  feat_langlab_desc:
+    "تدرّب على المفردات الروسية من السياق التاريخي عبر البطاقات والاختبارات.",
+  feat_quizzes_title: "اختبارات المعرفة",
+  feat_quizzes_desc:
+    "اختبر فهمك بعد كل مقال بأسئلة الاختيار من متعدد والمطابقة.",
+
+  level_novice: "مبتدئ",
+  level_boyar: "بويار",
+  level_voivode: "قائد",
+  level_knyaz: "أمير",
+  level_tsar: "قيصر",
+  level_emperor: "إمبراطور",
+  level_legend: "أسطورة",
+
+  hud_streak: "سلسلة",
+  hud_total_xp: "إجمالي الخبرة",
+  hud_day_streak: "أيام متتالية",
+  hud_topics_done: "مواضيع مكتملة",
+  hud_lv: "م.",
+  hud_in: "بعد",
+
+  levelup_title: "ترقية المستوى!",
+  levelup_subtitle: "أنت الآن",
+
+  epochs_page_title: "عصور تاريخ روسيا",
+  epochs_page_subtitle: "1200 عام من التاريخ منظمة في 18 عصرًا موضوعيًا",
+
+  epoch_not_found: "العصر غير موجود",
+  all_epochs: "كل العصور",
+  total_topics: "إجمالي المواضيع",
+  ui_completed: "مكتمل",
+  max_xp: "أقصى خبرة",
+  about_epoch: "حول هذا العصر",
+  topics_label: "المواضيع",
+  available: "متاح",
+  read_article: "اقرأ المقال",
+
+  breadcrumb_home: "الرئيسية",
+  breadcrumb_epochs: "العصور",
+  xp_on_completion: "+10 خبرة عند الإكمال",
+  bilingual_mode: "الوضع ثنائي اللغة",
+  toggle_on: "تشغيل",
+  toggle_off: "إيقاف",
+  ai_summary: "ملخص الذكاء الاصطناعي",
+  mark_as_read: "وضع علامة كمقروء (+10 خبرة)",
+  article_completed: "اكتمل المقال!",
+  xp_earned_10: "+10 خبرة مكتسبة",
+  test_knowledge: "اختبر معلوماتك (+25 خبرة)",
+  article_key_dates: "التواريخ الرئيسية",
+  russian_vocabulary: "المفردات الروسية",
+  your_progress: "تقدّمك",
+  article_related: "مواضيع ذات صلة",
+  article_not_found: "المقال غير موجود",
+  back_to_epochs: "العودة إلى العصور",
+
+  quiz_time: "وقت الاختبار",
+  quiz_questions: "أسئلة",
+  quiz_perfect: "نتيجة مثالية!",
+  quiz_complete: "اكتمل الاختبار!",
+  quiz_correct_answers: "إجابات صحيحة",
+  quiz_continue: "متابعة التعلم",
+  quiz_correct_fb: "صحيح! أحسنت.",
+  quiz_wrong_fb: "الإجابة الصحيحة كانت:",
+  quiz_next: "التالي",
+  quiz_finish: "إنهاء",
+
+  auth_welcome_back: "مرحبًا بعودتك",
+  auth_join: "انضم إلى RusHistory",
+  auth_login_sub: "واصل رحلتك التاريخية",
+  auth_register_sub: "ابدأ رحلتك عبر تاريخ روسيا",
+  auth_signin: "تسجيل الدخول",
+  auth_register_tab: "التسجيل",
+  auth_username: "اسم المستخدم",
+  auth_email_ph: "البريد الإلكتروني",
+  auth_password_ph: "كلمة المرور",
+  auth_processing: "جارٍ المعالجة...",
+  auth_create_account: "إنشاء حساب",
+  auth_new_here: "جديد في RusHistory؟",
+  auth_create_link: "أنشئ حسابًا",
+
+  timeline_page_title: "الجدول الزمني لتاريخ روسيا",
+  timeline_page_subtitle:
+    "من عام 862 ميلادي حتى اليوم — اسحب لاستكشاف 1200 عام من التاريخ",
+  timeline_epochs: "العصور",
+
+  lb_title: "المتصدرون",
+  lb_subtitle: "أفضل متعلمي التاريخ من جميع أنحاء العالم",
+  lb_weekly: "هذا الأسبوع",
+  lb_alltime: "كل الأوقات",
+  lb_you: "أنت",
+
+  about_hero_title: "حول المشروع",
+  about_hero_sub:
+    "نجعل 1200 عام من تاريخ روسيا في متناول المتعلمين حول العالم",
+  about_mission_title: "مهمتنا",
+  about_mission_p1:
+    "أُنشئ RusHistory بهدف بسيط لكنه طموح: إحياء تاريخ روسيا للمتعلمين الدوليين. نؤمن بأن التاريخ يُفهم على أفضل وجه من خلال السرد الغامر والثراء البصري والمشاركة الفعّالة — لا من خلال الكتب المدرسية الجافة.",
+  about_mission_p2:
+    "من خلال الجمع بين عمق البحث الأكاديمي وجاذبية تصميم التعليم الحديث، بنينا منصة يمكن فيها لمراهق في السادسة عشرة في القاهرة أو شنغهاي أن يشعر بحماس حقيقي للتعرف على معركة كوليكوفو أو حصار لينينغراد أو رحلة يوري غاغارين التاريخية.",
+  about_team_title: "فريقنا",
+  about_team_sub: "طلاب MADI · المجموعة 1bIVTn2",
+  about_sources_title: "المصادر الأكاديمية",
+  about_sources_intro:
+    "يستند كل المحتوى التاريخي إلى بحث أكاديمي روسي موثّق:",
+  about_made_with: "صُنع بـ",
+  about_for_lovers: "لمحبي التاريخ حول العالم · جامعة MADI · 2024",
+  about_university: "MADI",
+  about_group: "المجموعة 1bIVTn2",
+
+  role_lead_dev: "المطوّر الرئيسي والبنية المعمارية",
+  role_lead_dev_desc:
+    "مسؤول عن البنية التقنية وأنظمة الخادم وتطوير المنصة بشكل عام.",
+  role_frontend: "تطوير الواجهة الأمامية وتصميم الواجهة",
+  role_frontend_desc:
+    "صمّم الهوية البصرية وتصميم واجهة المستخدم ومكونات الواجهة التفاعلية.",
+  role_content: "بحث المحتوى والتحقق التاريخي",
+  role_content_desc:
+    "بحث وتحقق من كل المحتوى التاريخي باستخدام مصادر أكاديمية روسية أولية.",
+
+  source_karamzin: "تاريخ الدولة الروسية",
+  source_solovyov: "تاريخ روسيا منذ العصور القديمة",
+  source_klyuchevsky: "دورة في التاريخ الروسي",
+  source_kostomarov: "التاريخ الروسي في سير أبرز شخصياته",
+
+  ll_badge: "مختبر اللغة",
+  ll_title: "ممارسة اللغة الروسية",
+  ll_subtitle: "أتقن المفردات الروسية من السياق التاريخي",
+  ll_total_words: "إجمالي الكلمات",
+  ll_correct: "صحيح",
+  ll_xp_earned: "الخبرة المكتسبة",
+  ll_flashcards: "البطاقات",
+  ll_quiz: "اختبار",
+  ll_card: "بطاقة",
+  ll_of: "من",
+  ll_translation: "الترجمة",
+  ll_click_reveal: "انقر لكشف الترجمة",
+  ll_prev: "السابق",
+  ll_next: "التالي",
+  ll_what_means: "ماذا تعني هذه الكلمة؟",
+  ll_correct_xp: "صحيح! +5 خبرة",
+  ll_answer_was: "الإجابة كانت:",
+
+  difficulty_beginner: "مبتدئ",
+  difficulty_intermediate: "متوسط",
+  difficulty_advanced: "متقدم",
+
+  ui_loading: "جارٍ التحميل...",
+  ui_language: "اللغة",
+
+  lang_ru: "Русский",
+  lang_en: "English",
+  lang_ar: "العربية",
+  lang_zh: "中文",
+};
+
+const zh: Translations = {
+  nav_home: "首页",
+  nav_timeline: "时间线",
+  nav_epochs: "历史时代",
+  nav_language_lab: "语言实验室",
+  nav_leaderboard: "排行榜",
+  nav_about: "关于我们",
+  nav_login: "登录",
+  nav_register: "注册",
+
+  hero_eyebrow: "220+ 历史主题 · 18 个时代 · 4 种语言",
+  hero_title_pre: "探索",
+  hero_title_highlight: "俄罗斯",
+  hero_title_post: "的壮阔历史",
+  hero_subtitle:
+    "穿越俄罗斯 1200 年历史的沉浸式教育之旅——内置语言学习功能。",
+  hero_btn_start: "开始学习",
+  hero_btn_timeline: "探索时间线",
+  hero_scroll: "向下探索",
+
+  stat_topics: "历史主题",
+  stat_epochs: "个时代",
+  stat_epochs_covered: "涵盖时代",
+  stat_years: "年历史",
+  stat_languages: "种语言",
+
+  home_epochs_badge: "18 个时代",
+  home_epochs_title: "探索俄罗斯历史",
+  home_epochs_subtitle:
+    "从基辅罗斯的建立到现代俄罗斯——1200 年的文明、冲突与文化。",
+  home_view_all_epochs: "查看全部 18 个时代",
+  ui_explore: "探索",
+  ui_topics: "个主题",
+
+  featured_badge: "精选",
+  featured_title: "热门主题",
+  featured_subtitle: "深入了解俄罗斯历史中最引人入胜的时刻",
+
+  timeline_badge: "互动",
+  timeline_home_title: "历史时间线",
+  timeline_home_subtitle: "从公元 862 年至今——1200 年俄罗斯历史",
+
+  gamification_badge: "游戏化",
+  gamification_title: "前所未有的学习方式",
+  gamification_subtitle: "RusHistory 将严肃的历史学术变成引人入胜的冒险",
+  gamification_cta: "开启你的旅程",
+  level_system_title: "等级系统",
+  level_system_subtitle: "在俄罗斯历史的等级中不断攀升",
+
+  feat_xp_title: "赚取经验值",
+  feat_xp_desc:
+    "阅读文章并完成测验以赚取经验值。从新手升级到传奇。",
+  feat_streak_title: "每日连续打卡",
+  feat_streak_desc:
+    "保持你的学习连续记录。每天登录并完成活动以维持你的火焰。",
+  feat_achievements_title: "成就",
+  feat_achievements_desc:
+    '20+ 个独特徽章等待解锁。从"第一步"到"历史大师"——全部收集。',
+  feat_bilingual_title: "双语模式",
+  feat_bilingual_desc:
+    "用英语、阿拉伯语或中文阅读文章，每段下方附有俄语原文。",
+  feat_langlab_title: "语言实验室",
+  feat_langlab_desc:
+    "通过抽认卡和测验在历史语境中练习俄语词汇。",
+  feat_quizzes_title: "知识测验",
+  feat_quizzes_desc:
+    "每篇文章后通过选择题和配对题测试你的理解。",
+
+  level_novice: "新手",
+  level_boyar: "贵族",
+  level_voivode: "军政官",
+  level_knyaz: "公爵",
+  level_tsar: "沙皇",
+  level_emperor: "皇帝",
+  level_legend: "传奇",
+
+  hud_streak: "连续",
+  hud_total_xp: "总经验",
+  hud_day_streak: "天连续",
+  hud_topics_done: "已完成主题",
+  hud_lv: "等级",
+  hud_in: "还差",
+
+  levelup_title: "升级！",
+  levelup_subtitle: "你现在是",
+
+  epochs_page_title: "俄罗斯历史时代",
+  epochs_page_subtitle: "1200 年历史，划分为 18 个主题时代",
+
+  epoch_not_found: "未找到该时代",
+  all_epochs: "所有时代",
+  total_topics: "主题总数",
+  ui_completed: "已完成",
+  max_xp: "最高经验",
+  about_epoch: "关于这个时代",
+  topics_label: "主题",
+  available: "可用",
+  read_article: "阅读文章",
+
+  breadcrumb_home: "首页",
+  breadcrumb_epochs: "时代",
+  xp_on_completion: "完成可得 +10 经验",
+  bilingual_mode: "双语模式",
+  toggle_on: "开",
+  toggle_off: "关",
+  ai_summary: "AI 摘要",
+  mark_as_read: "标记为已读 (+10 经验)",
+  article_completed: "文章已完成！",
+  xp_earned_10: "获得 +10 经验",
+  test_knowledge: "测试你的知识 (+25 经验)",
+  article_key_dates: "关键日期",
+  russian_vocabulary: "俄语词汇",
+  your_progress: "你的进度",
+  article_related: "相关主题",
+  article_not_found: "未找到文章",
+  back_to_epochs: "返回时代",
+
+  quiz_time: "测验时间",
+  quiz_questions: "道题",
+  quiz_perfect: "满分！",
+  quiz_complete: "测验完成！",
+  quiz_correct_answers: "道答对",
+  quiz_continue: "继续学习",
+  quiz_correct_fb: "正确！做得好。",
+  quiz_wrong_fb: "正确答案是：",
+  quiz_next: "下一题",
+  quiz_finish: "完成",
+
+  auth_welcome_back: "欢迎回来",
+  auth_join: "加入 RusHistory",
+  auth_login_sub: "继续你的历史之旅",
+  auth_register_sub: "开启你的俄罗斯历史之旅",
+  auth_signin: "登录",
+  auth_register_tab: "注册",
+  auth_username: "用户名",
+  auth_email_ph: "电子邮件地址",
+  auth_password_ph: "密码",
+  auth_processing: "处理中...",
+  auth_create_account: "创建账户",
+  auth_new_here: "初次使用 RusHistory？",
+  auth_create_link: "创建账户",
+
+  timeline_page_title: "俄罗斯历史时间线",
+  timeline_page_subtitle: "从公元 862 年至今——拖动以探索 1200 年历史",
+  timeline_epochs: "时代",
+
+  lb_title: "排行榜",
+  lb_subtitle: "来自世界各地的顶尖历史学习者",
+  lb_weekly: "本周",
+  lb_alltime: "总榜",
+  lb_you: "你",
+
+  about_hero_title: "关于",
+  about_hero_sub: "让全世界的学习者都能了解俄罗斯 1200 年的历史",
+  about_mission_title: "我们的使命",
+  about_mission_p1:
+    "RusHistory 的创建有一个简单而宏大的目标：让俄罗斯历史在国际学习者面前鲜活起来。我们相信，历史最好通过沉浸式叙事、丰富的视觉和主动参与来理解，而不是枯燥的教科书。",
+  about_mission_p2:
+    "通过将学术研究的深度与现代教育科技设计的吸引力相结合，我们打造了一个平台，让开罗或上海的 16 岁少年也能真正兴致勃勃地了解库利科沃战役、列宁格勒围城战或尤里·加加林的历史性飞行。",
+  about_team_title: "我们的团队",
+  about_team_sub: "MADI 学生 · 1bIVTn2 班",
+  about_sources_title: "学术来源",
+  about_sources_intro: "所有历史内容均基于经过验证的俄罗斯学术研究：",
+  about_made_with: "用",
+  about_for_lovers: "为全世界的历史爱好者打造 · MADI 大学 · 2024",
+  about_university: "MADI",
+  about_group: "1bIVTn2 班",
+
+  role_lead_dev: "首席开发与架构",
+  role_lead_dev_desc: "负责技术架构、后端系统和整体平台开发。",
+  role_frontend: "前端开发与 UI 设计",
+  role_frontend_desc: "打造视觉形象、用户界面设计和交互式前端组件。",
+  role_content: "内容研究与历史核实",
+  role_content_desc: "使用俄罗斯第一手学术来源研究并核实所有历史内容。",
+
+  source_karamzin: "俄罗斯国家史",
+  source_solovyov: "古代以来的俄罗斯史",
+  source_klyuchevsky: "俄罗斯历史教程",
+  source_kostomarov: "以主要人物传记呈现的俄罗斯历史",
+
+  ll_badge: "语言实验室",
+  ll_title: "俄语练习",
+  ll_subtitle: "在历史语境中掌握俄语词汇",
+  ll_total_words: "单词总数",
+  ll_correct: "正确",
+  ll_xp_earned: "已获经验",
+  ll_flashcards: "抽认卡",
+  ll_quiz: "测验",
+  ll_card: "卡片",
+  ll_of: "/",
+  ll_translation: "翻译",
+  ll_click_reveal: "点击显示翻译",
+  ll_prev: "上一个",
+  ll_next: "下一个",
+  ll_what_means: "这个词是什么意思？",
+  ll_correct_xp: "正确！+5 经验",
+  ll_answer_was: "答案是：",
+
+  difficulty_beginner: "初级",
+  difficulty_intermediate: "中级",
+  difficulty_advanced: "高级",
+
+  ui_loading: "加载中...",
+  ui_language: "语言",
+
+  lang_ru: "Русский",
+  lang_en: "English",
+  lang_ar: "العربية",
+  lang_zh: "中文",
+};
+
+const translations: Record<Language, Translations> = { en, ru, ar, zh };
 
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: keyof Translations) => string;
+  t: (key: string) => string;
+  /** Pick the right string from a localized content object. */
+  localize: (obj: Localized | undefined) => string;
   isRTL: boolean;
   showRussianSubtitles: boolean;
 }
@@ -713,24 +911,39 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
   undefined
 );
 
+function applyDir(lang: Language) {
+  if (typeof document === "undefined") return;
+  document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+  document.documentElement.lang = lang;
+}
+
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [language, setLanguageState] = useState<Language>(() => {
-    const saved = localStorage.getItem("app_language");
-    return (saved as Language) || "en";
+    const saved =
+      typeof localStorage !== "undefined"
+        ? localStorage.getItem("app_language")
+        : null;
+    const initial = (saved as Language) || "en";
+    applyDir(initial);
+    return initial;
   });
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
-    localStorage.setItem("app_language", lang);
-    // Set direction for RTL languages
-    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
-    document.documentElement.lang = lang;
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem("app_language", lang);
+    }
+    applyDir(lang);
   };
 
-  const t = (key: keyof Translations): string => {
-    return translations[language][key] || translations["en"][key] || key;
+  const t = (key: string): string =>
+    translations[language][key] ?? translations.en[key] ?? key;
+
+  const localize = (obj: Localized | undefined): string => {
+    if (!obj) return "";
+    return obj[language] ?? obj.en ?? obj.ru ?? "";
   };
 
   const isRTL = language === "ar";
@@ -738,7 +951,7 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({
 
   return (
     <LanguageContext.Provider
-      value={{ language, setLanguage, t, isRTL, showRussianSubtitles }}
+      value={{ language, setLanguage, t, localize, isRTL, showRussianSubtitles }}
     >
       {children}
     </LanguageContext.Provider>

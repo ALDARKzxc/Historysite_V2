@@ -1,40 +1,50 @@
-import { BookOpen, Github, Heart } from 'lucide-react';
+import { BookOpen, Heart } from 'lucide-react';
+import { useLanguage } from '@/LanguageContext';
 
 const TEAM = [
   {
     name: 'Gazaev Alikhan Abdullakhovich',
     nameRu: 'Газаев Алихан Абдуллахович',
-    role: 'Lead Developer & Architecture',
-    description: 'Responsible for the technical architecture, backend systems, and overall platform development.',
+    roleKey: 'role_lead_dev',
+    descKey: 'role_lead_dev_desc',
     initials: 'GA',
     color: '#2F5D9F',
   },
   {
     name: 'Murzin Matvey Vladimirovich',
     nameRu: 'Мурзин Матвей Владимирович',
-    role: 'Frontend Development & UI Design',
-    description: 'Crafted the visual identity, user interface design, and interactive frontend components.',
+    roleKey: 'role_frontend',
+    descKey: 'role_frontend_desc',
     initials: 'MM',
     color: '#C94B4B',
   },
   {
     name: 'Yakimenko Alexey Sergeevich',
     nameRu: 'Якименко Алексей Сергеевич',
-    role: 'Content Research & Historical Verification',
-    description: 'Researched and verified all historical content using primary Russian academic sources.',
+    roleKey: 'role_content',
+    descKey: 'role_content_desc',
     initials: 'YA',
     color: '#4A7C59',
   },
 ];
 
 const SOURCES = [
-  { author: 'N.M. Karamzin', work: 'History of the Russian State' },
-  { author: 'S.M. Solovyov', work: 'History of Russia from Ancient Times' },
-  { author: 'V.O. Klyuchevsky', work: 'Course of Russian History' },
-  { author: 'N.I. Kostomarov', work: 'Russian History in Biographies of Its Chief Figures' },
+  { author: 'N.M. Karamzin', workKey: 'source_karamzin' },
+  { author: 'S.M. Solovyov', workKey: 'source_solovyov' },
+  { author: 'V.O. Klyuchevsky', workKey: 'source_klyuchevsky' },
+  { author: 'N.I. Kostomarov', workKey: 'source_kostomarov' },
 ];
 
 export default function AboutPage() {
+  const { t } = useLanguage();
+
+  const STATS = [
+    { value: '220+', label: t('stat_topics') },
+    { value: '18', label: t('stat_epochs_covered') },
+    { value: '4', label: t('stat_languages') },
+    { value: '1,200', label: t('stat_years') },
+  ];
+
   return (
     <main className="min-h-screen bg-[#F5F7FA] pt-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -44,10 +54,10 @@ export default function AboutPage() {
             <BookOpen className="w-10 h-10 text-white" />
           </div>
           <h1 className="font-display text-5xl md:text-6xl font-black text-[#2A2A2A] mb-4">
-            About <span className="text-[#C94B4B]">RusHistory</span>
+            {t('about_hero_title')} <span className="text-[#C94B4B]">RusHistory</span>
           </h1>
           <p className="text-[#7A8499] font-ui text-xl max-w-2xl mx-auto leading-relaxed">
-            Making 1,200 years of Russian history accessible to learners around the world
+            {t('about_hero_sub')}
           </p>
         </div>
 
@@ -56,24 +66,19 @@ export default function AboutPage() {
           <div className="flex gap-4 mb-6">
             <div className="w-1 bg-[#2F5D9F] rounded-full flex-shrink-0" />
             <div>
-              <h2 className="font-display text-3xl font-bold text-[#2A2A2A] mb-4">Our Mission</h2>
+              <h2 className="font-display text-3xl font-bold text-[#2A2A2A] mb-4">{t('about_mission_title')}</h2>
               <p className="text-[#2A2A2A] font-ui text-lg leading-relaxed mb-4">
-                RusHistory was created with a simple but ambitious goal: to make Russian history come alive for international learners. We believe that history is best understood through immersive storytelling, visual richness, and active engagement — not through dry textbooks.
+                {t('about_mission_p1')}
               </p>
               <p className="text-[#7A8499] font-ui leading-relaxed">
-                By combining the depth of academic scholarship with the engagement of modern ed-tech design, we've built a platform where a 16-year-old in Cairo or Shanghai can feel genuinely excited to learn about the Battle of Kulikovo, the Siege of Leningrad, or Yuri Gagarin's historic flight.
+                {t('about_mission_p2')}
               </p>
             </div>
           </div>
 
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-8 border-t border-[#EEF1F7]">
-            {[
-              { value: '220+', label: 'Historical Topics' },
-              { value: '18', label: 'Epochs Covered' },
-              { value: '4', label: 'Languages' },
-              { value: '1,200', label: 'Years of History' },
-            ].map(stat => (
+            {STATS.map(stat => (
               <div key={stat.label} className="text-center bg-[#F5F7FA] rounded-xl p-4">
                 <div className="font-mono-accent text-2xl font-bold text-[#2F5D9F]">{stat.value}</div>
                 <div className="text-xs text-[#7A8499] font-ui mt-1">{stat.label}</div>
@@ -85,8 +90,8 @@ export default function AboutPage() {
         {/* Team */}
         <div className="mb-12">
           <div className="text-center mb-8">
-            <h2 className="font-display text-3xl font-bold text-[#2A2A2A] mb-2">Our Team</h2>
-            <p className="text-[#7A8499] font-ui">Students of MADI · Group 1bIVTn2</p>
+            <h2 className="font-display text-3xl font-bold text-[#2A2A2A] mb-2">{t('about_team_title')}</h2>
+            <p className="text-[#7A8499] font-ui">{t('about_team_sub')}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -111,10 +116,10 @@ export default function AboutPage() {
                   className="inline-block px-3 py-1 rounded-full text-xs font-medium font-ui text-white mb-3"
                   style={{ backgroundColor: member.color + 'CC' }}
                 >
-                  {member.role}
+                  {t(member.roleKey)}
                 </div>
 
-                <p className="text-[#7A8499] text-sm font-ui leading-relaxed">{member.description}</p>
+                <p className="text-[#7A8499] text-sm font-ui leading-relaxed">{t(member.descKey)}</p>
 
                 {/* University */}
                 <div className="mt-4 pt-4 border-t border-[#EEF1F7] flex items-center gap-2">
@@ -122,8 +127,8 @@ export default function AboutPage() {
                     <BookOpen className="w-3 h-3 text-[#7A8499]" />
                   </div>
                   <div>
-                    <div className="text-xs font-medium text-[#2A2A2A] font-ui">MADI</div>
-                    <div className="text-[10px] text-[#7A8499] font-ui">Group 1bIVTn2</div>
+                    <div className="text-xs font-medium text-[#2A2A2A] font-ui">{t('about_university')}</div>
+                    <div className="text-[10px] text-[#7A8499] font-ui">{t('about_group')}</div>
                   </div>
                 </div>
               </div>
@@ -133,9 +138,9 @@ export default function AboutPage() {
 
         {/* Academic Sources */}
         <div className="bg-white rounded-2xl border border-[#EEF1F7] shadow-sm p-8 mb-8">
-          <h2 className="font-display text-2xl font-bold text-[#2A2A2A] mb-6">Academic Sources</h2>
+          <h2 className="font-display text-2xl font-bold text-[#2A2A2A] mb-6">{t('about_sources_title')}</h2>
           <p className="text-[#7A8499] font-ui mb-6">
-            All historical content is based on verified Russian academic scholarship:
+            {t('about_sources_intro')}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {SOURCES.map(source => (
@@ -145,7 +150,7 @@ export default function AboutPage() {
                 </div>
                 <div>
                   <div className="text-sm font-semibold text-[#2A2A2A] font-ui">{source.author}</div>
-                  <div className="text-xs text-[#7A8499] font-ui italic">{source.work}</div>
+                  <div className="text-xs text-[#7A8499] font-ui italic">{t(source.workKey)}</div>
                 </div>
               </div>
             ))}
@@ -154,9 +159,9 @@ export default function AboutPage() {
 
         {/* Footer note */}
         <div className="text-center text-[#7A8499] font-ui text-sm flex items-center justify-center gap-2">
-          <span>Made with</span>
+          <span>{t('about_made_with')}</span>
           <Heart className="w-4 h-4 text-[#C94B4B]" />
-          <span>for history lovers worldwide · MADI University · 2024</span>
+          <span>{t('about_for_lovers')}</span>
         </div>
       </div>
     </main>

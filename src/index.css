@@ -153,6 +153,16 @@
     }
   }
 
+  /* RTL support for Arabic */
+  [dir="rtl"] body,
+  [dir="rtl"] {
+    text-align: right;
+  }
+  [dir="rtl"] .font-mono-accent {
+    /* keep numbers/latin readable left-to-right inside RTL flow */
+    unicode-bidi: plaintext;
+  }
+
   @keyframes fadeInUp {
     from {
       opacity: 0;

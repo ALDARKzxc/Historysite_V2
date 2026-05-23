@@ -1,11 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { epochs } from '@/data/epochs';
-import { BookOpen, ArrowRight, Lock } from 'lucide-react';
+import { BookOpen, ArrowRight } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { useLanguage } from '@/LanguageContext';
 
 export default function EpochsPage() {
   const navigate = useNavigate();
   const { user } = useApp();
+  const { t, localize, showRussianSubtitles } = useLanguage();
 
   return (
     <main className="min-h-screen bg-[#F5F7FA] pt-20">
@@ -14,11 +16,11 @@ export default function EpochsPage() {
         <div className="mb-12">
           <div className="inline-flex items-center gap-2 bg-[#EEF1F7] rounded-full px-3 py-1 mb-4">
             <BookOpen className="w-3.5 h-3.5 text-[#2F5D9F]" />
-            <span className="text-xs font-medium text-[#2F5D9F] font-ui uppercase tracking-wide">18 Epochs</span>
+            <span className="text-xs font-medium text-[#2F5D9F] font-ui uppercase tracking-wide">{t('home_epochs_badge')}</span>
           </div>
-          <h1 className="font-display text-5xl font-bold text-[#2A2A2A] mb-3">Russian History Epochs</h1>
+          <h1 className="font-display text-5xl font-bold text-[#2A2A2A] mb-3">{t('epochs_page_title')}</h1>
           <p className="text-[#7A8499] font-ui text-lg">
-            1,200 years of history organized into 18 thematic epochs
+            {t('epochs_page_subtitle')}
           </p>
         </div>
 
@@ -49,22 +51,24 @@ export default function EpochsPage() {
                   />
                   <div className="absolute bottom-4 left-4">
                     <span className="font-mono-accent text-white/80 text-xs">{epoch.period}</span>
-                    <h3 className="font-display text-xl font-bold text-white mt-0.5">{epoch.title}</h3>
+                    <h3 className="font-display text-xl font-bold text-white mt-0.5">{localize(epoch.title)}</h3>
                   </div>
                   <div className="absolute top-3 right-3 bg-white/20 backdrop-blur-sm text-white text-xs font-mono-accent font-bold rounded-lg px-2.5 py-1">
-                    {epoch.topicCount} topics
+                    {epoch.topicCount} {t('ui_topics')}
                   </div>
                 </div>
 
                 {/* Card Body */}
                 <div className="p-4">
-                  <p className="text-[#7A8499] text-xs font-ui italic mb-3">{epoch.titleRu}</p>
-                  <p className="text-[#2A2A2A] text-sm font-ui line-clamp-2 mb-4">{epoch.description}</p>
+                  {showRussianSubtitles && (
+                    <p className="text-[#7A8499] text-xs font-ui italic mb-3">{epoch.title.ru}</p>
+                  )}
+                  <p className="text-[#2A2A2A] text-sm font-ui line-clamp-2 mb-4">{localize(epoch.description)}</p>
 
                   {/* Progress */}
                   <div className="mb-4">
                     <div className="flex justify-between text-xs text-[#7A8499] font-ui mb-1.5">
-                      <span>{completedCount}/{epoch.topicCount} topics</span>
+                      <span>{completedCount}/{epoch.topicCount} {t('ui_topics')}</span>
                       <span className="font-medium">{Math.round(progress)}%</span>
                     </div>
                     <div className="h-1.5 bg-[#EEF1F7] rounded-full overflow-hidden">
@@ -88,7 +92,7 @@ export default function EpochsPage() {
                       ))}
                     </div>
                     <div className="flex items-center gap-1 text-[#2F5D9F] text-sm font-medium font-ui opacity-0 group-hover:opacity-100 transition-opacity">
-                      Explore <ArrowRight className="w-3.5 h-3.5" />
+                      {t('ui_explore')} <ArrowRight className="w-3.5 h-3.5" />
                     </div>
                   </div>
                 </div>

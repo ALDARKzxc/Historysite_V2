@@ -2,12 +2,14 @@ import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { epochs, timelineEvents } from '@/data/epochs';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
+import { useLanguage } from '@/LanguageContext';
 
 export default function TimelinePage() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeEvent, setActiveEvent] = useState<number | null>(null);
   const [zoom, setZoom] = useState(1);
   const navigate = useNavigate();
+  const { t, localize } = useLanguage();
 
   const scroll = (dir: 'left' | 'right') => {
     if (!scrollRef.current) return;
@@ -23,10 +25,10 @@ export default function TimelinePage() {
         <div className="mb-10">
           <div className="inline-flex items-center gap-2 bg-[#EEF1F7] rounded-full px-3 py-1 mb-4">
             <span className="w-1.5 h-1.5 bg-[#2F5D9F] rounded-full" />
-            <span className="text-xs font-medium text-[#2F5D9F] font-ui uppercase tracking-wide">Interactive</span>
+            <span className="text-xs font-medium text-[#2F5D9F] font-ui uppercase tracking-wide">{t('timeline_badge')}</span>
           </div>
-          <h1 className="font-display text-5xl font-bold text-[#2A2A2A] mb-3">Russian History Timeline</h1>
-          <p className="text-[#7A8499] font-ui text-lg">862 AD to Present — Drag to explore 1,200 years of history</p>
+          <h1 className="font-display text-5xl font-bold text-[#2A2A2A] mb-3">{t('timeline_page_title')}</h1>
+          <p className="text-[#7A8499] font-ui text-lg">{t('timeline_page_subtitle')}</p>
         </div>
 
         {/* Controls */}
@@ -56,7 +58,7 @@ export default function TimelinePage() {
                 key={epoch.id}
                 className="flex-1"
                 style={{ backgroundColor: epoch.color + '66' }}
-                title={epoch.title}
+                title={localize(epoch.title)}
               />
             ))}
           </div>
@@ -132,9 +134,9 @@ export default function TimelinePage() {
                         isActive ? 'opacity-100 scale-105 shadow-xl' : 'opacity-90 scale-100'
                       }`} style={{ borderColor: color + '44' }}>
                         <div className="font-mono-accent text-sm font-bold mb-1" style={{ color }}>{event.year}</div>
-                        <div className="text-xs text-[#2A2A2A] font-ui font-medium max-w-[130px] text-center leading-tight">{event.title}</div>
+                        <div className="text-xs text-[#2A2A2A] font-ui font-medium max-w-[130px] text-center leading-tight">{localize(event.title)}</div>
                         {epoch && (
-                          <div className="text-[10px] text-[#7A8499] font-ui text-center mt-1">{epoch.title}</div>
+                          <div className="text-[10px] text-[#7A8499] font-ui text-center mt-1">{localize(epoch.title)}</div>
                         )}
                       </div>
                     </div>
@@ -156,7 +158,7 @@ export default function TimelinePage() {
 
         {/* Epoch Legend */}
         <div className="mt-8 bg-white rounded-2xl border border-[#EEF1F7] shadow-sm p-6">
-          <h3 className="font-display text-lg font-bold text-[#2A2A2A] mb-4">Epochs</h3>
+          <h3 className="font-display text-lg font-bold text-[#2A2A2A] mb-4">{t('timeline_epochs')}</h3>
           <div className="flex flex-wrap gap-3">
             {epochs.map(epoch => (
               <button
@@ -165,7 +167,7 @@ export default function TimelinePage() {
                 className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#F5F7FA] hover:bg-[#EEF1F7] transition-colors group"
               >
                 <div className="w-3 h-3 rounded-full" style={{ backgroundColor: epoch.color }} />
-                <span className="text-xs font-medium text-[#2A2A2A] font-ui group-hover:text-[#2F5D9F]">{epoch.title}</span>
+                <span className="text-xs font-medium text-[#2A2A2A] font-ui group-hover:text-[#2F5D9F]">{localize(epoch.title)}</span>
                 <span className="text-[10px] text-[#7A8499] font-mono-accent">{epoch.period}</span>
               </button>
             ))}

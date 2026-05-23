@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Languages, Zap, BookOpen, CheckCircle, Volume2 } from 'lucide-react';
+import { Languages, Zap, BookOpen, CheckCircle, Volume2 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { useLanguage } from '@/LanguageContext';
 import { epochs } from '@/data/epochs';
 import { getArticleData } from '@/data/articles';
 import QuizModule from '@/components/QuizModule';
@@ -9,7 +10,8 @@ import QuizModule from '@/components/QuizModule';
 export default function ArticlePage() {
   const { topicId } = useParams();
   const navigate = useNavigate();
-  const { language, bilingualMode, setBilingualMode, addXP, completeTopics, user } = useApp();
+  const { bilingualMode, setBilingualMode, addXP, completeTopics, user } = useApp();
+  const { t, localize, language, showRussianSubtitles } = useLanguage();
   const [articleRead, setArticleRead] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
   const [xpAwarded, setXpAwarded] = useState(false);
@@ -42,9 +44,9 @@ export default function ArticlePage() {
     return (
       <main className="min-h-screen bg-[#F5F7FA] pt-20 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-[#7A8499] font-ui text-lg">Article not found</p>
+          <p className="text-[#7A8499] font-ui text-lg">{t('article_not_found')}</p>
           <button onClick={() => navigate('/epochs')} className="mt-4 text-[#2F5D9F] font-ui hover:underline">
-            Back to Epochs
+            {t('back_to_epochs')}
           </button>
         </div>
       </main>
@@ -70,20 +72,22 @@ export default function ArticlePage() {
             <div className="bg-white rounded-2xl shadow-lg border border-[#EEF1F7] p-6 md:p-8 mb-6">
               {/* Breadcrumb */}
               <div className="flex items-center gap-2 text-sm text-[#7A8499] font-ui mb-4 flex-wrap">
-                <button onClick={() => navigate('/')} className="hover:text-[#2F5D9F] transition-colors">Home</button>
+                <button onClick={() => navigate('/')} className="hover:text-[#2F5D9F] transition-colors">{t('breadcrumb_home')}</button>
                 <span>/</span>
-                <button onClick={() => navigate('/epochs')} className="hover:text-[#2F5D9F] transition-colors">Epochs</button>
+                <button onClick={() => navigate('/epochs')} className="hover:text-[#2F5D9F] transition-colors">{t('breadcrumb_epochs')}</button>
                 <span>/</span>
-                <button onClick={() => navigate(`/epochs/${epoch.id}`)} className="hover:text-[#2F5D9F] transition-colors">{epoch.title}</button>
+                <button onClick={() => navigate(`/epochs/${epoch.id}`)} className="hover:text-[#2F5D9F] transition-colors">{localize(epoch.title)}</button>
                 <span>/</span>
-                <span className="text-[#2A2A2A]">{article.title}</span>
+                <span className="text-[#2A2A2A]">{localize(article.title)}</span>
               </div>
 
               {/* Title */}
               <h1 className="font-display text-3xl md:text-4xl font-black text-[#2A2A2A] leading-tight mb-2">
-                {article.title}
+                {localize(article.title)}
               </h1>
-              <p className="text-russian text-base mb-4">{article.titleRu}</p>
+              {showRussianSubtitles && (
+                <p className="text-russian text-base mb-4">{article.title.ru}</p>
+              )}
 
               {/* Meta */}
               <div className="flex flex-wrap items-center gap-3 mb-6">
@@ -92,22 +96,22 @@ export default function ArticlePage() {
                   style={{ backgroundColor: epoch.color }}
                 >
                   <BookOpen className="w-3 h-3" />
-                  {epoch.title}
+                  {localize(epoch.title)}
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#EEF1F7] rounded-full text-xs font-medium text-[#2F5D9F] font-ui">
                   <Zap className="w-3 h-3" />
-                  +10 XP on completion
+                  {t('xp_on_completion')}
                 </span>
                 {isCompleted && (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-100 rounded-full text-xs font-medium text-green-700 font-ui">
                     <CheckCircle className="w-3 h-3" />
-                    Completed
+                    {t('ui_completed')}
                   </span>
                 )}
               </div>
 
               {/* Bilingual Toggle */}
-              {language !== 'RU' && (
+              {showRussianSubtitles && (
                 <button
                   onClick={() => setBilingualMode(!bilingualMode)}
                   className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium font-ui transition-all btn-press ${
@@ -117,7 +121,7 @@ export default function ArticlePage() {
                   }`}
                 >
                   <Languages className="w-4 h-4" />
-                  Bilingual Mode {bilingualMode ? 'ON' : 'OFF'}
+                  {t('bilingual_mode')} {bilingualMode ? t('toggle_on') : t('toggle_off')}
                 </button>
               )}
             </div>
@@ -129,8 +133,8 @@ export default function ArticlePage() {
                   <span className="text-white text-xs font-bold">AI</span>
                 </div>
                 <div>
-                  <div className="text-xs font-medium text-[#2F5D9F] font-ui mb-1 uppercase tracking-wide">AI Summary</div>
-                  <p className="text-sm text-[#2A2A2A] font-ui leading-relaxed">{article.summary}</p>
+                  <div className="text-xs font-medium text-[#2F5D9F] font-ui mb-1 uppercase tracking-wide">{t('ai_summary')}</div>
+                  <p className="text-sm text-[#2A2A2A] font-ui leading-relaxed">{localize(article.summary)}</p>
                 </div>
               </div>
             </div>
@@ -139,22 +143,22 @@ export default function ArticlePage() {
             <div className="bg-white rounded-2xl shadow-sm border border-[#EEF1F7] p-6 md:p-8 mb-6">
               {/* Lead Paragraph */}
               <p className="text-lg font-ui text-[#2A2A2A] leading-relaxed mb-6 font-medium border-l-4 border-[#2F5D9F] pl-4">
-                {article.leadParagraph}
+                {localize(article.leadParagraph)}
               </p>
 
               {/* Sections */}
               {article.sections.map((section, i) => (
                 <div key={i} className="mb-8">
                   <h2 className="font-display text-xl md:text-2xl font-bold text-[#2A2A2A] mb-4">
-                    {section.heading}
+                    {localize(section.heading)}
                   </h2>
-                  <div className={bilingualMode && language !== 'RU' ? 'space-y-3' : ''}>
+                  <div className={bilingualMode && showRussianSubtitles ? 'space-y-3' : ''}>
                     <p className="text-[#2A2A2A] font-ui leading-relaxed text-base">
-                      {section.content}
+                      {localize(section.content)}
                     </p>
-                    {bilingualMode && language !== 'RU' && section.contentRu && (
+                    {bilingualMode && showRussianSubtitles && section.content.ru && (
                       <p className="text-russian pl-4 border-l-2 border-[#EEF1F7]">
-                        {section.contentRu}
+                        {section.content.ru}
                       </p>
                     )}
                   </div>
@@ -169,7 +173,7 @@ export default function ArticlePage() {
                     className="w-full py-3.5 bg-[#2F5D9F] text-white rounded-xl font-medium font-ui hover:bg-[#264d8a] transition-all btn-press shadow-lg shadow-[#2F5D9F]/20 flex items-center justify-center gap-2"
                   >
                     <CheckCircle className="w-5 h-5" />
-                    Mark as Read (+10 XP)
+                    {t('mark_as_read')}
                   </button>
                 </div>
               )}
@@ -179,8 +183,8 @@ export default function ArticlePage() {
                   <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3 mb-4">
                     <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
                     <div>
-                      <div className="text-sm font-semibold text-green-800 font-ui">Article completed!</div>
-                      <div className="text-xs text-green-600 font-ui">+10 XP earned</div>
+                      <div className="text-sm font-semibold text-green-800 font-ui">{t('article_completed')}</div>
+                      <div className="text-xs text-green-600 font-ui">{t('xp_earned_10')}</div>
                     </div>
                   </div>
                   <button
@@ -188,7 +192,7 @@ export default function ArticlePage() {
                     className="w-full py-3.5 bg-[#C94B4B] text-white rounded-xl font-medium font-ui hover:bg-[#b03d3d] transition-all btn-press shadow-lg shadow-[#C94B4B]/20 flex items-center justify-center gap-2"
                   >
                     <Zap className="w-5 h-5" />
-                    Test Your Knowledge (+25 XP)
+                    {t('test_knowledge')}
                   </button>
                 </div>
               )}
@@ -196,7 +200,7 @@ export default function ArticlePage() {
 
             {/* Quiz Module */}
             {showQuiz && (
-              <QuizModule topicId={topicId!} articleTitle={article.title} onComplete={() => setShowQuiz(false)} />
+              <QuizModule topicId={topicId!} articleTitle={localize(article.title)} onComplete={() => setShowQuiz(false)} />
             )}
 
             {/* Related Topics */}
@@ -209,13 +213,13 @@ export default function ArticlePage() {
             <div className="bg-white rounded-2xl border border-[#EEF1F7] shadow-sm p-5">
               <h3 className="font-display text-base font-bold text-[#2A2A2A] mb-4 flex items-center gap-2">
                 <span className="w-2 h-2 bg-[#C94B4B] rounded-full" />
-                Key Dates
+                {t('article_key_dates')}
               </h3>
               <div className="space-y-3">
                 {article.keyDates.map((date, i) => (
                   <div key={i} className="flex gap-3">
                     <div className="font-mono-accent text-xs font-bold text-[#2F5D9F] w-20 flex-shrink-0 pt-0.5">{date.year}</div>
-                    <div className="text-sm text-[#7A8499] font-ui leading-snug">{date.event}</div>
+                    <div className="text-sm text-[#7A8499] font-ui leading-snug">{localize(date.event)}</div>
                   </div>
                 ))}
               </div>
@@ -225,7 +229,7 @@ export default function ArticlePage() {
             <div className="bg-white rounded-2xl border border-[#EEF1F7] shadow-sm p-5">
               <h3 className="font-display text-base font-bold text-[#2A2A2A] mb-4 flex items-center gap-2">
                 <span className="w-2 h-2 bg-[#4A7C59] rounded-full" />
-                Russian Vocabulary
+                {t('russian_vocabulary')}
               </h3>
               <div className="space-y-3">
                 {article.vocabulary.map((word, i) => (
@@ -236,7 +240,7 @@ export default function ArticlePage() {
                         <Volume2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
-                    <div className="text-xs text-[#7A8499] font-ui">{word.translation}</div>
+                    <div className="text-xs text-[#7A8499] font-ui">{localize(word.translation)}</div>
                     <div className="text-xs font-mono-accent text-[#9AA3B2] mt-0.5">/{word.pronunciation}/</div>
                   </div>
                 ))}
@@ -245,9 +249,9 @@ export default function ArticlePage() {
 
             {/* Progress */}
             <div className="bg-white rounded-2xl border border-[#EEF1F7] shadow-sm p-5">
-              <h3 className="font-display text-base font-bold text-[#2A2A2A] mb-3">Your Progress</h3>
+              <h3 className="font-display text-base font-bold text-[#2A2A2A] mb-3">{t('your_progress')}</h3>
               <div className="text-sm text-[#7A8499] font-ui mb-2">
-                {epoch.title}
+                {localize(epoch.title)}
               </div>
               <div className="h-2 bg-[#EEF1F7] rounded-full overflow-hidden mb-2">
                 <div
@@ -259,7 +263,7 @@ export default function ArticlePage() {
                 />
               </div>
               <div className="text-xs text-[#7A8499] font-ui">
-                {user?.completedTopics.filter((t: string) => epoch.topics.some((ep: any) => ep.id === t)).length || 0} / {epoch.topicCount} topics
+                {user?.completedTopics.filter((tp: string) => epoch.topics.some((ep: any) => ep.id === tp)).length || 0} / {epoch.topicCount} {t('ui_topics')}
               </div>
             </div>
           </aside>
@@ -271,15 +275,16 @@ export default function ArticlePage() {
 
 function RelatedTopics({ topicIds }: { topicIds: string[] }) {
   const navigate = useNavigate();
+  const { t, localize, showRussianSubtitles } = useLanguage();
   const allTopics: any[] = [];
-  epochs.forEach(ep => ep.topics.forEach(t => allTopics.push({ ...t, epochColor: ep.color })));
-  const related = topicIds.map(id => allTopics.find(t => t.id === id)).filter(Boolean);
+  epochs.forEach(ep => ep.topics.forEach(tp => allTopics.push({ ...tp, epochColor: ep.color })));
+  const related = topicIds.map(id => allTopics.find(tp => tp.id === id)).filter(Boolean);
 
   if (related.length === 0) return null;
 
   return (
     <div className="bg-white rounded-2xl border border-[#EEF1F7] shadow-sm p-6 mb-8">
-      <h3 className="font-display text-xl font-bold text-[#2A2A2A] mb-4">Related Topics</h3>
+      <h3 className="font-display text-xl font-bold text-[#2A2A2A] mb-4">{t('article_related')}</h3>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {related.map(topic => (
           <div
@@ -295,8 +300,10 @@ function RelatedTopics({ topicIds }: { topicIds: string[] }) {
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
             </div>
             <div className="p-3">
-              <p className="text-sm font-semibold text-[#2A2A2A] font-ui line-clamp-2">{topic.title}</p>
-              <p className="text-xs text-[#7A8499] font-ui italic mt-0.5">{topic.titleRu}</p>
+              <p className="text-sm font-semibold text-[#2A2A2A] font-ui line-clamp-2">{localize(topic.title)}</p>
+              {showRussianSubtitles && (
+                <p className="text-xs text-[#7A8499] font-ui italic mt-0.5">{topic.title.ru}</p>
+              )}
             </div>
           </div>
         ))}

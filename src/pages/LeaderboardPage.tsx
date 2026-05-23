@@ -1,5 +1,16 @@
 import { useState } from 'react';
-import { Trophy, Flame, Zap, Globe } from 'lucide-react';
+import { Trophy, Flame, Zap } from 'lucide-react';
+import { useLanguage } from '@/LanguageContext';
+
+const LEVEL_KEYS: Record<string, string> = {
+  Novice: 'level_novice',
+  Boyar: 'level_boyar',
+  Voivode: 'level_voivode',
+  Knyaz: 'level_knyaz',
+  Tsar: 'level_tsar',
+  Emperor: 'level_emperor',
+  Legend: 'level_legend',
+};
 
 const LEADERBOARD_DATA = [
   { rank: 1, username: 'ИванГрозный', country: '🇷🇺', level: 'Emperor', levelNum: 5, xp: 2840, streak: 45, avatar: 'И' },
@@ -18,6 +29,7 @@ const MEDAL_COLORS = ['text-yellow-400', 'text-gray-400', 'text-amber-600'];
 
 export default function LeaderboardPage() {
   const [period, setPeriod] = useState<'weekly' | 'alltime'>('weekly');
+  const { t } = useLanguage();
 
   const sorted = [...LEADERBOARD_DATA].sort((a, b) => b.xp - a.xp);
 
@@ -29,8 +41,8 @@ export default function LeaderboardPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-400 rounded-2xl shadow-lg mb-4">
             <Trophy className="w-8 h-8 text-yellow-900" />
           </div>
-          <h1 className="font-display text-4xl font-bold text-[#2A2A2A] mb-2">Leaderboard</h1>
-          <p className="text-[#7A8499] font-ui">Top history learners from around the world</p>
+          <h1 className="font-display text-4xl font-bold text-[#2A2A2A] mb-2">{t('lb_title')}</h1>
+          <p className="text-[#7A8499] font-ui">{t('lb_subtitle')}</p>
         </div>
 
         {/* Toggle */}
@@ -45,7 +57,7 @@ export default function LeaderboardPage() {
                   : 'text-[#7A8499] hover:text-[#2A2A2A]'
               }`}
             >
-              {p === 'weekly' ? 'This Week' : 'All Time'}
+              {p === 'weekly' ? t('lb_weekly') : t('lb_alltime')}
             </button>
           ))}
         </div>
@@ -102,12 +114,12 @@ export default function LeaderboardPage() {
                       {user.username}
                     </span>
                     {isCurrentUser && (
-                      <span className="text-[10px] bg-[#2F5D9F] text-white rounded-full px-2 py-0.5 font-ui font-medium">You</span>
+                      <span className="text-[10px] bg-[#2F5D9F] text-white rounded-full px-2 py-0.5 font-ui font-medium">{t('lb_you')}</span>
                     )}
                     <span>{user.country}</span>
                   </div>
                   <div className="flex items-center gap-3 mt-0.5">
-                    <span className="text-xs text-[#7A8499] font-ui">{user.level}</span>
+                    <span className="text-xs text-[#7A8499] font-ui">{t(LEVEL_KEYS[user.level] || 'level_novice')}</span>
                     <div className="flex items-center gap-1">
                       <Flame className="w-3 h-3 text-orange-400" />
                       <span className="font-mono-accent text-xs text-[#7A8499]">{user.streak}</span>

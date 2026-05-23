@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
+import { LanguageProvider } from "@/LanguageContext";
 import { AppProvider } from "@/context/AppContext";
 import Navbar from "@/components/Navbar";
 import AuthModal from "@/components/AuthModal";
@@ -44,9 +45,11 @@ function AppContent() {
 
 function App() {
   return (
-    <AppProvider>
-      <AppContent />
-    </AppProvider>
+    <LanguageProvider>
+      <AppProvider>
+        <AppContent />
+      </AppProvider>
+    </LanguageProvider>
   );
 }
 

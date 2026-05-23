@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useLanguage, Language } from "../contexts/LanguageContext";
+import { useLanguage, Language } from "./LanguageContext";
 
 const FLAG_EMOJIS: Record<Language, string> = {
   ru: "🇷🇺",
