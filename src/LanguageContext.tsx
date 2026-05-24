@@ -17,6 +17,7 @@ const en: Translations = {
   nav_about: "About",
   nav_login: "Sign In",
   nav_register: "Register",
+  nav_logout: "Sign Out",
 
   // Hero
   hero_eyebrow: "220+ Historical Topics · 18 Epochs · 4 Languages",
@@ -174,6 +175,8 @@ const en: Translations = {
   auth_create_account: "Create Account",
   auth_new_here: "New to RusHistory?",
   auth_create_link: "Create an account",
+  auth_error_generic: "Something went wrong. Please try again.",
+  auth_check_email: "Account created! Check your email to confirm, then sign in.",
 
   // Timeline page
   timeline_page_title: "Russian History Timeline",
@@ -187,6 +190,7 @@ const en: Translations = {
   lb_weekly: "This Week",
   lb_alltime: "All Time",
   lb_you: "You",
+  lb_empty: "No learners yet — be the first to earn XP!",
 
   // About page
   about_hero_title: "About",
@@ -266,6 +270,7 @@ const ru: Translations = {
   nav_about: "О нас",
   nav_login: "Войти",
   nav_register: "Регистрация",
+  nav_logout: "Выйти",
 
   hero_eyebrow: "220+ исторических тем · 18 эпох · 4 языка",
   hero_title_pre: "Откройте",
@@ -410,6 +415,8 @@ const ru: Translations = {
   auth_create_account: "Создать аккаунт",
   auth_new_here: "Впервые в RusHistory?",
   auth_create_link: "Создать аккаунт",
+  auth_error_generic: "Что-то пошло не так. Попробуйте ещё раз.",
+  auth_check_email: "Аккаунт создан! Подтвердите почту по ссылке из письма, затем войдите.",
 
   timeline_page_title: "Хронология истории России",
   timeline_page_subtitle:
@@ -421,6 +428,7 @@ const ru: Translations = {
   lb_weekly: "За неделю",
   lb_alltime: "За всё время",
   lb_you: "Вы",
+  lb_empty: "Пока никого — станьте первым, кто заработает опыт!",
 
   about_hero_title: "О проекте",
   about_hero_sub:
@@ -495,6 +503,7 @@ const ar: Translations = {
   nav_about: "حول",
   nav_login: "تسجيل الدخول",
   nav_register: "التسجيل",
+  nav_logout: "تسجيل الخروج",
 
   hero_eyebrow: "أكثر من 220 موضوعًا تاريخيًا · 18 عصرًا · 4 لغات",
   hero_title_pre: "اكتشف",
@@ -638,6 +647,8 @@ const ar: Translations = {
   auth_create_account: "إنشاء حساب",
   auth_new_here: "جديد في RusHistory؟",
   auth_create_link: "أنشئ حسابًا",
+  auth_error_generic: "حدث خطأ ما. حاول مرة أخرى.",
+  auth_check_email: "تم إنشاء الحساب! تحقق من بريدك لتأكيد الحساب، ثم سجّل الدخول.",
 
   timeline_page_title: "الجدول الزمني لتاريخ روسيا",
   timeline_page_subtitle:
@@ -649,6 +660,7 @@ const ar: Translations = {
   lb_weekly: "هذا الأسبوع",
   lb_alltime: "كل الأوقات",
   lb_you: "أنت",
+  lb_empty: "لا متعلمين بعد — كن أول من يكسب الخبرة!",
 
   about_hero_title: "حول المشروع",
   about_hero_sub:
@@ -723,6 +735,7 @@ const zh: Translations = {
   nav_about: "关于我们",
   nav_login: "登录",
   nav_register: "注册",
+  nav_logout: "退出登录",
 
   hero_eyebrow: "220+ 历史主题 · 18 个时代 · 4 种语言",
   hero_title_pre: "探索",
@@ -865,6 +878,8 @@ const zh: Translations = {
   auth_create_account: "创建账户",
   auth_new_here: "初次使用 RusHistory？",
   auth_create_link: "创建账户",
+  auth_error_generic: "出错了，请重试。",
+  auth_check_email: "账户已创建！请查收邮件确认后再登录。",
 
   timeline_page_title: "俄罗斯历史时间线",
   timeline_page_subtitle: "从公元 862 年至今——拖动以探索 1200 年历史",
@@ -875,6 +890,7 @@ const zh: Translations = {
   lb_weekly: "本周",
   lb_alltime: "总榜",
   lb_you: "你",
+  lb_empty: "还没有学习者——成为第一个赚取经验的人吧！",
 
   about_hero_title: "关于",
   about_hero_sub: "让全世界的学习者都能了解俄罗斯 1200 年的历史",

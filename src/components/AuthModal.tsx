@@ -4,43 +4,57 @@ import { useApp } from '@/context/AppContext';
 import { useLanguage } from '@/LanguageContext';
 
 export default function AuthModal() {
-  const { showAuthModal, setShowAuthModal, authMode, setAuthMode, setUser } = useApp();
+  const { showAuthModal, setShowAuthModal, authMode, setAuthMode, signIn, signUp } = useApp();
   const { t } = useLanguage();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
 
   if (!showAuthModal) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const close = () => {
+    setShowAuthModal(false);
+    setError(null);
+    setInfo(null);
+  };
+
+  const switchMode = (mode: 'login' | 'register') => {
+    setAuthMode(mode);
+    setError(null);
+    setInfo(null);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    setInfo(null);
     setLoading(true);
-    setTimeout(() => {
-      setUser({
-        id: '1',
-        username: username || 'HistoryExplorer',
-        email: email || 'user@example.com',
-        xp: 0,
-        level: 0,
-        streak: 0,
-        completedTopics: [],
-        completedEpochs: [],
-        achievements: [],
-        languagesUsed: ['EN'],
-        quizAttempts: {},
-      });
-      setLoading(false);
-      setShowAuthModal(false);
-    }, 1000);
+    const result =
+      authMode === 'login'
+        ? await signIn(email, password)
+        : await signUp(email, password, username);
+    setLoading(false);
+
+    if (!result.ok) {
+      setError(result.error || t('auth_error_generic'));
+      return;
+    }
+    if (result.needsConfirmation) {
+      setInfo(t('auth_check_email'));
+      return;
+    }
+    close();
   };
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={() => setShowAuthModal(false)}
+        onClick={close}
       />
       <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-fade-in-up">
         {/* Header */}
@@ -57,7 +71,7 @@ export default function AuthModal() {
             </p>
           </div>
           <button
-            onClick={() => setShowAuthModal(false)}
+            onClick={close}
             className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors"
           >
             <X className="w-5 h-5" />
@@ -71,7 +85,7 @@ export default function AuthModal() {
             {(['login', 'register'] as const).map(mode => (
               <button
                 key={mode}
-                onClick={() => setAuthMode(mode)}
+                onClick={() => switchMode(mode)}
                 className={`flex-1 py-2 text-sm font-medium rounded-md transition-all ${
                   authMode === mode
                     ? 'bg-white text-[#2F5D9F] shadow-sm'
@@ -82,6 +96,17 @@ export default function AuthModal() {
               </button>
             ))}
           </div>
+
+          {error && (
+            <div className="mb-4 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700 font-ui">
+              {error}
+            </div>
+          )}
+          {info && (
+            <div className="mb-4 px-4 py-3 rounded-xl bg-green-50 border border-green-200 text-sm text-green-700 font-ui">
+              {info}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {authMode === 'register' && (
@@ -147,7 +172,7 @@ export default function AuthModal() {
             <p className="text-center text-sm text-[#7A8499] mt-4 font-ui">
               {t('auth_new_here')}{' '}
               <button
-                onClick={() => setAuthMode('register')}
+                onClick={() => switchMode('register')}
                 className="text-[#2F5D9F] font-medium hover:underline"
               >
                 {t('auth_create_link')}

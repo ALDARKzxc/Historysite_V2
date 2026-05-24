@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Trophy, Flame, Zap } from 'lucide-react';
 import { useLanguage } from '@/LanguageContext';
+import { useApp, getLevelFromXP, LEVEL_TITLES } from '@/context/AppContext';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 const LEVEL_KEYS: Record<string, string> = {
   Novice: 'level_novice',
@@ -12,26 +14,80 @@ const LEVEL_KEYS: Record<string, string> = {
   Legend: 'level_legend',
 };
 
-const LEADERBOARD_DATA = [
-  { rank: 1, username: 'ИванГрозный', country: '🇷🇺', level: 'Emperor', levelNum: 5, xp: 2840, streak: 45, avatar: 'И' },
-  { rank: 2, username: 'HistoryMaster', country: '🇬🇧', level: 'Tsar', levelNum: 4, xp: 2150, streak: 30, avatar: 'H' },
-  { rank: 3, username: 'PeterFan88', country: '🇩🇪', level: 'Tsar', levelNum: 4, xp: 1980, streak: 22, avatar: 'P' },
-  { rank: 4, username: 'RussiaNerd', country: '🇺🇸', level: 'Knyaz', levelNum: 3, xp: 1620, streak: 15, avatar: 'R' },
-  { rank: 5, username: 'SovietScholar', country: '🇫🇷', level: 'Knyaz', levelNum: 3, xp: 1540, streak: 12, avatar: 'S' },
-  { rank: 6, username: 'ВойнаиМир', country: '🇺🇦', level: 'Voivode', levelNum: 2, xp: 1120, streak: 8, avatar: 'В' },
-  { rank: 7, username: 'HistoryExplorer', country: '🇺🇸', level: 'Boyar', levelNum: 1, xp: 125, streak: 3, avatar: 'H' },
-  { rank: 8, username: 'SilkRoadTraveler', country: '🇨🇳', level: 'Boyar', levelNum: 1, xp: 980, streak: 5, avatar: 'S' },
-  { rank: 9, username: 'МудрыйЯрослав', country: '🇧🇾', level: 'Voivode', levelNum: 2, xp: 1050, streak: 11, avatar: 'М' },
-  { rank: 10, username: 'SteppeWarrior', country: '🇰🇿', level: 'Boyar', levelNum: 1, xp: 890, streak: 4, avatar: 'S' },
+interface Row {
+  key: string;
+  username: string;
+  level: string; // English level title, mapped to a key for display
+  xp: number;
+  streak: number;
+  avatar: string;
+  country?: string;
+  isCurrentUser: boolean;
+}
+
+const MOCK_DATA: Omit<Row, 'isCurrentUser' | 'key'>[] = [
+  { username: 'ИванГрозный', country: '🇷🇺', level: 'Emperor', xp: 2840, streak: 45, avatar: 'И' },
+  { username: 'HistoryMaster', country: '🇬🇧', level: 'Tsar', xp: 2150, streak: 30, avatar: 'H' },
+  { username: 'PeterFan88', country: '🇩🇪', level: 'Tsar', xp: 1980, streak: 22, avatar: 'P' },
+  { username: 'RussiaNerd', country: '🇺🇸', level: 'Knyaz', xp: 1620, streak: 15, avatar: 'R' },
+  { username: 'SovietScholar', country: '🇫🇷', level: 'Knyaz', xp: 1540, streak: 12, avatar: 'S' },
+  { username: 'ВойнаиМир', country: '🇺🇦', level: 'Voivode', xp: 1120, streak: 8, avatar: 'В' },
+  { username: 'HistoryExplorer', country: '🇺🇸', level: 'Boyar', xp: 125, streak: 3, avatar: 'H' },
+  { username: 'SilkRoadTraveler', country: '🇨🇳', level: 'Boyar', xp: 980, streak: 5, avatar: 'S' },
+  { username: 'МудрыйЯрослав', country: '🇧🇾', level: 'Voivode', xp: 1050, streak: 11, avatar: 'М' },
+  { username: 'SteppeWarrior', country: '🇰🇿', level: 'Boyar', xp: 890, streak: 4, avatar: 'S' },
 ];
 
 const MEDAL_COLORS = ['text-yellow-400', 'text-gray-400', 'text-amber-600'];
 
 export default function LeaderboardPage() {
-  const [period, setPeriod] = useState<'weekly' | 'alltime'>('weekly');
+  const [period, setPeriod] = useState<'weekly' | 'alltime'>('alltime');
   const { t } = useLanguage();
+  const { user } = useApp();
+  const [rows, setRows] = useState<Row[]>([]);
+  const [loading, setLoading] = useState(isSupabaseConfigured);
 
-  const sorted = [...LEADERBOARD_DATA].sort((a, b) => b.xp - a.xp);
+  useEffect(() => {
+    let active = true;
+
+    if (!isSupabaseConfigured || !supabase) {
+      const mock: Row[] = MOCK_DATA.map((r, i) => ({
+        ...r,
+        key: `mock-${i}`,
+        isCurrentUser: !!user && r.username === user.username,
+      })).sort((a, b) => b.xp - a.xp);
+      setRows(mock);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    supabase
+      .from('profiles')
+      .select('id, username, xp, streak')
+      .order('xp', { ascending: false })
+      .limit(50)
+      .then(({ data }) => {
+        if (!active) return;
+        const mapped: Row[] = (data ?? []).map(p => ({
+          key: p.id,
+          username: p.username || 'Explorer',
+          level: LEVEL_TITLES[getLevelFromXP(p.xp ?? 0)],
+          xp: p.xp ?? 0,
+          streak: p.streak ?? 0,
+          avatar: (p.username || 'E').charAt(0),
+          isCurrentUser: !!user && p.id === user.id,
+        }));
+        setRows(mapped);
+        setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [user?.id]);
+
+  const showPodium = rows.length >= 3;
 
   return (
     <main className="min-h-screen bg-[#F5F7FA] pt-20">
@@ -62,80 +118,91 @@ export default function LeaderboardPage() {
           ))}
         </div>
 
-        {/* Top 3 Podium */}
-        <div className="flex items-end justify-center gap-4 mb-8">
-          {[sorted[1], sorted[0], sorted[2]].map((user, i) => {
-            const isFirst = i === 1;
-            const rankOrder = [2, 1, 3];
-            return (
-              <div key={user.rank} className={`flex flex-col items-center ${isFirst ? 'order-2' : i === 0 ? 'order-1' : 'order-3'}`}>
-                <div className={`relative ${isFirst ? 'w-20 h-20' : 'w-16 h-16'} rounded-full bg-[#2F5D9F] flex items-center justify-center text-white font-bold shadow-lg mb-2 ${isFirst ? 'text-2xl ring-4 ring-yellow-400' : 'text-lg'}`}>
-                  {user.avatar}
-                  <div className="absolute -top-2 -right-1 text-lg">{rankOrder[i] === 1 ? '🥇' : rankOrder[i] === 2 ? '🥈' : '🥉'}</div>
-                </div>
-                <div className="text-center">
-                  <div className={`font-ui font-semibold text-[#2A2A2A] ${isFirst ? 'text-sm' : 'text-xs'} max-w-[80px] truncate`}>{user.username}</div>
-                  <div className="font-mono-accent text-xs font-bold text-[#2F5D9F]">{user.xp} XP</div>
-                  <div className="text-xs text-[#7A8499]">{user.country}</div>
-                </div>
-                <div className={`rounded-t-lg ${isFirst ? 'h-20 w-20 bg-yellow-400' : i === 0 ? 'h-14 w-16 bg-gray-300' : 'h-10 w-16 bg-amber-500'} flex items-center justify-center mt-2`}>
-                  <span className="font-mono-accent font-bold text-white text-lg">{rankOrder[i]}</span>
-                </div>
+        {loading ? (
+          <div className="py-20 flex items-center justify-center">
+            <div className="w-8 h-8 border-2 border-[#2F5D9F]/20 border-t-[#2F5D9F] rounded-full animate-spin" />
+          </div>
+        ) : rows.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-[#EEF1F7] shadow-sm p-10 text-center text-[#7A8499] font-ui">
+            {t('lb_empty')}
+          </div>
+        ) : (
+          <>
+            {/* Top 3 Podium */}
+            {showPodium && (
+              <div className="flex items-end justify-center gap-4 mb-8">
+                {[rows[1], rows[0], rows[2]].map((row, i) => {
+                  const isFirst = i === 1;
+                  const rankOrder = [2, 1, 3];
+                  return (
+                    <div key={row.key} className={`flex flex-col items-center ${isFirst ? 'order-2' : i === 0 ? 'order-1' : 'order-3'}`}>
+                      <div className={`relative ${isFirst ? 'w-20 h-20' : 'w-16 h-16'} rounded-full bg-[#2F5D9F] flex items-center justify-center text-white font-bold shadow-lg mb-2 uppercase ${isFirst ? 'text-2xl ring-4 ring-yellow-400' : 'text-lg'}`}>
+                        {row.avatar}
+                        <div className="absolute -top-2 -right-1 text-lg">{rankOrder[i] === 1 ? '🥇' : rankOrder[i] === 2 ? '🥈' : '🥉'}</div>
+                      </div>
+                      <div className="text-center">
+                        <div className={`font-ui font-semibold text-[#2A2A2A] ${isFirst ? 'text-sm' : 'text-xs'} max-w-[80px] truncate`}>{row.username}</div>
+                        <div className="font-mono-accent text-xs font-bold text-[#2F5D9F]">{row.xp} XP</div>
+                        {row.country && <div className="text-xs text-[#7A8499]">{row.country}</div>}
+                      </div>
+                      <div className={`rounded-t-lg ${isFirst ? 'h-20 w-20 bg-yellow-400' : i === 0 ? 'h-14 w-16 bg-gray-300' : 'h-10 w-16 bg-amber-500'} flex items-center justify-center mt-2`}>
+                        <span className="font-mono-accent font-bold text-white text-lg">{rankOrder[i]}</span>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
+            )}
 
-        {/* Full List */}
-        <div className="bg-white rounded-2xl border border-[#EEF1F7] shadow-sm overflow-hidden">
-          {sorted.map((user, i) => {
-            const isCurrentUser = user.username === 'HistoryExplorer';
-            return (
-              <div
-                key={user.rank}
-                className={`flex items-center gap-4 px-5 py-4 border-b border-[#F5F7FA] last:border-0 transition-colors ${
-                  isCurrentUser ? 'bg-[#EEF1F7]' : 'hover:bg-[#F5F7FA]'
-                }`}
-              >
-                {/* Rank */}
-                <div className={`w-8 text-center font-mono-accent font-bold text-sm ${i < 3 ? MEDAL_COLORS[i] : 'text-[#7A8499]'}`}>
-                  {i < 3 ? ['🥇', '🥈', '🥉'][i] : `#${i + 1}`}
-                </div>
-
-                {/* Avatar */}
-                <div className={`w-10 h-10 rounded-full bg-[#2F5D9F] flex items-center justify-center text-white font-bold text-sm flex-shrink-0 ${isCurrentUser ? 'ring-2 ring-[#2F5D9F]' : ''}`}>
-                  {user.avatar}
-                </div>
-
-                {/* Info */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className={`font-ui font-semibold text-sm text-[#2A2A2A] truncate ${isCurrentUser ? 'text-[#2F5D9F]' : ''}`}>
-                      {user.username}
-                    </span>
-                    {isCurrentUser && (
-                      <span className="text-[10px] bg-[#2F5D9F] text-white rounded-full px-2 py-0.5 font-ui font-medium">{t('lb_you')}</span>
-                    )}
-                    <span>{user.country}</span>
+            {/* Full List */}
+            <div className="bg-white rounded-2xl border border-[#EEF1F7] shadow-sm overflow-hidden">
+              {rows.map((row, i) => (
+                <div
+                  key={row.key}
+                  className={`flex items-center gap-4 px-5 py-4 border-b border-[#F5F7FA] last:border-0 transition-colors ${
+                    row.isCurrentUser ? 'bg-[#EEF1F7]' : 'hover:bg-[#F5F7FA]'
+                  }`}
+                >
+                  {/* Rank */}
+                  <div className={`w-8 text-center font-mono-accent font-bold text-sm ${i < 3 ? MEDAL_COLORS[i] : 'text-[#7A8499]'}`}>
+                    {i < 3 ? ['🥇', '🥈', '🥉'][i] : `#${i + 1}`}
                   </div>
-                  <div className="flex items-center gap-3 mt-0.5">
-                    <span className="text-xs text-[#7A8499] font-ui">{t(LEVEL_KEYS[user.level] || 'level_novice')}</span>
-                    <div className="flex items-center gap-1">
-                      <Flame className="w-3 h-3 text-orange-400" />
-                      <span className="font-mono-accent text-xs text-[#7A8499]">{user.streak}</span>
+
+                  {/* Avatar */}
+                  <div className={`w-10 h-10 rounded-full bg-[#2F5D9F] flex items-center justify-center text-white font-bold text-sm flex-shrink-0 uppercase ${row.isCurrentUser ? 'ring-2 ring-[#2F5D9F]' : ''}`}>
+                    {row.avatar}
+                  </div>
+
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className={`font-ui font-semibold text-sm text-[#2A2A2A] truncate ${row.isCurrentUser ? 'text-[#2F5D9F]' : ''}`}>
+                        {row.username}
+                      </span>
+                      {row.isCurrentUser && (
+                        <span className="text-[10px] bg-[#2F5D9F] text-white rounded-full px-2 py-0.5 font-ui font-medium">{t('lb_you')}</span>
+                      )}
+                      {row.country && <span>{row.country}</span>}
+                    </div>
+                    <div className="flex items-center gap-3 mt-0.5">
+                      <span className="text-xs text-[#7A8499] font-ui">{t(LEVEL_KEYS[row.level] || 'level_novice')}</span>
+                      <div className="flex items-center gap-1">
+                        <Flame className="w-3 h-3 text-orange-400" />
+                        <span className="font-mono-accent text-xs text-[#7A8499]">{row.streak}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* XP */}
-                <div className="flex items-center gap-1 text-[#2F5D9F]">
-                  <Zap className="w-3.5 h-3.5" />
-                  <span className="font-mono-accent text-sm font-bold">{user.xp}</span>
+                  {/* XP */}
+                  <div className="flex items-center gap-1 text-[#2F5D9F]">
+                    <Zap className="w-3.5 h-3.5" />
+                    <span className="font-mono-accent text-sm font-bold">{row.xp}</span>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </main>
   );

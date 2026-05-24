@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Flame, Globe, ChevronDown, BookOpen, Zap, Menu, X } from 'lucide-react';
+import { Flame, Globe, ChevronDown, BookOpen, Zap, Menu, X, LogOut } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { useLanguage, Language } from '@/LanguageContext';
 
@@ -20,9 +20,10 @@ const LANGUAGES: { code: Language; label: string; flag: string }[] = [
 ];
 
 export default function Navbar() {
-  const { user, setShowAuthModal, setAuthMode } = useApp();
+  const { user, setShowAuthModal, setAuthMode, signOut } = useApp();
   const { language, setLanguage, t } = useLanguage();
   const [langOpen, setLangOpen] = useState(false);
+  const [userOpen, setUserOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
 
@@ -31,6 +32,11 @@ export default function Navbar() {
   const handleLogin = () => {
     setAuthMode('login');
     setShowAuthModal(true);
+  };
+
+  const handleSignOut = async () => {
+    setUserOpen(false);
+    await signOut();
   };
 
   return (
@@ -108,8 +114,30 @@ export default function Navbar() {
                   <Zap className="w-4 h-4 text-[#2F5D9F]" />
                   <span className="font-mono-accent text-sm font-medium text-[#2F5D9F]">{user.xp} XP</span>
                 </div>
-                <div className="w-9 h-9 rounded-full bg-[#2F5D9F] flex items-center justify-center text-white text-sm font-bold cursor-pointer hover:opacity-90 transition-opacity shadow-md">
-                  {user.username.charAt(0)}
+                <div className="relative">
+                  <button
+                    onClick={() => setUserOpen(o => !o)}
+                    className="w-9 h-9 rounded-full bg-[#2F5D9F] flex items-center justify-center text-white text-sm font-bold cursor-pointer hover:opacity-90 transition-opacity shadow-md uppercase"
+                  >
+                    {user.username.charAt(0)}
+                  </button>
+                  {userOpen && (
+                    <div className="absolute right-0 top-full mt-2 bg-white rounded-xl shadow-xl border border-[#EEF1F7] py-1 w-56 z-50">
+                      <div className="px-4 py-2.5 border-b border-[#EEF1F7]">
+                        <div className="text-sm font-semibold text-[#2A2A2A] font-ui truncate">{user.username}</div>
+                        {user.email && (
+                          <div className="text-xs text-[#7A8499] font-ui truncate">{user.email}</div>
+                        )}
+                      </div>
+                      <button
+                        onClick={handleSignOut}
+                        className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-[#C94B4B] hover:bg-[#F5F7FA] transition-colors font-ui"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        {t('nav_logout')}
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
