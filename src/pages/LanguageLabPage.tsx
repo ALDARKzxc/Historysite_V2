@@ -24,7 +24,7 @@ const VOCABULARY_POOL: { word: string; translation: Localized; pronunciation: st
 type Mode = 'flashcard' | 'quiz';
 
 export default function LanguageLabPage() {
-  const { addXP } = useApp();
+  const { addXP, user, setShowAuthModal, setAuthMode } = useApp();
   const { t, localize } = useLanguage();
   const [mode, setMode] = useState<Mode>('flashcard');
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -56,6 +56,12 @@ export default function LanguageLabPage() {
 
   const handleAnswer = (answer: string) => {
     if (quizAnswered) return;
+    // XP can only be earned by registered users — prompt guests to sign in.
+    if (!user) {
+      setAuthMode('register');
+      setShowAuthModal(true);
+      return;
+    }
     setSelectedAnswer(answer);
     setQuizAnswered(true);
     if (answer === localize(card.translation)) {

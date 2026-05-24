@@ -160,6 +160,7 @@ const en: Translations = {
   quiz_no_attempts_title: "No attempts left",
   quiz_no_attempts_msg: "You have used all 3 attempts for this test.",
   quiz_close: "Close",
+  quiz_signin_hint: "Sign in to take the test and earn XP.",
 
   // Auth
   auth_welcome_back: "Welcome Back",
@@ -403,6 +404,7 @@ const ru: Translations = {
   quiz_no_attempts_title: "Попытки закончились",
   quiz_no_attempts_msg: "Вы использовали все 3 попытки для этого теста.",
   quiz_close: "Закрыть",
+  quiz_signin_hint: "Войдите, чтобы пройти тест и получать очки.",
 
   auth_welcome_back: "С возвращением",
   auth_join: "Присоединиться к RusHistory",
@@ -637,6 +639,7 @@ const ar: Translations = {
   quiz_no_attempts_title: "لا محاولات متبقية",
   quiz_no_attempts_msg: "لقد استخدمت كل المحاولات الثلاث لهذا الاختبار.",
   quiz_close: "إغلاق",
+  quiz_signin_hint: "سجّل الدخول لأداء الاختبار وكسب الخبرة.",
 
   auth_welcome_back: "مرحبًا بعودتك",
   auth_join: "انضم إلى RusHistory",
@@ -870,6 +873,7 @@ const zh: Translations = {
   quiz_no_attempts_title: "没有剩余机会",
   quiz_no_attempts_msg: "你已用完本测验的全部 3 次机会。",
   quiz_close: "关闭",
+  quiz_signin_hint: "登录后即可参加测验并赚取经验值。",
 
   auth_welcome_back: "欢迎回来",
   auth_join: "加入 RusHistory",

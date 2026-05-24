@@ -30,12 +30,14 @@ export default function EpochDetailPage() {
 
   return (
     <main className="min-h-screen bg-[#F5F7FA] pt-20">
-      {/* Hero */}
-      <div className="relative h-72 md:h-96 overflow-hidden">
-        <ImageFill src={epoch.coverImage} />
+      {/* Hero — clean branded banner in the epoch colour */}
+      <div className="relative h-52 md:h-60 overflow-hidden" style={{ backgroundColor: epoch.color }}>
         <div
           className="absolute inset-0"
-          style={{ background: `linear-gradient(180deg, ${epoch.color}44 0%, ${epoch.color}F0 100%)` }}
+          style={{
+            background:
+              'radial-gradient(circle at 82% 18%, rgba(255,255,255,0.18) 0%, transparent 50%), linear-gradient(135deg, rgba(255,255,255,0.10) 0%, rgba(0,0,0,0.5) 100%)',
+          }}
         />
         <div className="relative h-full flex flex-col justify-end px-4 sm:px-8 pb-8 max-w-7xl mx-auto">
           <button

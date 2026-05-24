@@ -5,8 +5,27 @@ import { useLanguage, translations } from '@/LanguageContext';
 
 export default function HeroSection() {
   const navigate = useNavigate();
-  const { setShowAuthModal, setAuthMode } = useApp();
+  const { user, setShowAuthModal, setAuthMode } = useApp();
   const { t, showRussianSubtitles } = useLanguage();
+
+  const handleStart = () => {
+    if (!user) {
+      setAuthMode('register');
+      setShowAuthModal(true);
+      return;
+    }
+    const el = document.getElementById('epochs');
+    if (!el) {
+      navigate('/epochs');
+      return;
+    }
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // pleasant blur-in as the section comes into view
+    el.classList.remove('blur-in');
+    void el.offsetWidth;
+    el.classList.add('blur-in');
+    window.setTimeout(() => el.classList.remove('blur-in'), 1000);
+  };
 
   const STATS = [
     { value: '220+', label: t('stat_topics') },
@@ -84,7 +103,7 @@ export default function HeroSection() {
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16 animate-fade-in-up stagger-3">
           <button
-            onClick={() => { setAuthMode('register'); setShowAuthModal(true); }}
+            onClick={handleStart}
             className="group flex items-center gap-3 px-8 py-4 bg-[#C94B4B] text-white rounded-2xl font-medium text-base hover:bg-[#b03d3d] transition-all btn-press shadow-xl shadow-[#C94B4B]/30 min-w-[200px] justify-center"
           >
             <Play className="w-5 h-5 group-hover:scale-110 transition-transform" />

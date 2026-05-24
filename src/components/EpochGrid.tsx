@@ -9,7 +9,7 @@ export default function EpochGrid() {
   const { t, localize, showRussianSubtitles } = useLanguage();
 
   return (
-    <section className="py-20 bg-[#F5F7FA]">
+    <section id="epochs" className="py-20 bg-[#F5F7FA] scroll-mt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-14">

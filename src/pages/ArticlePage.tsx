@@ -16,9 +16,19 @@ const TOPIC_REWARD = READING_XP + TEST_XP;
 export default function ArticlePage() {
   const { topicId } = useParams();
   const navigate = useNavigate();
-  const { passQuiz, failQuiz, user, bilingualMode, setBilingualMode } = useApp();
+  const { passQuiz, failQuiz, user, bilingualMode, setBilingualMode, setShowAuthModal, setAuthMode } = useApp();
   const { t, localize, showRussianSubtitles } = useLanguage();
   const [showQuiz, setShowQuiz] = useState(false);
+
+  // Earning points requires an account; guests are prompted to sign in / register.
+  const startTest = () => {
+    if (!user) {
+      setAuthMode('register');
+      setShowAuthModal(true);
+      return;
+    }
+    setShowQuiz(true);
+  };
 
   // Find topic
   let topic: any = null;
@@ -53,10 +63,18 @@ export default function ArticlePage() {
 
   return (
     <main className="min-h-screen bg-[#F5F7FA] pt-16">
-      {/* Hero Image */}
-      <div className="relative h-64 md:h-96 overflow-hidden">
-        <ImageFill src={article.heroImage} />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#F5F7FA] via-black/20 to-black/40" />
+      {/* Hero — clean banner in the epoch colour (full title lives in the card below) */}
+      <div
+        className="relative h-44 md:h-56 overflow-hidden"
+        style={{ backgroundColor: epoch.color }}
+      >
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(circle at 82% 18%, rgba(255,255,255,0.18) 0%, transparent 50%), linear-gradient(180deg, rgba(0,0,0,0.25) 0%, #F5F7FA 100%)',
+          }}
+        />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -178,15 +196,19 @@ export default function ArticlePage() {
                 <div className="mt-8 pt-6 border-t border-[#EEF1F7]">
                   <p className="text-sm text-[#7A8499] font-ui mb-3 text-center">{t('quiz_pass_hint')}</p>
                   <button
-                    onClick={() => setShowQuiz(true)}
+                    onClick={startTest}
                     className="w-full py-3.5 bg-[#C94B4B] text-white rounded-xl font-medium font-ui hover:bg-[#b03d3d] transition-all btn-press shadow-lg shadow-[#C94B4B]/20 flex items-center justify-center gap-2"
                   >
                     <Zap className="w-5 h-5" />
                     {t('quiz_take_test')} (+{TOPIC_REWARD} XP)
                   </button>
-                  <p className="text-xs text-[#9AA3B2] font-ui mt-2 text-center">
-                    {t('quiz_attempt')} {attemptsUsed + 1}/{MAX_QUIZ_ATTEMPTS}
-                  </p>
+                  {user ? (
+                    <p className="text-xs text-[#9AA3B2] font-ui mt-2 text-center">
+                      {t('quiz_attempt')} {attemptsUsed + 1}/{MAX_QUIZ_ATTEMPTS}
+                    </p>
+                  ) : (
+                    <p className="text-xs text-[#9AA3B2] font-ui mt-2 text-center">{t('quiz_signin_hint')}</p>
+                  )}
                 </div>
               )}
 

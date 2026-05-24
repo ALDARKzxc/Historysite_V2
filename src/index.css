@@ -223,6 +223,15 @@
     animation: green-pulse 0.8s ease;
   }
 
+  @keyframes blurIn {
+    0% { filter: blur(16px); opacity: 0.35; transform: translateY(14px); }
+    100% { filter: blur(0); opacity: 1; transform: none; }
+  }
+
+  .blur-in {
+    animation: blurIn 0.85s ease-out;
+  }
+
   .stagger-1 { animation-delay: 60ms; }
   .stagger-2 { animation-delay: 120ms; }
   .stagger-3 { animation-delay: 180ms; }
