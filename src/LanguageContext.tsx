@@ -177,6 +177,8 @@ const en: Translations = {
   auth_create_link: "Create an account",
   auth_error_generic: "Something went wrong. Please try again.",
   auth_check_email: "Account created! Check your email to confirm, then sign in.",
+  auth_err_invalid_credentials: "Wrong email or password.",
+  auth_err_email_taken: "This email is already registered. Try signing in.",
 
   // Timeline page
   timeline_page_title: "Russian History Timeline",
@@ -417,6 +419,8 @@ const ru: Translations = {
   auth_create_link: "Создать аккаунт",
   auth_error_generic: "Что-то пошло не так. Попробуйте ещё раз.",
   auth_check_email: "Аккаунт создан! Подтвердите почту по ссылке из письма, затем войдите.",
+  auth_err_invalid_credentials: "Неверная почта или пароль.",
+  auth_err_email_taken: "Эта почта уже зарегистрирована. Попробуйте войти.",
 
   timeline_page_title: "Хронология истории России",
   timeline_page_subtitle:
@@ -649,6 +653,8 @@ const ar: Translations = {
   auth_create_link: "أنشئ حسابًا",
   auth_error_generic: "حدث خطأ ما. حاول مرة أخرى.",
   auth_check_email: "تم إنشاء الحساب! تحقق من بريدك لتأكيد الحساب، ثم سجّل الدخول.",
+  auth_err_invalid_credentials: "بريد إلكتروني أو كلمة مرور غير صحيحة.",
+  auth_err_email_taken: "هذا البريد مسجّل بالفعل. حاول تسجيل الدخول.",
 
   timeline_page_title: "الجدول الزمني لتاريخ روسيا",
   timeline_page_subtitle:
@@ -880,6 +886,8 @@ const zh: Translations = {
   auth_create_link: "创建账户",
   auth_error_generic: "出错了，请重试。",
   auth_check_email: "账户已创建！请查收邮件确认后再登录。",
+  auth_err_invalid_credentials: "邮箱或密码错误。",
+  auth_err_email_taken: "该邮箱已注册，请尝试登录。",
 
   timeline_page_title: "俄罗斯历史时间线",
   timeline_page_subtitle: "从公元 862 年至今——拖动以探索 1200 年历史",

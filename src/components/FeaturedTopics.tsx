@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { epochs } from '@/data/epochs';
 import { Zap, Star } from 'lucide-react';
 import { useLanguage } from '@/LanguageContext';
+import ImageFill from '@/components/ImageFill';
 
 const DIFF_COLORS = {
   Beginner: 'bg-green-100 text-green-700',
@@ -59,10 +60,10 @@ export default function FeaturedTopics() {
               style={{ animationDelay: `${i * 80}ms` }}
             >
               {/* Image */}
-              <div className="relative h-52 overflow-hidden">
-                <div
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                  style={{ backgroundImage: `url(${topic.image})` }}
+              <div className="relative aspect-square overflow-hidden">
+                <ImageFill
+                  src={topic.image}
+                  imgClassName="transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 

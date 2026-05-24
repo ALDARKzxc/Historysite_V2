@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { epochs } from '@/data/epochs';
 import { BookOpen, ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/LanguageContext';
+import ImageFill from '@/components/ImageFill';
 
 export default function EpochGrid() {
   const navigate = useNavigate();
@@ -41,9 +42,9 @@ export default function EpochGrid() {
                 style={{ animationDelay: `${i * 60}ms` }}
               >
                 {/* Background Image */}
-                <div
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                  style={{ backgroundImage: `url(${epoch.coverImage})` }}
+                <ImageFill
+                  src={epoch.coverImage}
+                  imgClassName="transition-transform duration-500 group-hover:scale-105"
                 />
 
                 {/* Gradient Overlay */}

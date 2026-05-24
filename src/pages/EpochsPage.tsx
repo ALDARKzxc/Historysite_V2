@@ -3,6 +3,7 @@ import { epochs } from '@/data/epochs';
 import { BookOpen, ArrowRight } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { useLanguage } from '@/LanguageContext';
+import ImageFill from '@/components/ImageFill';
 
 export default function EpochsPage() {
   const navigate = useNavigate();
@@ -40,10 +41,10 @@ export default function EpochsPage() {
                 style={{ animationDelay: `${i * 60}ms` }}
               >
                 {/* Cover Image */}
-                <div className="relative h-44 overflow-hidden">
-                  <div
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                    style={{ backgroundImage: `url(${epoch.coverImage})` }}
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <ImageFill
+                    src={epoch.coverImage}
+                    imgClassName="transition-transform duration-500 group-hover:scale-105"
                   />
                   <div
                     className="absolute inset-0"

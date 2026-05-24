@@ -3,6 +3,7 @@ import { Trophy, Flame, Zap } from 'lucide-react';
 import { useLanguage } from '@/LanguageContext';
 import { useApp, getLevelFromXP, LEVEL_TITLES } from '@/context/AppContext';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { listAccounts } from '@/lib/localAccounts';
 
 const LEVEL_KEYS: Record<string, string> = {
   Novice: 'level_novice',
@@ -25,14 +26,13 @@ interface Row {
   isCurrentUser: boolean;
 }
 
-const MOCK_DATA: Omit<Row, 'isCurrentUser' | 'key'>[] = [
+// Seed entries so the board isn't empty; real (local or DB) accounts are merged in.
+const SEED_DATA: Omit<Row, 'isCurrentUser' | 'key'>[] = [
   { username: 'ИванГрозный', country: '🇷🇺', level: 'Emperor', xp: 2840, streak: 45, avatar: 'И' },
   { username: 'HistoryMaster', country: '🇬🇧', level: 'Tsar', xp: 2150, streak: 30, avatar: 'H' },
   { username: 'PeterFan88', country: '🇩🇪', level: 'Tsar', xp: 1980, streak: 22, avatar: 'P' },
   { username: 'RussiaNerd', country: '🇺🇸', level: 'Knyaz', xp: 1620, streak: 15, avatar: 'R' },
   { username: 'SovietScholar', country: '🇫🇷', level: 'Knyaz', xp: 1540, streak: 12, avatar: 'S' },
-  { username: 'ВойнаиМир', country: '🇺🇦', level: 'Voivode', xp: 1120, streak: 8, avatar: 'В' },
-  { username: 'HistoryExplorer', country: '🇺🇸', level: 'Boyar', xp: 125, streak: 3, avatar: 'H' },
   { username: 'SilkRoadTraveler', country: '🇨🇳', level: 'Boyar', xp: 980, streak: 5, avatar: 'S' },
   { username: 'МудрыйЯрослав', country: '🇧🇾', level: 'Voivode', xp: 1050, streak: 11, avatar: 'М' },
   { username: 'SteppeWarrior', country: '🇰🇿', level: 'Boyar', xp: 890, streak: 4, avatar: 'S' },
@@ -51,12 +51,19 @@ export default function LeaderboardPage() {
     let active = true;
 
     if (!isSupabaseConfigured || !supabase) {
-      const mock: Row[] = MOCK_DATA.map((r, i) => ({
-        ...r,
-        key: `mock-${i}`,
-        isCurrentUser: !!user && r.username === user.username,
-      })).sort((a, b) => b.xp - a.xp);
-      setRows(mock);
+      // Real registered accounts (offline) merged with seed entries, ranked by XP.
+      const real: Row[] = listAccounts().map(a => ({
+        key: a.id,
+        username: a.username,
+        level: LEVEL_TITLES[getLevelFromXP(a.xp)],
+        xp: a.xp,
+        streak: a.streak,
+        avatar: (a.username || 'E').charAt(0),
+        isCurrentUser: !!user && a.id === user.id,
+      }));
+      const seed: Row[] = SEED_DATA.map((r, i) => ({ ...r, key: `seed-${i}`, isCurrentUser: false }));
+      const merged = [...real, ...seed].sort((a, b) => b.xp - a.xp).slice(0, 50);
+      setRows(merged);
       setLoading(false);
       return;
     }
@@ -85,7 +92,8 @@ export default function LeaderboardPage() {
     return () => {
       active = false;
     };
-  }, [user?.id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, user?.xp]);
 
   const showPodium = rows.length >= 3;
 

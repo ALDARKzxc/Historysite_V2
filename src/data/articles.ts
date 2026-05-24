@@ -25,7 +25,7 @@ export const articles: Record<string, ArticleData> = {
     title: { en: 'Baptism of Rus', ru: 'Крещение Руси', ar: 'تعميد روس', zh: '罗斯受洗' },
     epochId: 'ancient-rus',
     epochTitle: { en: 'Ancient Rus', ru: 'Древняя Русь', ar: 'روس القديمة', zh: '古代罗斯' },
-    heroImage: 'https://images.unsplash.com/photo-1548438294-1ad5d5f4f063?w=1600&q=80',
+    heroImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Lebedev_baptism.jpg/960px-Lebedev_baptism.jpg',
     leadParagraph: {
       en: 'In 988 AD, Prince Vladimir of Kiev made one of the most consequential decisions in world history — he chose Orthodox Christianity as the state religion of Kievan Rus, forever shaping Russian civilization, culture, and identity.',
       ru: 'В 988 году князь Владимир Киевский принял одно из самых судьбоносных решений в мировой истории — он выбрал православное христианство государственной религией Киевской Руси, навсегда определив русскую цивилизацию, культуру и самосознание.',
@@ -88,7 +88,7 @@ export const articles: Record<string, ArticleData> = {
     title: { en: 'Battle of Stalingrad', ru: 'Сталинградская битва', ar: 'معركة ستالينغراد', zh: '斯大林格勒战役' },
     epochId: 'great-patriotic-war',
     epochTitle: { en: 'Great Patriotic War', ru: 'Великая Отечественная война', ar: 'الحرب الوطنية العظمى', zh: '伟大卫国战争' },
-    heroImage: 'https://images.unsplash.com/photo-1581591524425-c7e0978865fc?w=1600&q=80',
+    heroImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/%D0%A0%D0%B0%D1%81%D1%87%D0%B5%D1%82_%D1%81%D0%BE%D0%B2%D0%B5%D1%82%D1%81%D0%BA%D0%BE%D0%B9_76%2C2-%D0%BC%D0%BC_%D0%BF%D1%83%D1%88%D0%BA%D0%B8_%D0%97%D0%B8%D0%A1-3_%D0%B2%D0%B5%D0%B4%D0%B5%D1%82_%D0%BE%D0%B3%D0%BE%D0%BD%D1%8C_%D0%B2_%D0%A1%D1%82%D0%B0%D0%BB%D0%B8%D0%BD%D0%B3%D1%80%D0%B0%D0%B4%D0%B5._%D0%9D%D0%BE%D1%8F%D0%B1%D1%80%D1%8C_1942_%D0%B3.jpg/960px-%D0%A0%D0%B0%D1%81%D1%87%D0%B5%D1%82_%D1%81%D0%BE%D0%B2%D0%B5%D1%82%D1%81%D0%BA%D0%BE%D0%B9_76%2C2-%D0%BC%D0%BC_%D0%BF%D1%83%D1%88%D0%BA%D0%B8_%D0%97%D0%B8%D0%A1-3_%D0%B2%D0%B5%D0%B4%D0%B5%D1%82_%D0%BE%D0%B3%D0%BE%D0%BD%D1%8C_%D0%B2_%D0%A1%D1%82%D0%B0%D0%BB%D0%B8%D0%BD%D0%B3%D1%80%D0%B0%D0%B4%D0%B5._%D0%9D%D0%BE%D1%8F%D0%B1%D1%80%D1%8C_1942_%D0%B3.jpg',
     leadParagraph: {
       en: "From August 1942 to February 1943, the Battle of Stalingrad became the single deadliest military engagement in human history — and the turning point that would ultimately seal Nazi Germany's fate.",
       ru: 'С августа 1942 по февраль 1943 года Сталинградская битва стала самым кровопролитным военным сражением в истории человечества — и переломным моментом, в конечном счёте решившим судьбу нацистской Германии.',
@@ -152,7 +152,7 @@ export const articles: Record<string, ArticleData> = {
     title: { en: 'Yuri Gagarin — First in Space', ru: 'Юрий Гагарин — первый в космосе', ar: 'يوري غاغارين — أول إنسان في الفضاء', zh: '尤里·加加林——首位进入太空者' },
     epochId: 'cold-war',
     epochTitle: { en: 'Cold War & Space Race', ru: 'Холодная война', ar: 'الحرب الباردة وسباق الفضاء', zh: '冷战与太空竞赛' },
-    heroImage: 'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=1600&q=80',
+    heroImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Yuri_Gagarin_with_awards_%28cropped%29_2.jpg/960px-Yuri_Gagarin_with_awards_%28cropped%29_2.jpg',
     leadParagraph: {
       en: "On April 12, 1961, a 27-year-old Soviet Air Force pilot named Yuri Alekseyevich Gagarin became the first human being to travel into outer space, completing one orbit of Earth in 108 minutes and forever changing humanity's relationship with the cosmos.",
       ru: '12 апреля 1961 года 27-летний лётчик советских ВВС Юрий Алексеевич Гагарин стал первым человеком, отправившимся в космос, совершив один виток вокруг Земли за 108 минут и навсегда изменив отношение человечества к космосу.',

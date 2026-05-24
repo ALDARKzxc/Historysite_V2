@@ -6,6 +6,7 @@ import { useLanguage } from '@/LanguageContext';
 import { epochs } from '@/data/epochs';
 import { getArticleData } from '@/data/articles';
 import QuizModule from '@/components/QuizModule';
+import ImageFill from '@/components/ImageFill';
 
 // XP granted once, only after passing the quiz 3/3: reading + test.
 const READING_XP = 10;
@@ -54,10 +55,7 @@ export default function ArticlePage() {
     <main className="min-h-screen bg-[#F5F7FA] pt-16">
       {/* Hero Image */}
       <div className="relative h-64 md:h-96 overflow-hidden">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${article.heroImage})` }}
-        />
+        <ImageFill src={article.heroImage} />
         <div className="absolute inset-0 bg-gradient-to-t from-[#F5F7FA] via-black/20 to-black/40" />
       </div>
 
@@ -310,9 +308,9 @@ function RelatedTopics({ topicIds }: { topicIds: string[] }) {
             className="rounded-xl overflow-hidden cursor-pointer card-hover border border-[#EEF1F7] group"
           >
             <div className="relative h-24 overflow-hidden">
-              <div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
-                style={{ backgroundImage: `url(${topic.image})` }}
+              <ImageFill
+                src={topic.image}
+                imgClassName="transition-transform duration-300 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
             </div>

@@ -40,7 +40,12 @@ export default function AuthModal() {
     setLoading(false);
 
     if (!result.ok) {
-      setError(result.error || t('auth_error_generic'));
+      const codeKeys: Record<string, string> = {
+        invalid_credentials: 'auth_err_invalid_credentials',
+        email_taken: 'auth_err_email_taken',
+      };
+      const key = result.error && codeKeys[result.error];
+      setError(key ? t(key) : result.error || t('auth_error_generic'));
       return;
     }
     if (result.needsConfirmation) {

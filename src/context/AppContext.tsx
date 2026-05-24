@@ -2,6 +2,15 @@ import React, { createContext, useContext, useState, useRef, useEffect, ReactNod
 import type { Session } from '@supabase/supabase-js';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import type { ProfileRow } from '@/types/supabase';
+import {
+  type LocalAccount,
+  findByEmail,
+  findById,
+  createAccount,
+  updateAccount,
+  getSessionId,
+  setSessionId,
+} from '@/lib/localAccounts';
 
 interface User {
   id: string;
@@ -55,20 +64,21 @@ function getLevelFromXP(xp: number): number {
   return Math.min(Math.floor(xp / 500), LEVEL_TITLES.length - 1);
 }
 
-// Local demo user, used only when Supabase is NOT configured.
-const MOCK_USER: User = {
-  id: 'local',
-  username: 'HistoryExplorer',
-  email: 'explorer@rushistory.ru',
-  xp: 125,
-  level: 0,
-  streak: 3,
-  completedTopics: [],
-  completedEpochs: [],
-  achievements: [],
-  languagesUsed: ['en'],
-  quizAttempts: {},
-};
+function accountToUser(a: LocalAccount): User {
+  return {
+    id: a.id,
+    username: a.username,
+    email: a.email,
+    xp: a.xp,
+    level: getLevelFromXP(a.xp),
+    streak: a.streak,
+    completedTopics: a.completedTopics ?? [],
+    completedEpochs: [],
+    achievements: [],
+    languagesUsed: [],
+    quizAttempts: a.quizAttempts ?? {},
+  };
+}
 
 function profileToUser(p: ProfileRow, email: string): User {
   return {
@@ -86,8 +96,18 @@ function profileToUser(p: ProfileRow, email: string): User {
   };
 }
 
+// Restore the locally logged-in user (mock mode) from the saved session.
+function loadLocalSessionUser(): User | null {
+  const id = getSessionId();
+  if (!id) return null;
+  const acc = findById(id);
+  return acc ? accountToUser(acc) : null;
+}
+
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(isSupabaseConfigured ? null : MOCK_USER);
+  const [user, setUser] = useState<User | null>(() =>
+    isSupabaseConfigured ? null : loadLocalSessionUser(),
+  );
   const [authLoading, setAuthLoading] = useState<boolean>(isSupabaseConfigured);
   const [bilingualMode, setBilingualMode] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -105,7 +125,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     const loadProfile = async (session: Session) => {
       const email = session.user.email ?? '';
-      const { data, error } = await supabase!
+      const { data } = await supabase!
         .from('profiles')
         .select('*')
         .eq('id', session.user.id)
@@ -117,7 +137,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
         skipSync.current = true;
         setUser(profileToUser(data as ProfileRow, email));
       } else {
-        // No profile row yet (e.g. trigger missing) — create a default one.
         const username =
           (session.user.user_metadata?.username as string | undefined) ||
           email.split('@')[0] ||
@@ -126,19 +145,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
         if (!active) return;
         skipSync.current = true;
         setUser({
-          ...MOCK_USER,
           id: session.user.id,
           username,
           email,
           xp: 0,
+          level: 0,
           streak: 0,
           completedTopics: [],
+          completedEpochs: [],
+          achievements: [],
+          languagesUsed: [],
           quizAttempts: {},
-          level: 0,
         });
-      }
-      if (error && !data) {
-        // swallow — handled by creating a default profile above
       }
     };
 
@@ -166,9 +184,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  // ---- Persist progress back to the DB (debounced) ----
+  // ---- Persist progress to Supabase (debounced) ----
   useEffect(() => {
-    if (!isSupabaseConfigured || !supabase || !user || user.id === 'local') return;
+    if (!isSupabaseConfigured || !supabase || !user) return;
     if (skipSync.current) {
       skipSync.current = false;
       return;
@@ -189,6 +207,19 @@ export function AppProvider({ children }: { children: ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.xp, user?.streak, user?.completedTopics, user?.quizAttempts, user?.username]);
 
+  // ---- Persist progress to the local account store (mock mode) ----
+  useEffect(() => {
+    if (isSupabaseConfigured || !user) return;
+    updateAccount(user.id, {
+      username: user.username,
+      xp: user.xp,
+      streak: user.streak,
+      completedTopics: user.completedTopics,
+      quizAttempts: user.quizAttempts,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.xp, user?.streak, user?.completedTopics, user?.quizAttempts, user?.username]);
+
   // ---- Level-up animation when the derived level increases ----
   const prevLevel = useRef(getLevelFromXP(user?.xp ?? 0));
   useEffect(() => {
@@ -205,7 +236,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
   // ---- Auth methods ----
   const signIn = async (email: string, password: string): Promise<AuthResult> => {
     if (!isSupabaseConfigured || !supabase) {
-      setUser({ ...MOCK_USER, email, username: email.split('@')[0] || 'Explorer' });
+      const acc = findByEmail(email);
+      if (!acc || acc.password !== password) {
+        return { ok: false, error: 'invalid_credentials' };
+      }
+      setSessionId(acc.id);
+      setUser(accountToUser(acc));
       return { ok: true };
     }
     const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -215,16 +251,20 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const signUp = async (email: string, password: string, username: string): Promise<AuthResult> => {
     if (!isSupabaseConfigured || !supabase) {
-      setUser({
-        ...MOCK_USER,
-        email,
+      if (findByEmail(email)) {
+        return { ok: false, error: 'email_taken' };
+      }
+      const acc = createAccount({
         username: username || email.split('@')[0] || 'Explorer',
+        email: email.trim(),
+        password,
         xp: 0,
         streak: 0,
         completedTopics: [],
         quizAttempts: {},
-        level: 0,
       });
+      setSessionId(acc.id);
+      setUser(accountToUser(acc));
       return { ok: true };
     }
     const { data, error } = await supabase.auth.signUp({
@@ -240,6 +280,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const signOut = async () => {
     if (isSupabaseConfigured && supabase) {
       await supabase.auth.signOut();
+    } else {
+      setSessionId(null);
     }
     setUser(null);
   };
