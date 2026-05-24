@@ -1,9 +1,11 @@
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { epochs } from '@/data/epochs';
 import { BookOpen, ArrowRight } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { useLanguage } from '@/LanguageContext';
 import ImageFill from '@/components/ImageFill';
+import { popIn, staggerGrid, fadeUp, cardHover, cardTap, inView } from '@/lib/animations';
 
 export default function EpochsPage() {
   const navigate = useNavigate();
@@ -14,7 +16,12 @@ export default function EpochsPage() {
     <main className="min-h-screen bg-[#F5F7FA] pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
-        <div className="mb-12">
+        <motion.div
+          className="mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <div className="inline-flex items-center gap-2 bg-[#EEF1F7] rounded-full px-3 py-1 mb-4">
             <BookOpen className="w-3.5 h-3.5 text-[#2F5D9F]" />
             <span className="text-xs font-medium text-[#2F5D9F] font-ui uppercase tracking-wide">{t('home_epochs_badge')}</span>
@@ -23,22 +30,30 @@ export default function EpochsPage() {
           <p className="text-[#7A8499] font-ui text-lg">
             {t('epochs_page_subtitle')}
           </p>
-        </div>
+        </motion.div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {epochs.map((epoch, i) => {
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          variants={staggerGrid}
+          initial="hidden"
+          whileInView="show"
+          viewport={inView}
+        >
+          {epochs.map((epoch) => {
             const completedCount = user?.completedTopics.filter(t =>
               epoch.topics.some(ep => ep.id === t)
             ).length || 0;
             const progress = (completedCount / epoch.topicCount) * 100;
 
             return (
-              <div
+              <motion.div
                 key={epoch.id}
                 onClick={() => navigate(`/epochs/${epoch.id}`)}
-                className="bg-white rounded-2xl overflow-hidden cursor-pointer card-hover border border-[#EEF1F7] shadow-sm group"
-                style={{ animationDelay: `${i * 60}ms` }}
+                variants={popIn}
+                whileHover={cardHover}
+                whileTap={cardTap}
+                className="bg-white rounded-2xl overflow-hidden cursor-pointer border border-[#EEF1F7] shadow-sm hover:shadow-2xl transition-shadow group"
               >
                 {/* Cover Image */}
                 <div className="relative aspect-[4/3] overflow-hidden">
@@ -97,10 +112,10 @@ export default function EpochsPage() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </main>
   );

@@ -77,9 +77,9 @@ const en: Translations = {
   feat_bilingual_title: "Bilingual Mode",
   feat_bilingual_desc:
     "Read articles in English, Arabic, or Chinese with Russian text below each paragraph.",
-  feat_langlab_title: "Language Lab",
+  feat_langlab_title: "History Mini-Games",
   feat_langlab_desc:
-    "Practice Russian vocabulary from historical context with flashcards and quizzes.",
+    "Test your sense of history — guess which of two events came first and build a streak.",
   feat_quizzes_title: "Knowledge Quizzes",
   feat_quizzes_desc:
     "Test your understanding after each article with multiple-choice and matching questions.",
@@ -248,6 +248,24 @@ const en: Translations = {
   ll_correct_xp: "Correct! +5 XP",
   ll_answer_was: "The answer was:",
 
+  // History mini-game ("Which came first?")
+  nav_game: "Time Game",
+  game_badge: "Mini-game",
+  game_title: "Which Came First?",
+  game_subtitle: "Tap the event that happened earlier in history",
+  game_which_first: "Which came first?",
+  game_score: "Score",
+  game_streak: "Streak",
+  game_best: "Best",
+  game_correct: "Correct!",
+  game_wrong: "Not quite!",
+  game_next: "Next round",
+  game_play: "Play",
+  game_signin_hint: "Sign in to earn XP for your answers.",
+  topic_timeline_title: "On the timeline",
+  glossary_title: "Words of the Era",
+  glossary_hint: "tap to flip",
+
   // Difficulty
   difficulty_beginner: "Beginner",
   difficulty_intermediate: "Intermediate",
@@ -328,9 +346,9 @@ const ru: Translations = {
   feat_bilingual_title: "Двуязычный режим",
   feat_bilingual_desc:
     "Читайте статьи на английском, арабском или китайском с русским текстом под каждым абзацем.",
-  feat_langlab_title: "Языковая лаборатория",
+  feat_langlab_title: "Исторические мини-игры",
   feat_langlab_desc:
-    "Практикуйте русскую лексику в историческом контексте с карточками и тестами.",
+    "Проверьте чувство истории — угадайте, какое из двух событий произошло раньше, и набирайте серию.",
   feat_quizzes_title: "Тесты на знания",
   feat_quizzes_desc:
     "Проверяйте понимание после каждой статьи вопросами с выбором ответа и на сопоставление.",
@@ -487,6 +505,24 @@ const ru: Translations = {
   ll_correct_xp: "Верно! +5 опыта",
   ll_answer_was: "Правильный ответ:",
 
+  // History mini-game ("Which came first?")
+  nav_game: "Игра",
+  game_badge: "Мини-игра",
+  game_title: "Что было раньше?",
+  game_subtitle: "Выберите событие, которое произошло раньше",
+  game_which_first: "Что произошло раньше?",
+  game_score: "Счёт",
+  game_streak: "Серия",
+  game_best: "Рекорд",
+  game_correct: "Верно!",
+  game_wrong: "Мимо!",
+  game_next: "Следующий раунд",
+  game_play: "Играть",
+  game_signin_hint: "Войдите, чтобы получать очки за ответы.",
+  topic_timeline_title: "Тема на ленте времени",
+  glossary_title: "Слова эпохи",
+  glossary_hint: "нажмите, чтобы перевернуть",
+
   difficulty_beginner: "Начальный",
   difficulty_intermediate: "Средний",
   difficulty_advanced: "Продвинутый",
@@ -563,9 +599,9 @@ const ar: Translations = {
   feat_bilingual_title: "الوضع ثنائي اللغة",
   feat_bilingual_desc:
     "اقرأ المقالات بالإنجليزية أو العربية أو الصينية مع نص روسي أسفل كل فقرة.",
-  feat_langlab_title: "مختبر اللغة",
+  feat_langlab_title: "ألعاب تاريخية مصغّرة",
   feat_langlab_desc:
-    "تدرّب على المفردات الروسية من السياق التاريخي عبر البطاقات والاختبارات.",
+    "اختبر حسّك التاريخي — خمّن أيّ الحدثين وقع أولًا واصنع سلسلة انتصارات.",
   feat_quizzes_title: "اختبارات المعرفة",
   feat_quizzes_desc:
     "اختبر فهمك بعد كل مقال بأسئلة الاختيار من متعدد والمطابقة.",
@@ -722,6 +758,24 @@ const ar: Translations = {
   ll_correct_xp: "صحيح! +5 خبرة",
   ll_answer_was: "الإجابة كانت:",
 
+  // History mini-game ("Which came first?")
+  nav_game: "لعبة",
+  game_badge: "لعبة مصغّرة",
+  game_title: "أيّهما حدث أولًا؟",
+  game_subtitle: "اختر الحدث الذي وقع أولًا في التاريخ",
+  game_which_first: "أيّهما حدث أولًا؟",
+  game_score: "النتيجة",
+  game_streak: "السلسلة",
+  game_best: "الأفضل",
+  game_correct: "صحيح!",
+  game_wrong: "ليس تمامًا!",
+  game_next: "الجولة التالية",
+  game_play: "العب",
+  game_signin_hint: "سجّل الدخول لتكسب الخبرة على إجاباتك.",
+  topic_timeline_title: "على الخط الزمني",
+  glossary_title: "كلمات العصر",
+  glossary_hint: "انقر للقلب",
+
   difficulty_beginner: "مبتدئ",
   difficulty_intermediate: "متوسط",
   difficulty_advanced: "متقدم",
@@ -797,9 +851,9 @@ const zh: Translations = {
   feat_bilingual_title: "双语模式",
   feat_bilingual_desc:
     "用英语、阿拉伯语或中文阅读文章，每段下方附有俄语原文。",
-  feat_langlab_title: "语言实验室",
+  feat_langlab_title: "历史小游戏",
   feat_langlab_desc:
-    "通过抽认卡和测验在历史语境中练习俄语词汇。",
+    "考验你的历史感——猜猜两件事中哪件更早发生，并积累连胜。",
   feat_quizzes_title: "知识测验",
   feat_quizzes_desc:
     "每篇文章后通过选择题和配对题测试你的理解。",
@@ -949,6 +1003,24 @@ const zh: Translations = {
   ll_what_means: "这个词是什么意思？",
   ll_correct_xp: "正确！+5 经验",
   ll_answer_was: "答案是：",
+
+  // History mini-game ("Which came first?")
+  nav_game: "小游戏",
+  game_badge: "小游戏",
+  game_title: "哪个更早？",
+  game_subtitle: "选择在历史上更早发生的事件",
+  game_which_first: "哪个先发生？",
+  game_score: "得分",
+  game_streak: "连胜",
+  game_best: "最佳",
+  game_correct: "正确！",
+  game_wrong: "差一点！",
+  game_next: "下一轮",
+  game_play: "开始游戏",
+  game_signin_hint: "登录后即可为你的答案赚取经验值。",
+  topic_timeline_title: "在时间线上",
+  glossary_title: "时代词汇",
+  glossary_hint: "点击翻转",
 
   difficulty_beginner: "初级",
   difficulty_intermediate: "中级",

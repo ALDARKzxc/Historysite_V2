@@ -1,7 +1,9 @@
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { ChevronDown, Play, Map } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { useLanguage, translations } from '@/LanguageContext';
+import { spring } from '@/lib/animations';
 
 export default function HeroSection() {
   const navigate = useNavigate();
@@ -102,20 +104,26 @@ export default function HeroSection() {
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16 animate-fade-in-up stagger-3">
-          <button
+          <motion.button
             onClick={handleStart}
-            className="group flex items-center gap-3 px-8 py-4 bg-[#C94B4B] text-white rounded-2xl font-medium text-base hover:bg-[#b03d3d] transition-all btn-press shadow-xl shadow-[#C94B4B]/30 min-w-[200px] justify-center"
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.96 }}
+            transition={spring}
+            className="group flex items-center gap-3 px-8 py-4 bg-[#C94B4B] text-white rounded-2xl font-medium text-base hover:bg-[#b03d3d] transition-colors shadow-xl shadow-[#C94B4B]/30 min-w-[200px] justify-center"
           >
             <Play className="w-5 h-5 group-hover:scale-110 transition-transform" />
             {t('hero_btn_start')}
-          </button>
-          <button
+          </motion.button>
+          <motion.button
             onClick={() => navigate('/timeline')}
-            className="group flex items-center gap-3 px-8 py-4 bg-white/10 backdrop-blur-sm text-white border border-white/30 rounded-2xl font-medium text-base hover:bg-white/20 transition-all btn-press min-w-[200px] justify-center"
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.96 }}
+            transition={spring}
+            className="group flex items-center gap-3 px-8 py-4 bg-white/10 backdrop-blur-sm text-white border border-white/30 rounded-2xl font-medium text-base hover:bg-white/20 transition-colors min-w-[200px] justify-center"
           >
             <Map className="w-5 h-5 group-hover:scale-110 transition-transform" />
             {t('hero_btn_timeline')}
-          </button>
+          </motion.button>
         </div>
 
         {/* Stats */}

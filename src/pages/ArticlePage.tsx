@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Languages, Zap, BookOpen, CheckCircle, Volume2, Lock } from 'lucide-react';
+import { Languages, Zap, BookOpen, CheckCircle, Lock } from 'lucide-react';
 import { useApp, MAX_QUIZ_ATTEMPTS } from '@/context/AppContext';
 import { useLanguage } from '@/LanguageContext';
 import { epochs } from '@/data/epochs';
 import { getArticleData } from '@/data/articles';
+import { getTopicDetail } from '@/data/topicDetails';
 import QuizModule from '@/components/QuizModule';
 import ImageFill from '@/components/ImageFill';
+import TopicGlossary from '@/components/TopicGlossary';
 
 // XP granted once, only after passing the quiz 3/3: reading + test.
 const READING_XP = 10;
@@ -43,6 +45,8 @@ export default function ArticlePage() {
   }
 
   const article = topic ? getArticleData(topicId!, topic) : null;
+  const detail = getTopicDetail(topicId);
+  const keyDates = detail?.keyDates ?? article?.keyDates ?? [];
   const isCompleted = !!(topicId && user?.completedTopics.includes(topicId));
   const attemptsUsed = (topicId && user?.quizAttempts?.[topicId]) || 0;
   const attemptsLeft = Math.max(0, MAX_QUIZ_ATTEMPTS - attemptsUsed);
@@ -247,42 +251,25 @@ export default function ArticlePage() {
           {/* Sidebar */}
           <aside className="hidden lg:block w-72 flex-shrink-0 sticky top-24 self-start space-y-5">
             {/* Key Dates */}
-            <div className="bg-white rounded-2xl border border-[#EEF1F7] shadow-sm p-5">
-              <h3 className="font-display text-base font-bold text-[#2A2A2A] mb-4 flex items-center gap-2">
-                <span className="w-2 h-2 bg-[#C94B4B] rounded-full" />
-                {t('article_key_dates')}
-              </h3>
-              <div className="space-y-3">
-                {article.keyDates.map((date, i) => (
-                  <div key={i} className="flex gap-3">
-                    <div className="font-mono-accent text-xs font-bold text-[#2F5D9F] w-20 flex-shrink-0 pt-0.5">{date.year}</div>
-                    <div className="text-sm text-[#7A8499] font-ui leading-snug">{localize(date.event)}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Vocabulary Box */}
-            <div className="bg-white rounded-2xl border border-[#EEF1F7] shadow-sm p-5">
-              <h3 className="font-display text-base font-bold text-[#2A2A2A] mb-4 flex items-center gap-2">
-                <span className="w-2 h-2 bg-[#4A7C59] rounded-full" />
-                {t('russian_vocabulary')}
-              </h3>
-              <div className="space-y-3">
-                {article.vocabulary.map((word, i) => (
-                  <div key={i} className="bg-[#F5F7FA] rounded-xl p-3">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-display text-base font-bold text-[#2A2A2A]">{word.word}</span>
-                      <button className="text-[#7A8499] hover:text-[#2F5D9F] transition-colors">
-                        <Volume2 className="w-3.5 h-3.5" />
-                      </button>
+            {keyDates.length > 0 && (
+              <div className="bg-white rounded-2xl border border-[#EEF1F7] shadow-sm p-5">
+                <h3 className="font-display text-base font-bold text-[#2A2A2A] mb-4 flex items-center gap-2">
+                  <span className="w-2 h-2 bg-[#C94B4B] rounded-full" />
+                  {t('article_key_dates')}
+                </h3>
+                <div className="space-y-3">
+                  {keyDates.map((date, i) => (
+                    <div key={i} className="flex gap-3">
+                      <div className="font-mono-accent text-xs font-bold text-[#2F5D9F] w-16 flex-shrink-0 pt-0.5">{date.year}</div>
+                      <div className="text-sm text-[#7A8499] font-ui leading-snug">{localize(date.event)}</div>
                     </div>
-                    <div className="text-xs text-[#7A8499] font-ui">{localize(word.translation)}</div>
-                    <div className="text-xs font-mono-accent text-[#9AA3B2] mt-0.5">/{word.pronunciation}/</div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
+
+            {/* Interactive glossary — "Words of the Era" */}
+            <TopicGlossary topicId={topicId} color={epoch.color} />
 
             {/* Progress */}
             <div className="bg-white rounded-2xl border border-[#EEF1F7] shadow-sm p-5">

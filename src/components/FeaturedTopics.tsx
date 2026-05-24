@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { epochs } from '@/data/epochs';
 import { Zap, Star } from 'lucide-react';
 import { useLanguage } from '@/LanguageContext';
 import ImageFill from '@/components/ImageFill';
+import { popIn, staggerGrid, fadeUp, cardHover, cardTap, inView } from '@/lib/animations';
 
 const DIFF_COLORS = {
   Beginner: 'bg-green-100 text-green-700',
@@ -39,7 +41,13 @@ export default function FeaturedTopics() {
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="flex items-end justify-between mb-12">
+        <motion.div
+          className="flex items-end justify-between mb-12"
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={inView}
+        >
           <div>
             <div className="inline-flex items-center gap-2 bg-[#EEF1F7] rounded-full px-3 py-1 mb-3">
               <Star className="w-3.5 h-3.5 text-yellow-500" />
@@ -48,16 +56,24 @@ export default function FeaturedTopics() {
             <h2 className="font-display text-4xl font-bold text-[#2A2A2A]">{t('featured_title')}</h2>
             <p className="text-[#7A8499] font-ui mt-2">{t('featured_subtitle')}</p>
           </div>
-        </div>
+        </motion.div>
 
         {/* Topics Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredTopics.map((topic, i) => (
-            <div
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          variants={staggerGrid}
+          initial="hidden"
+          whileInView="show"
+          viewport={inView}
+        >
+          {featuredTopics.map((topic) => (
+            <motion.div
               key={topic.id}
               onClick={() => navigate(`/article/${topic.id}`)}
-              className="group cursor-pointer bg-white rounded-2xl overflow-hidden border border-[#EEF1F7] shadow-sm card-hover animate-fade-in-up"
-              style={{ animationDelay: `${i * 80}ms` }}
+              variants={popIn}
+              whileHover={cardHover}
+              whileTap={cardTap}
+              className="group cursor-pointer bg-white rounded-2xl overflow-hidden border border-[#EEF1F7] shadow-sm hover:shadow-2xl transition-shadow"
             >
               {/* Image */}
               <div className="relative aspect-square overflow-hidden">
@@ -101,9 +117,9 @@ export default function FeaturedTopics() {
                   {localize(topic.teaser)}
                 </p>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

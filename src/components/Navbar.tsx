@@ -1,13 +1,33 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Flame, Globe, ChevronDown, BookOpen, Zap, Menu, X, LogOut } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '@/context/AppContext';
 import { useLanguage, Language } from '@/LanguageContext';
+import { spring, springSnappy, EASE } from '@/lib/animations';
+
+const MotionLink = motion(Link);
+
+// Smooth, non-bouncy dropdown reveal (no spring overshoot → no "shake").
+const dropdown = {
+  hidden: { opacity: 0, y: -6, scale: 0.98 },
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.22, ease: EASE, staggerChildren: 0.05, delayChildren: 0.05 },
+  },
+  exit: { opacity: 0, y: -6, scale: 0.98, transition: { duration: 0.14, ease: 'easeIn' } },
+};
+const dropItem = {
+  hidden: { opacity: 0, y: -6 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.22, ease: EASE } },
+};
 
 const NAV_LINKS = [
   { key: 'nav_timeline', path: '/timeline' },
   { key: 'nav_epochs', path: '/epochs' },
-  { key: 'nav_language_lab', path: '/language-lab' },
+  { key: 'nav_game', path: '/game' },
   { key: 'nav_leaderboard', path: '/leaderboard' },
   { key: 'nav_about', path: '/about' },
 ];
@@ -55,53 +75,86 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop Nav Links */}
+          {/* Desktop Nav Links — magic pill on active + lift & gradient underline on hover */}
           <div className="hidden md:flex items-center gap-1">
-            {NAV_LINKS.map(link => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`px-4 py-2 rounded-lg text-sm font-medium font-ui transition-all ${
-                  location.pathname === link.path
-                    ? 'bg-[#EEF1F7] text-[#2F5D9F]'
-                    : 'text-[#7A8499] hover:text-[#2A2A2A] hover:bg-[#F5F7FA]'
-                }`}
-              >
-                {t(link.key)}
-              </Link>
-            ))}
+            {NAV_LINKS.map(link => {
+              const active = location.pathname === link.path;
+              return (
+                <MotionLink
+                  key={link.path}
+                  to={link.path}
+                  whileHover={{ y: -3 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={spring}
+                  className="group relative px-4 py-2 rounded-lg text-sm font-medium font-ui"
+                >
+                  {active && (
+                    <motion.span
+                      layoutId="nav-pill"
+                      className="absolute inset-0 rounded-lg bg-[#EEF1F7]"
+                      transition={springSnappy}
+                    />
+                  )}
+                  <span
+                    className={`relative z-10 transition-colors ${
+                      active ? 'text-[#2F5D9F]' : 'text-[#7A8499] group-hover:text-[#2A2A2A]'
+                    }`}
+                  >
+                    {t(link.key)}
+                  </span>
+                  {!active && (
+                    <span className="absolute left-3 right-3 bottom-1 h-[2px] rounded-full bg-gradient-to-r from-[#2F5D9F] to-[#C94B4B] origin-center scale-x-0 transition-transform duration-300 ease-out group-hover:scale-x-100" />
+                  )}
+                </MotionLink>
+              );
+            })}
           </div>
 
           {/* Right Side */}
           <div className="flex items-center gap-3">
             {/* Language Switcher */}
             <div className="relative">
-              <button
+              <motion.button
                 onClick={() => setLangOpen(!langOpen)}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-[#7A8499] hover:text-[#2A2A2A] hover:bg-[#F5F7FA] transition-all"
+                whileTap={{ scale: 0.94 }}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-[#7A8499] hover:text-[#2A2A2A] hover:bg-[#F5F7FA] transition-colors"
               >
                 <Globe className="w-4 h-4" />
                 <span className="hidden sm:inline">{currentLang.flag} {currentLang.code.toUpperCase()}</span>
-                <ChevronDown className="w-3 h-3" />
-              </button>
-              {langOpen && (
-                <div className="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-xl border border-[#EEF1F7] py-1 w-44 z-50">
-                  {LANGUAGES.map(lang => (
-                    <button
-                      key={lang.code}
-                      onClick={() => { setLanguage(lang.code); setLangOpen(false); }}
-                      className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
-                        language === lang.code
-                          ? 'bg-[#EEF1F7] text-[#2F5D9F] font-medium'
-                          : 'text-[#2A2A2A] hover:bg-[#F5F7FA]'
-                      }`}
-                    >
-                      <span>{lang.flag}</span>
-                      <span className="font-ui">{lang.label}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
+                <motion.span animate={{ rotate: langOpen ? 180 : 0 }} transition={spring}>
+                  <ChevronDown className="w-3 h-3" />
+                </motion.span>
+              </motion.button>
+              <AnimatePresence>
+                {langOpen && (
+                  <motion.div
+                    variants={dropdown}
+                    initial="hidden"
+                    animate="show"
+                    exit="exit"
+                    style={{ transformOrigin: 'top right' }}
+                    className="absolute right-0 top-full mt-2 bg-white rounded-xl shadow-2xl border border-[#EEF1F7] py-1 w-44 z-50"
+                  >
+                    {LANGUAGES.map(lang => (
+                      <motion.button
+                        key={lang.code}
+                        variants={dropItem}
+                        whileHover={{ x: 4 }}
+                        transition={spring}
+                        onClick={() => { setLanguage(lang.code); setLangOpen(false); }}
+                        className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm ${
+                          language === lang.code
+                            ? 'bg-[#EEF1F7] text-[#2F5D9F] font-medium'
+                            : 'text-[#2A2A2A] hover:bg-[#F5F7FA]'
+                        }`}
+                      >
+                        <span className="text-base">{lang.flag}</span>
+                        <span className="font-ui">{lang.label}</span>
+                      </motion.button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* User Avatar + XP */}
@@ -115,38 +168,56 @@ export default function Navbar() {
                   <span className="font-mono-accent text-sm font-medium text-[#2F5D9F]">{user.xp} XP</span>
                 </div>
                 <div className="relative">
-                  <button
+                  <motion.button
                     onClick={() => setUserOpen(o => !o)}
-                    className="w-9 h-9 rounded-full bg-[#2F5D9F] flex items-center justify-center text-white text-sm font-bold cursor-pointer hover:opacity-90 transition-opacity shadow-md uppercase"
+                    whileHover={{ scale: 1.08 }}
+                    whileTap={{ scale: 0.92 }}
+                    transition={spring}
+                    className="w-9 h-9 rounded-full bg-[#2F5D9F] flex items-center justify-center text-white text-sm font-bold cursor-pointer shadow-md uppercase"
                   >
                     {user.username.charAt(0)}
-                  </button>
-                  {userOpen && (
-                    <div className="absolute right-0 top-full mt-2 bg-white rounded-xl shadow-xl border border-[#EEF1F7] py-1 w-56 z-50">
-                      <div className="px-4 py-2.5 border-b border-[#EEF1F7]">
-                        <div className="text-sm font-semibold text-[#2A2A2A] font-ui truncate">{user.username}</div>
-                        {user.email && (
-                          <div className="text-xs text-[#7A8499] font-ui truncate">{user.email}</div>
-                        )}
-                      </div>
-                      <button
-                        onClick={handleSignOut}
-                        className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-[#C94B4B] hover:bg-[#F5F7FA] transition-colors font-ui"
+                  </motion.button>
+                  <AnimatePresence>
+                    {userOpen && (
+                      <motion.div
+                        variants={dropdown}
+                        initial="hidden"
+                        animate="show"
+                        exit="exit"
+                        style={{ transformOrigin: 'top right' }}
+                        className="absolute right-0 top-full mt-2 bg-white rounded-xl shadow-2xl border border-[#EEF1F7] py-1 w-56 z-50"
                       >
-                        <LogOut className="w-4 h-4" />
-                        {t('nav_logout')}
-                      </button>
-                    </div>
-                  )}
+                        <motion.div variants={dropItem} className="px-4 py-2.5 border-b border-[#EEF1F7]">
+                          <div className="text-sm font-semibold text-[#2A2A2A] font-ui truncate">{user.username}</div>
+                          {user.email && (
+                            <div className="text-xs text-[#7A8499] font-ui truncate">{user.email}</div>
+                          )}
+                        </motion.div>
+                        <motion.button
+                          variants={dropItem}
+                          whileHover={{ x: 4 }}
+                          transition={spring}
+                          onClick={handleSignOut}
+                          className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-[#C94B4B] hover:bg-[#F5F7FA] transition-colors font-ui"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          {t('nav_logout')}
+                        </motion.button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
             ) : (
-              <button
+              <motion.button
                 onClick={handleLogin}
-                className="hidden sm:flex items-center gap-2 px-4 py-2 bg-[#2F5D9F] text-white rounded-lg text-sm font-medium hover:bg-[#264d8a] transition-colors btn-press"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                transition={spring}
+                className="hidden sm:flex items-center gap-2 px-4 py-2 bg-[#2F5D9F] text-white rounded-lg text-sm font-medium hover:bg-[#264d8a] transition-colors shadow-md shadow-[#2F5D9F]/30"
               >
                 {t('nav_login')}
-              </button>
+              </motion.button>
             )}
 
             {/* Mobile Menu Toggle */}

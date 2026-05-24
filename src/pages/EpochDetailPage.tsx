@@ -1,9 +1,11 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { epochs } from '@/data/epochs';
 import { ChevronLeft, Star, Zap, CheckCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useApp } from '@/context/AppContext';
 import { useLanguage } from '@/LanguageContext';
 import ImageFill from '@/components/ImageFill';
+import { popIn, staggerGrid, cardHover, cardTap, inView } from '@/lib/animations';
 
 const DIFF_COLOR = {
   Beginner: 'bg-green-100 text-green-700',
@@ -101,15 +103,23 @@ export default function EpochDetailPage() {
         <h2 className="font-display text-2xl font-bold text-[#2A2A2A] mb-6">
           {t('topics_label')} ({epoch.topics.length} {t('available')})
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {epoch.topics.map((topic, i) => {
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+          variants={staggerGrid}
+          initial="hidden"
+          whileInView="show"
+          viewport={inView}
+        >
+          {epoch.topics.map((topic) => {
             const isCompleted = user?.completedTopics.includes(topic.id);
             return (
-              <div
+              <motion.div
                 key={topic.id}
                 onClick={() => navigate(`/article/${topic.id}`)}
-                className="bg-white rounded-2xl overflow-hidden cursor-pointer card-hover border border-[#EEF1F7] shadow-sm group relative"
-                style={{ animationDelay: `${i * 60}ms` }}
+                variants={popIn}
+                whileHover={cardHover}
+                whileTap={cardTap}
+                className="bg-white rounded-2xl overflow-hidden cursor-pointer border border-[#EEF1F7] shadow-sm hover:shadow-2xl transition-shadow group relative"
               >
                 {isCompleted && (
                   <div className="absolute top-3 right-3 z-10">
@@ -150,10 +160,10 @@ export default function EpochDetailPage() {
                     </span>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </main>
   );
