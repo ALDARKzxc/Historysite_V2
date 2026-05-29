@@ -125,39 +125,73 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     const loadProfile = async (session: Session) => {
       const email = session.user.email ?? '';
-      const { data } = await supabase!
+      const userId = session.user.id;
+      const fallbackUsername =
+        (session.user.user_metadata?.username as string | undefined) ||
+        email.split('@')[0] ||
+        'Explorer';
+
+      const { data, error } = await supabase!
         .from('profiles')
         .select('*')
-        .eq('id', session.user.id)
+        .eq('id', userId)
         .maybeSingle();
-
+      if (error) {
+        console.error('[supabase] profile fetch failed:', error);
+      }
       if (!active) return;
 
       if (data) {
         skipSync.current = true;
         setUser(profileToUser(data as ProfileRow, email));
-      } else {
-        const username =
-          (session.user.user_metadata?.username as string | undefined) ||
-          email.split('@')[0] ||
-          'Explorer';
-        await supabase!.from('profiles').insert({ id: session.user.id, username });
-        if (!active) return;
-        skipSync.current = true;
-        setUser({
-          id: session.user.id,
-          username,
-          email,
-          xp: 0,
-          level: 0,
-          streak: 0,
-          completedTopics: [],
-          completedEpochs: [],
-          achievements: [],
-          languagesUsed: [],
-          quizAttempts: {},
-        });
+        return;
       }
+
+      // No row found. Upsert so we don't conflict with the signup trigger,
+      // then re-fetch to read the canonical row (it may already have progress
+      // from another session that we missed on the first SELECT).
+      const { error: upsertError } = await supabase!
+        .from('profiles')
+        .upsert(
+          { id: userId, username: fallbackUsername },
+          { onConflict: 'id', ignoreDuplicates: true },
+        );
+      if (upsertError) {
+        console.error('[supabase] profile upsert failed:', upsertError);
+      }
+      if (!active) return;
+
+      const { data: refetched, error: refetchError } = await supabase!
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle();
+      if (refetchError) {
+        console.error('[supabase] profile re-fetch failed:', refetchError);
+      }
+      if (!active) return;
+
+      if (refetched) {
+        skipSync.current = true;
+        setUser(profileToUser(refetched as ProfileRow, email));
+        return;
+      }
+
+      // Truly nothing in the DB — last-resort default.
+      skipSync.current = true;
+      setUser({
+        id: userId,
+        username: fallbackUsername,
+        email,
+        xp: 0,
+        level: 0,
+        streak: 0,
+        completedTopics: [],
+        completedEpochs: [],
+        achievements: [],
+        languagesUsed: [],
+        quizAttempts: {},
+      });
     };
 
     supabase.auth.getSession().then(({ data }) => {
@@ -202,7 +236,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
         completed_topics: user.completedTopics,
         quiz_attempts: user.quizAttempts,
       })
-      .eq('id', user.id);
+      .eq('id', user.id)
+      .then(({ error }) => {
+        if (error) console.error('[supabase] profile update failed:', error);
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.xp, user?.streak, user?.completedTopics, user?.quizAttempts, user?.username]);
 
