@@ -5,6 +5,9 @@ import { abolitionSerfdomArticle } from './articles/abolition-serfdom';
 import { octoberRevolutionArticle } from './articles/october-revolution';
 import { peterReformsArticle } from './articles/peter-reforms';
 import { operationBarbarossaArticle } from './articles/operation-barbarossa';
+import { siegeLeningradArticle } from './articles/siege-leningrad';
+import { victoryDayArticle } from './articles/victory-day';
+import { ivanTerribleArticle } from './articles/ivan-terrible';
 
 export interface ArticleSection {
   heading: LocalizedText;
@@ -223,6 +226,9 @@ export const articles: Record<string, ArticleData> = {
   'october-revolution': octoberRevolutionArticle,
   'peter-reforms': peterReformsArticle,
   'operation-barbarossa': operationBarbarossaArticle,
+  'siege-leningrad': siegeLeningradArticle,
+  'victory-day': victoryDayArticle,
+  'ivan-terrible': ivanTerribleArticle,
 };
 
 // Generic article template for topics without specific content
