@@ -3,36 +3,37 @@ import { useLanguage } from '@/LanguageContext';
 
 const TEAM = [
   {
-    name: 'Gazaev Alikhan Abdullakhovich',
-    nameRu: 'Газаев Алихан Абдуллахович',
+    name: 'Газаев Алихан Абдуллахович',
+    nameRu: 'Gazaev Alikhan Abdullakhovich',
     roleKey: 'role_lead_dev',
     descKey: 'role_lead_dev_desc',
-    initials: 'GA',
+    initials: 'ГА',
     color: '#2F5D9F',
   },
   {
-    name: 'Murzin Matvey Vladimirovich',
-    nameRu: 'Мурзин Матвей Владимирович',
+    name: 'Мурзин Матвей Владимирович',
+    nameRu: 'Murzin Matvey Vladimirovich',
     roleKey: 'role_frontend',
     descKey: 'role_frontend_desc',
-    initials: 'MM',
+    initials: 'ММ',
     color: '#C94B4B',
   },
   {
-    name: 'Yakimenko Alexey Sergeevich',
-    nameRu: 'Якименко Алексей Сергеевич',
+    name: 'Якименко Алексей Сергеевич',
+    nameRu: 'Yakimenko Alexey Sergeevich',
     roleKey: 'role_content',
     descKey: 'role_content_desc',
-    initials: 'YA',
+    initials: 'ЯА',
     color: '#4A7C59',
   },
 ];
 
 const SOURCES = [
-  { author: 'N.M. Karamzin', workKey: 'source_karamzin' },
-  { author: 'S.M. Solovyov', workKey: 'source_solovyov' },
-  { author: 'V.O. Klyuchevsky', workKey: 'source_klyuchevsky' },
-  { author: 'N.I. Kostomarov', workKey: 'source_kostomarov' },
+  { author: 'А.С. Орлов', workKey: 'source_orlov' },
+  { author: 'Н.М. Карамзин', workKey: 'source_karamzin' },
+  { author: 'С.М. Соловьёв', workKey: 'source_solovyov' },
+  { author: 'В.О. Ключевский', workKey: 'source_klyuchevsky' },
+  { author: 'Н.И. Костомаров', workKey: 'source_kostomarov' },
 ];
 
 export default function AboutPage() {

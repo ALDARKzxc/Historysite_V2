@@ -138,6 +138,11 @@ const en: Translations = {
   article_related: "Related Topics",
   article_not_found: "Article not found",
   back_to_epochs: "Back to Epochs",
+  reader_intro: "Introduction",
+  reader_section: "Chapter",
+  reader_contents: "Contents",
+  reader_prev: "Previous",
+  reader_next: "Next",
 
   // Quiz
   quiz_time: "Quiz Time",
@@ -210,7 +215,7 @@ const en: Translations = {
   about_sources_intro:
     "All historical content is based on verified Russian academic scholarship:",
   about_made_with: "Made with",
-  about_for_lovers: "for history lovers worldwide · MADI University · 2024",
+  about_for_lovers: "for history lovers worldwide · MADI University · 2026",
   about_university: "MADI",
   about_group: "Group 1bIVTn2",
 
@@ -224,6 +229,7 @@ const en: Translations = {
   role_content_desc:
     "Researched and verified all historical content using primary Russian academic sources.",
 
+  source_orlov: "History of Russia from Ancient Times to the Present (textbook)",
   source_karamzin: "History of the Russian State",
   source_solovyov: "History of Russia from Ancient Times",
   source_klyuchevsky: "Course of Russian History",
@@ -401,6 +407,11 @@ const ru: Translations = {
   article_related: "Связанные темы",
   article_not_found: "Статья не найдена",
   back_to_epochs: "Назад к эпохам",
+  reader_intro: "Введение",
+  reader_section: "Глава",
+  reader_contents: "Содержание",
+  reader_prev: "Назад",
+  reader_next: "Далее",
 
   quiz_time: "Время теста",
   quiz_questions: "вопросов",
@@ -468,7 +479,7 @@ const ru: Translations = {
   about_sources_intro:
     "Весь исторический контент основан на проверенной российской академической науке:",
   about_made_with: "Сделано с",
-  about_for_lovers: "для любителей истории по всему миру · Университет МАДИ · 2024",
+  about_for_lovers: "для любителей истории по всему миру · Университет МАДИ · 2026",
   about_university: "МАДИ",
   about_group: "Группа 1бИВТн2",
 
@@ -482,6 +493,7 @@ const ru: Translations = {
   role_content_desc:
     "Исследовал и проверял весь исторический контент по первичным российским академическим источникам.",
 
+  source_orlov: "История России с древнейших времён до наших дней (учебник)",
   source_karamzin: "История государства Российского",
   source_solovyov: "История России с древнейших времён",
   source_klyuchevsky: "Курс русской истории",
@@ -654,6 +666,11 @@ const ar: Translations = {
   article_related: "مواضيع ذات صلة",
   article_not_found: "المقال غير موجود",
   back_to_epochs: "العودة إلى العصور",
+  reader_intro: "مقدمة",
+  reader_section: "فصل",
+  reader_contents: "المحتويات",
+  reader_prev: "السابق",
+  reader_next: "التالي",
 
   quiz_time: "وقت الاختبار",
   quiz_questions: "أسئلة",
@@ -721,7 +738,7 @@ const ar: Translations = {
   about_sources_intro:
     "يستند كل المحتوى التاريخي إلى بحث أكاديمي روسي موثّق:",
   about_made_with: "صُنع بـ",
-  about_for_lovers: "لمحبي التاريخ حول العالم · جامعة MADI · 2024",
+  about_for_lovers: "لمحبي التاريخ حول العالم · جامعة MADI · 2026",
   about_university: "MADI",
   about_group: "المجموعة 1bIVTn2",
 
@@ -735,6 +752,7 @@ const ar: Translations = {
   role_content_desc:
     "بحث وتحقق من كل المحتوى التاريخي باستخدام مصادر أكاديمية روسية أولية.",
 
+  source_orlov: "تاريخ روسيا من العصور القديمة حتى اليوم (كتاب مدرسي)",
   source_karamzin: "تاريخ الدولة الروسية",
   source_solovyov: "تاريخ روسيا منذ العصور القديمة",
   source_klyuchevsky: "دورة في التاريخ الروسي",
@@ -906,6 +924,11 @@ const zh: Translations = {
   article_related: "相关主题",
   article_not_found: "未找到文章",
   back_to_epochs: "返回时代",
+  reader_intro: "导言",
+  reader_section: "章节",
+  reader_contents: "目录",
+  reader_prev: "上一章",
+  reader_next: "下一章",
 
   quiz_time: "测验时间",
   quiz_questions: "道题",
@@ -970,7 +993,7 @@ const zh: Translations = {
   about_sources_title: "学术来源",
   about_sources_intro: "所有历史内容均基于经过验证的俄罗斯学术研究：",
   about_made_with: "用",
-  about_for_lovers: "为全世界的历史爱好者打造 · MADI 大学 · 2024",
+  about_for_lovers: "为全世界的历史爱好者打造 · MADI 大学 · 2026",
   about_university: "MADI",
   about_group: "1bIVTn2 班",
 
@@ -981,6 +1004,7 @@ const zh: Translations = {
   role_content: "内容研究与历史核实",
   role_content_desc: "使用俄罗斯第一手学术来源研究并核实所有历史内容。",
 
+  source_orlov: "从古至今的俄罗斯历史(教科书)",
   source_karamzin: "俄罗斯国家史",
   source_solovyov: "古代以来的俄罗斯史",
   source_klyuchevsky: "俄罗斯历史教程",

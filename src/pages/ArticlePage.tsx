@@ -9,6 +9,7 @@ import { getTopicDetail } from '@/data/topicDetails';
 import QuizModule from '@/components/QuizModule';
 import ImageFill from '@/components/ImageFill';
 import TopicGlossary from '@/components/TopicGlossary';
+import ArticleReader from '@/components/ArticleReader';
 
 // XP granted once, only after passing the quiz 3/3: reading + test.
 const READING_XP = 10;
@@ -156,35 +157,19 @@ export default function ArticlePage() {
               </div>
             </div>
 
-            {/* Article Body */}
+            {/* Paged article reader */}
+            <ArticleReader
+              leadParagraph={article.leadParagraph}
+              sections={article.sections}
+              bilingualMode={bilingualMode}
+              accentColor={epoch.color}
+            />
+
+            {/* Quiz / completion panel */}
             <div className="bg-white rounded-2xl shadow-sm border border-[#EEF1F7] p-6 md:p-8 mb-6">
-              {/* Lead Paragraph */}
-              <p className="text-lg font-ui text-[#2A2A2A] leading-relaxed mb-6 font-medium border-l-4 border-[#2F5D9F] pl-4">
-                {localize(article.leadParagraph)}
-              </p>
-
-              {/* Sections */}
-              {article.sections.map((section, i) => (
-                <div key={i} className="mb-8">
-                  <h2 className="font-display text-xl md:text-2xl font-bold text-[#2A2A2A] mb-4">
-                    {localize(section.heading)}
-                  </h2>
-                  <div className={bilingualMode && showRussianSubtitles ? 'space-y-3' : ''}>
-                    <p className="text-[#2A2A2A] font-ui leading-relaxed text-base">
-                      {localize(section.content)}
-                    </p>
-                    {bilingualMode && showRussianSubtitles && section.content.ru && (
-                      <p className="text-russian pl-4 border-l-2 border-[#EEF1F7]">
-                        {section.content.ru}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ))}
-
               {/* Completed state — earned once */}
               {isCompleted && !showQuiz && (
-                <div className="mt-8 pt-6 border-t border-[#EEF1F7]">
+                <div>
                   <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3">
                     <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
                     <div>
@@ -197,7 +182,7 @@ export default function ArticlePage() {
 
               {/* Take the test — XP only on a perfect 3/3 result */}
               {!isCompleted && !showQuiz && canTakeTest && (
-                <div className="mt-8 pt-6 border-t border-[#EEF1F7]">
+                <div>
                   <p className="text-sm text-[#7A8499] font-ui mb-3 text-center">{t('quiz_pass_hint')}</p>
                   <button
                     onClick={startTest}
@@ -218,7 +203,7 @@ export default function ArticlePage() {
 
               {/* Locked — all attempts used without passing */}
               {!isCompleted && !showQuiz && !canTakeTest && (
-                <div className="mt-8 pt-6 border-t border-[#EEF1F7]">
+                <div>
                   <div className="bg-[#F5F7FA] border border-[#EEF1F7] rounded-xl p-4 flex items-center gap-3">
                     <Lock className="w-5 h-5 text-[#7A8499] flex-shrink-0" />
                     <div>
