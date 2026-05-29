@@ -68,29 +68,41 @@ export default function LeaderboardPage() {
       return;
     }
 
+    const fetchBoard = async () => {
+      const { data } = await supabase!
+        .from('profiles')
+        .select('id, username, xp, streak')
+        .order('xp', { ascending: false })
+        .limit(50);
+      if (!active) return;
+      const mapped: Row[] = (data ?? []).map(p => ({
+        key: p.id,
+        username: p.username || 'Explorer',
+        level: LEVEL_TITLES[getLevelFromXP(p.xp ?? 0)],
+        xp: p.xp ?? 0,
+        streak: p.streak ?? 0,
+        avatar: (p.username || 'E').charAt(0),
+        isCurrentUser: !!user && p.id === user.id,
+      }));
+      setRows(mapped);
+      setLoading(false);
+    };
+
     setLoading(true);
-    supabase
-      .from('profiles')
-      .select('id, username, xp, streak')
-      .order('xp', { ascending: false })
-      .limit(50)
-      .then(({ data }) => {
-        if (!active) return;
-        const mapped: Row[] = (data ?? []).map(p => ({
-          key: p.id,
-          username: p.username || 'Explorer',
-          level: LEVEL_TITLES[getLevelFromXP(p.xp ?? 0)],
-          xp: p.xp ?? 0,
-          streak: p.streak ?? 0,
-          avatar: (p.username || 'E').charAt(0),
-          isCurrentUser: !!user && p.id === user.id,
-        }));
-        setRows(mapped);
-        setLoading(false);
-      });
+    void fetchBoard();
+
+    // Live updates: any profile UPDATE (someone earned XP, possibly on another
+    // device) triggers a fresh fetch so the board stays current without a reload.
+    const channel = supabase
+      .channel('leaderboard-updates')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, () => {
+        void fetchBoard();
+      })
+      .subscribe();
 
     return () => {
       active = false;
+      void supabase!.removeChannel(channel);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id, user?.xp]);

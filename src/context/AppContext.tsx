@@ -184,28 +184,81 @@ export function AppProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  // ---- Persist progress to Supabase (debounced) ----
+  // ---- Persist progress to Supabase (immediate write).
+  // Writing immediately (no debounce) so the leaderboard and other devices
+  // see the new XP within a second instead of after a stale 600ms window.
   useEffect(() => {
     if (!isSupabaseConfigured || !supabase || !user) return;
     if (skipSync.current) {
       skipSync.current = false;
       return;
     }
-    const handle = setTimeout(() => {
-      void supabase!
-        .from('profiles')
-        .update({
-          username: user.username,
-          xp: user.xp,
-          streak: user.streak,
-          completed_topics: user.completedTopics,
-          quiz_attempts: user.quizAttempts,
-        })
-        .eq('id', user.id);
-    }, 600);
-    return () => clearTimeout(handle);
+    void supabase!
+      .from('profiles')
+      .update({
+        username: user.username,
+        xp: user.xp,
+        streak: user.streak,
+        completed_topics: user.completedTopics,
+        quiz_attempts: user.quizAttempts,
+      })
+      .eq('id', user.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.xp, user?.streak, user?.completedTopics, user?.quizAttempts, user?.username]);
+
+  // ---- Live sync of the user's own profile across devices.
+  // Subscribes to UPDATE events on this row so progress made on another
+  // device shows up here without a page reload. The monotonic XP guard
+  // prevents a slow realtime echo from reverting fresher local progress.
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase || !user?.id) return;
+    const userId = user.id;
+    const channel = supabase
+      .channel(`profile-${userId}`)
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'profiles', filter: `id=eq.${userId}` },
+        payload => {
+          const fresh = payload.new as ProfileRow;
+          setUser(prev => {
+            if (!prev || prev.id !== userId) return prev;
+            if ((fresh.xp ?? 0) < prev.xp) return prev;
+            skipSync.current = true;
+            return profileToUser(fresh, prev.email);
+          });
+        },
+      )
+      .subscribe();
+    return () => {
+      void supabase!.removeChannel(channel);
+    };
+  }, [user?.id]);
+
+  // ---- Refresh profile when the tab becomes visible again.
+  // Belt-and-braces in case the realtime channel missed a beat while the
+  // tab was backgrounded.
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase || !user?.id) return;
+    const userId = user.id;
+    const refresh = async () => {
+      if (document.visibilityState !== 'visible') return;
+      const { data } = await supabase!
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle();
+      if (!data) return;
+      const fresh = data as ProfileRow;
+      setUser(prev => {
+        if (!prev || prev.id !== userId) return prev;
+        if ((fresh.xp ?? 0) < prev.xp) return prev;
+        skipSync.current = true;
+        return profileToUser(fresh, prev.email);
+      });
+    };
+    document.addEventListener('visibilitychange', refresh);
+    return () => document.removeEventListener('visibilitychange', refresh);
+  }, [user?.id]);
 
   // ---- Persist progress to the local account store (mock mode) ----
   useEffect(() => {

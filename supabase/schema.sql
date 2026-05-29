@@ -77,3 +77,13 @@ create trigger profiles_set_updated_at
 
 -- 5) Optional: faster leaderboard ordering.
 create index if not exists profiles_xp_idx on public.profiles (xp desc);
+
+-- 6) Enable Realtime for cross-device live progress sync.
+-- Idempotent: ignore "already member" error if the table is already published.
+do $$
+begin
+  begin
+    alter publication supabase_realtime add table public.profiles;
+  exception when duplicate_object then null;
+  end;
+end $$;
