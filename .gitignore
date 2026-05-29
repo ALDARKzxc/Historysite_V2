@@ -38,3 +38,6 @@ core
 .github/
 
 **/tempobook/**
+
+# Local research material (Orlov textbook PDF + extracted text — not for distribution)
+.orlov/
