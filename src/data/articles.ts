@@ -1,4 +1,8 @@
 import type { LocalizedText, Topic } from './epochs';
+import { kulikovoArticle } from './articles/kulikovo';
+import { patrioticWarArticle } from './articles/patriotic-war';
+import { abolitionSerfdomArticle } from './articles/abolition-serfdom';
+import { octoberRevolutionArticle } from './articles/october-revolution';
 
 export interface ArticleSection {
   heading: LocalizedText;
@@ -211,6 +215,10 @@ export const articles: Record<string, ArticleData> = {
     ],
     relatedTopics: ['sputnik', 'cuban-crisis', 'khrushchev-thaw'],
   },
+  'kulikovo': kulikovoArticle,
+  'patriotic-war': patrioticWarArticle,
+  'abolition-serfdom': abolitionSerfdomArticle,
+  'october-revolution': octoberRevolutionArticle,
 };
 
 // Generic article template for topics without specific content
