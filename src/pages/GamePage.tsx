@@ -38,34 +38,58 @@ function pairKey(a: GameEvent, b: GameEvent): string {
 }
 
 // Pick a fresh pair: both events from the SAME century, never repeating a key
-// the player has already seen this session. When we run out, the seen set
-// gets cleared and the cycle starts over.
-function pickPair(seen: Set<string>): [EventCard, EventCard] {
-  // 1) Try centuries in random order until we find one with an unseen pair.
-  const shuffled = [...gameCenturies].sort(() => Math.random() - 0.5);
-  for (const century of shuffled) {
-    const list = gameEventsByCentury.get(century)!;
-    // Maximum number of unique pairs in this century:
-    // for n events, n*(n-1)/2 distinct unordered pairs.
+// the player has already seen this session, never reusing an event that was on
+// screen the previous round, and preferring a different century from the
+// previous round so consecutive rounds feel like distinct eras.
+// When the seen-set is exhausted, it clears and the cycle restarts.
+function pickPair(
+  seen: Set<string>,
+  prev?: [EventCard, EventCard],
+): [EventCard, EventCard] {
+  // Identity of an event = "year|english-title" (year alone collides on 1917).
+  const evKey = (e: { year: number; title: LocalizedText }) => `${e.year}|${e.title.en}`;
+  const prevEvKeys = new Set<string>();
+  if (prev) {
+    prevEvKeys.add(evKey(prev[0]));
+    prevEvKeys.add(evKey(prev[1]));
+  }
+  const prevCentury = prev ? Math.ceil(prev[0].year / 100) : undefined;
+
+  // Shuffle centuries; if we know the previous one, push it to the end so
+  // other centuries get first crack at producing a valid pair.
+  const order = [...gameCenturies].sort(() => Math.random() - 0.5);
+  if (prevCentury !== undefined) {
+    const i = order.indexOf(prevCentury);
+    if (i >= 0) {
+      order.splice(i, 1);
+      order.push(prevCentury);
+    }
+  }
+
+  for (const century of order) {
+    // Drop events that were on screen last round; still need at least 2 left
+    // in this century to form a pair.
+    const list = gameEventsByCentury.get(century)!.filter(e => !prevEvKeys.has(evKey(e)));
+    if (list.length < 2) continue;
+
     const maxPairs = (list.length * (list.length - 1)) / 2;
-    // Try up to 4×maxPairs random draws inside this century before giving up.
     const budget = Math.max(8, maxPairs * 4);
     for (let i = 0; i < budget; i++) {
       const ai = Math.floor(Math.random() * list.length);
       let bi = Math.floor(Math.random() * list.length);
       if (bi === ai) bi = (bi + 1) % list.length;
-      // Reject same-year pairs (would be ambiguous to the player).
       if (list[ai].year === list[bi].year) continue;
       const key = pairKey(list[ai], list[bi]);
       if (seen.has(key)) continue;
       seen.add(key);
-      // Randomise left/right so the answer isn't always the same side.
       const flip = Math.random() < 0.5;
       const [left, right] = flip ? [list[ai], list[bi]] : [list[bi], list[ai]];
       return [eventToCard(left), eventToCard(right)];
     }
   }
-  // 2) Cycle exhausted → clear seen and recurse once.
+  // Exhausted — clear seen and recurse without prev to guarantee a valid pair
+  // (passing prev again could let us loop forever if every remaining pair
+  // shares an event with prev).
   seen.clear();
   return pickPair(seen);
 }
@@ -114,7 +138,7 @@ export default function GamePage() {
   };
 
   const next = () => {
-    setPair(pickPair(seenRef.current));
+    setPair(prevPair => pickPair(seenRef.current, prevPair));
     setAnswered(false);
     setPickedYear(null);
   };
@@ -129,12 +153,18 @@ export default function GamePage() {
     }
     return (
       <motion.button
-        key={side}
+        // Keying by the image URL forces React to fully replace the <img>
+        // element when the event changes between rounds — without this the
+        // browser keeps showing the *previous* photo until the new one
+        // finishes downloading, which made consecutive rounds look identical.
+        key={`${side}-${card.image}`}
         onClick={() => pick(card)}
         disabled={answered}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         whileHover={!answered ? { scale: 1.03, y: -4 } : undefined}
         whileTap={!answered ? { scale: 0.98 } : undefined}
-        transition={spring}
+        transition={{ opacity: { duration: 0.25, ease: EASE }, ...spring }}
         className={`group relative flex-1 min-h-[280px] sm:min-h-[360px] rounded-3xl overflow-hidden border-4 ${ring} shadow-lg ${answered ? 'cursor-default' : 'cursor-pointer'} ${answered && !isEarlier && !isPicked ? 'opacity-70' : ''}`}
       >
         <ImageFill src={card.image} imgClassName="transition-transform duration-500 group-hover:scale-105" />
