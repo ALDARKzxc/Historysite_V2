@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Swords, Flame, Trophy, Zap, Check, X, RotateCcw } from 'lucide-react';
-import { epochs, timelineEvents, type LocalizedText } from '@/data/epochs';
+import { epochs, type LocalizedText } from '@/data/epochs';
+import { gameEventsByCentury, gameCenturies, type GameEvent } from '@/data/gameEvents';
 import { useApp } from '@/context/AppContext';
 import { useLanguage } from '@/LanguageContext';
 import ImageFill from '@/components/ImageFill';
@@ -15,7 +16,8 @@ interface EventCard {
   epochTitle?: LocalizedText;
 }
 
-const POOL: EventCard[] = timelineEvents.map(ev => {
+// Resolve an epoch's image/color/title once per card, keyed by epochId.
+function eventToCard(ev: GameEvent): EventCard {
   const ep = epochs.find(e => e.id === ev.epochId);
   return {
     year: ev.year,
@@ -24,20 +26,45 @@ const POOL: EventCard[] = timelineEvents.map(ev => {
     color: ep?.color ?? '#2F5D9F',
     epochTitle: ep?.title,
   };
-});
+}
 
-function randomPair(prev?: [EventCard, EventCard]): [EventCard, EventCard] {
-  for (let tries = 0; tries < 20; tries++) {
-    const a = Math.floor(Math.random() * POOL.length);
-    let b = Math.floor(Math.random() * POOL.length);
-    while (b === a) b = Math.floor(Math.random() * POOL.length);
-    const pair: [EventCard, EventCard] = [POOL[a], POOL[b]];
-    // avoid repeating the exact same matchup twice in a row
-    if (prev && ((prev[0].year === pair[0].year && prev[1].year === pair[1].year) ||
-                 (prev[0].year === pair[1].year && prev[1].year === pair[0].year))) continue;
-    return pair;
+// Order-independent key for a pair: sorted "year-year".
+function pairKey(a: GameEvent, b: GameEvent): string {
+  const [lo, hi] = a.year < b.year ? [a.year, b.year] : [b.year, a.year];
+  return `${lo}-${hi}`;
+}
+
+// Pick a fresh pair: both events from the SAME century, never repeating a key
+// the player has already seen this session. When we run out, the seen set
+// gets cleared and the cycle starts over.
+function pickPair(seen: Set<string>): [EventCard, EventCard] {
+  // 1) Try centuries in random order until we find one with an unseen pair.
+  const shuffled = [...gameCenturies].sort(() => Math.random() - 0.5);
+  for (const century of shuffled) {
+    const list = gameEventsByCentury.get(century)!;
+    // Maximum number of unique pairs in this century:
+    // for n events, n*(n-1)/2 distinct unordered pairs.
+    const maxPairs = (list.length * (list.length - 1)) / 2;
+    // Try up to 4×maxPairs random draws inside this century before giving up.
+    const budget = Math.max(8, maxPairs * 4);
+    for (let i = 0; i < budget; i++) {
+      const ai = Math.floor(Math.random() * list.length);
+      let bi = Math.floor(Math.random() * list.length);
+      if (bi === ai) bi = (bi + 1) % list.length;
+      // Reject same-year pairs (would be ambiguous to the player).
+      if (list[ai].year === list[bi].year) continue;
+      const key = pairKey(list[ai], list[bi]);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      // Randomise left/right so the answer isn't always the same side.
+      const flip = Math.random() < 0.5;
+      const [left, right] = flip ? [list[ai], list[bi]] : [list[bi], list[ai]];
+      return [eventToCard(left), eventToCard(right)];
+    }
   }
-  return [POOL[0], POOL[1]];
+  // 2) Cycle exhausted → clear seen and recurse once.
+  seen.clear();
+  return pickPair(seen);
 }
 
 const BEST_KEY = 'rh_game_best';
@@ -46,7 +73,11 @@ export default function GamePage() {
   const { user, addXP } = useApp();
   const { t, localize } = useLanguage();
 
-  const [pair, setPair] = useState<[EventCard, EventCard]>(() => randomPair());
+  // Per-session set of "year-year" keys we've already shown — pickPair never
+  // repeats one until every pair in every century has been used.
+  const seenRef = useRef<Set<string>>(new Set());
+
+  const [pair, setPair] = useState<[EventCard, EventCard]>(() => pickPair(seenRef.current));
   const [answered, setAnswered] = useState(false);
   const [pickedYear, setPickedYear] = useState<number | null>(null);
   const [score, setScore] = useState(0);
@@ -80,7 +111,7 @@ export default function GamePage() {
   };
 
   const next = () => {
-    setPair(prev => randomPair(prev));
+    setPair(pickPair(seenRef.current));
     setAnswered(false);
     setPickedYear(null);
   };
