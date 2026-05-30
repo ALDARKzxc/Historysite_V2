@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Swords, Flame, Trophy, Zap, Check, X, RotateCcw } from 'lucide-react';
 import { epochs, type LocalizedText } from '@/data/epochs';
-import { gameEventsByCentury, gameCenturies, type GameEvent } from '@/data/gameEvents';
+import { gameEventsByCentury, gameCenturies, imageForEvent, type GameEvent } from '@/data/gameEvents';
 import { useApp } from '@/context/AppContext';
 import { useLanguage } from '@/LanguageContext';
 import ImageFill from '@/components/ImageFill';
@@ -16,13 +16,16 @@ interface EventCard {
   epochTitle?: LocalizedText;
 }
 
-// Resolve an epoch's image/color/title once per card, keyed by epochId.
+// Resolve image/color/title for a card. Each event has its own Wikipedia
+// thumbnail (via imageForEvent → gameImages.json). If for some reason that
+// returned null at fetch time, we fall back to the epoch cover image so the
+// card is never blank.
 function eventToCard(ev: GameEvent): EventCard {
   const ep = epochs.find(e => e.id === ev.epochId);
   return {
     year: ev.year,
     title: ev.title,
-    image: ep?.coverImage ?? '',
+    image: imageForEvent(ev) ?? ep?.coverImage ?? '',
     color: ep?.color ?? '#2F5D9F',
     epochTitle: ep?.title,
   };
