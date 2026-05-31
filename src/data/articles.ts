@@ -8,6 +8,7 @@ import { operationBarbarossaArticle } from './articles/operation-barbarossa';
 import { siegeLeningradArticle } from './articles/siege-leningrad';
 import { victoryDayArticle } from './articles/victory-day';
 import { ivanTerribleArticle } from './articles/ivan-terrible';
+import { alexanderNevskyArticle } from './articles/alexander-nevsky';
 
 export interface ArticleSection {
   heading: LocalizedText;
@@ -229,6 +230,7 @@ export const articles: Record<string, ArticleData> = {
   'siege-leningrad': siegeLeningradArticle,
   'victory-day': victoryDayArticle,
   'ivan-terrible': ivanTerribleArticle,
+  'alexander-nevsky': alexanderNevskyArticle,
 };
 
 // Generic article template for topics without specific content
