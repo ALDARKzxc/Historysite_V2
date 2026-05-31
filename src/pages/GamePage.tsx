@@ -37,6 +37,30 @@ function pairKey(a: GameEvent, b: GameEvent): string {
   return `${lo}-${hi}`;
 }
 
+// Weighted shuffle of centuries — sample without replacement where the
+// probability of each century is proportional to its event count. This way
+// the 20th century (≈37 events) is picked far more often than the 9th
+// (≈3 events), so cards naturally skew towards modern history instead of
+// every century getting the same airtime.
+function weightedCenturyShuffle(): number[] {
+  const remaining = [...gameCenturies];
+  const weights = remaining.map(c => gameEventsByCentury.get(c)!.length);
+  const out: number[] = [];
+  while (remaining.length) {
+    const total = weights.reduce((a, b) => a + b, 0);
+    let r = Math.random() * total;
+    let i = 0;
+    for (; i < remaining.length - 1; i++) {
+      r -= weights[i];
+      if (r <= 0) break;
+    }
+    out.push(remaining[i]);
+    remaining.splice(i, 1);
+    weights.splice(i, 1);
+  }
+  return out;
+}
+
 // Pick a fresh pair: both events from the SAME century, never repeating a key
 // the player has already seen this session, never reusing an event that was on
 // screen the previous round, and preferring a different century from the
@@ -55,9 +79,10 @@ function pickPair(
   }
   const prevCentury = prev ? Math.ceil(prev[0].year / 100) : undefined;
 
-  // Shuffle centuries; if we know the previous one, push it to the end so
-  // other centuries get first crack at producing a valid pair.
-  const order = [...gameCenturies].sort(() => Math.random() - 0.5);
+  // Weighted shuffle by event count — denser centuries (XIX/XX/etc.) get
+  // first crack at producing a pair. If we know the previous century, push
+  // it to the end of the order so consecutive rounds prefer a different era.
+  const order = weightedCenturyShuffle();
   if (prevCentury !== undefined) {
     const i = order.indexOf(prevCentury);
     if (i >= 0) {

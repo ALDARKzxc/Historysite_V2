@@ -149,6 +149,45 @@ export const gameEvents: GameEvent[] = [
   { id: '1986-chernobyl', year: 1986, title: { en: 'Chernobyl disaster', ru: 'Чернобыльская катастрофа', ar: 'كارثة تشيرنوبيل', zh: '切尔诺贝利灾难' }, epochId: 'perestroika' },
   { id: '1989-afghan-withdrawal', year: 1989, title: { en: 'Soviet withdrawal from Afghanistan', ru: 'Вывод войск из Афганистана', ar: 'الانسحاب السوفيتي من أفغانستان', zh: '苏联从阿富汗撤军' }, epochId: 'perestroika' },
   { id: '1991-ussr-collapse', year: 1991, title: { en: 'August coup; dissolution of the USSR', ru: 'Августовский путч; распад СССР', ar: 'انقلاب أغسطس وانحلال الاتحاد السوفيتي', zh: '八月政变；苏联解体' }, epochId: 'perestroika' },
+
+  // --- XVIII век дополнения (имперская Россия) ---
+  { id: '1718-alexei-death', year: 1718, title: { en: 'Death of Tsarevich Alexei', ru: 'Гибель царевича Алексея', ar: 'وفاة الأمير ألكسي', zh: '皇太子阿列克谢之死' }, epochId: 'peter-the-great' },
+  { id: '1722-table-of-ranks', year: 1722, title: { en: 'Table of Ranks issued', ru: 'Издание Табели о рангах', ar: 'إصدار جدول المراتب', zh: '颁布《官秩表》' }, epochId: 'peter-the-great' },
+  { id: '1755-moscow-university', year: 1755, title: { en: 'Moscow University founded', ru: 'Основание Московского университета', ar: 'تأسيس جامعة موسكو', zh: '莫斯科大学创立' }, epochId: 'catherine-great' },
+  { id: '1762-nobility-liberty', year: 1762, title: { en: 'Manifesto on the Liberty of the Nobility', ru: 'Манифест о вольности дворянства', ar: 'مرسوم حرية النبلاء', zh: '《贵族自由宣言》颁布' }, epochId: 'catherine-great' },
+  { id: '1767-legislative-commission', year: 1767, title: { en: "Catherine II's Legislative Commission convened", ru: 'Созыв Уложенной комиссии Екатерины II', ar: 'انعقاد لجنة كاترين الثانية التشريعية', zh: '叶卡捷琳娜二世立法委员会召开' }, epochId: 'catherine-great' },
+  { id: '1772-poland-partition-1', year: 1772, title: { en: 'First Partition of Poland', ru: 'Первый раздел Польши', ar: 'التقسيم الأول لبولندا', zh: '波兰第一次被瓜分' }, epochId: 'catherine-great' },
+  { id: '1774-kainarji', year: 1774, title: { en: 'Treaty of Kuchuk-Kainarji ends the Russo-Turkish War', ru: 'Кючук-Кайнарджийский мир завершает русско-турецкую войну', ar: 'معاهدة كوتشوك قينارجي تُنهي الحرب الروسية-التركية', zh: '《库楚克-开纳吉条约》结束俄土战争' }, epochId: 'catherine-great' },
+  { id: '1790-izmail', year: 1790, title: { en: 'Suvorov storms Izmail', ru: 'Суворов берёт Измаил', ar: 'سوفوروف يقتحم إزمائيل', zh: '苏沃洛夫攻占伊兹梅尔' }, epochId: 'catherine-great' },
+
+  // --- XIX век дополнения (имперская Россия) ---
+  { id: '1809-finland', year: 1809, title: { en: 'Grand Duchy of Finland created within the Russian Empire', ru: 'Образование Великого княжества Финляндского', ar: 'إنشاء دوقية فنلندا الكبرى ضمن الإمبراطورية الروسية', zh: '芬兰大公国并入俄罗斯帝国' }, epochId: 'napoleon' },
+  { id: '1815-vienna-congress', year: 1815, title: { en: 'Vienna Congress and the Holy Alliance', ru: 'Венский конгресс и Священный союз', ar: 'مؤتمر فيينا والحلف المقدّس', zh: '维也纳会议与神圣同盟' }, epochId: 'napoleon' },
+  { id: '1830-polish-uprising', year: 1830, title: { en: 'November Uprising in Poland', ru: 'Польское восстание 1830 года', ar: 'انتفاضة بولندا 1830', zh: '1830年波兰起义' }, epochId: 'napoleon' },
+  { id: '1837-pushkin-duel', year: 1837, title: { en: 'Pushkin killed in a duel', ru: 'Гибель Пушкина на дуэли', ar: 'مقتل بوشكين في مبارزة', zh: '普希金死于决斗' }, epochId: 'napoleon' },
+  { id: '1856-paris-treaty', year: 1856, title: { en: 'Treaty of Paris ends the Crimean War', ru: 'Парижский мир завершает Крымскую войну', ar: 'معاهدة باريس تُنهي حرب القرم', zh: '《巴黎和约》结束克里米亚战争' }, epochId: 'great-reforms' },
+  { id: '1863-polish-uprising-2', year: 1863, title: { en: 'January Uprising in Poland', ru: 'Польское восстание 1863 года', ar: 'انتفاضة بولندا 1863', zh: '1863年波兰起义' }, epochId: 'great-reforms' },
+  { id: '1877-russoturkish', year: 1877, title: { en: 'Russo-Turkish War of 1877–1878 begins', ru: 'Начало русско-турецкой войны 1877–1878', ar: 'بدء الحرب الروسية-التركية 1877–1878', zh: '1877–1878年俄土战争爆发' }, epochId: 'great-reforms' },
+  { id: '1898-rsdlp', year: 1898, title: { en: 'First Congress of the RSDLP in Minsk', ru: 'I съезд РСДРП в Минске', ar: 'المؤتمر الأول للحزب الاشتراكي-الديمقراطي العمّالي الروسي في مينسك', zh: '俄国社会民主工党第一次代表大会在明斯克召开' }, epochId: 'late-empire' },
+
+  // --- XX век дополнения (империя, СССР) ---
+  { id: '1903-rsdlp-split', year: 1903, title: { en: 'RSDLP splits into Bolsheviks and Mensheviks', ru: 'Раскол РСДРП на большевиков и меньшевиков', ar: 'انقسام الحزب الاشتراكي إلى البلاشفة والمناشفة', zh: '俄国社会民主工党分裂为布尔什维克与孟什维克' }, epochId: 'late-empire' },
+  { id: '1907-stolypin-reform', year: 1907, title: { en: "Stolypin's agrarian reform begins", ru: 'Начало столыпинской аграрной реформы', ar: 'بدء إصلاح ستوليبين الزراعي', zh: '斯托雷平农业改革开始' }, epochId: 'late-empire' },
+  { id: '1911-stolypin-killed', year: 1911, title: { en: 'Stolypin assassinated in Kiev', ru: 'Убийство Столыпина в Киеве', ar: 'اغتيال ستوليبين في كييف', zh: '斯托雷平在基辅遇刺' }, epochId: 'late-empire' },
+  { id: '1916-brusilov', year: 1916, title: { en: 'Brusilov Offensive — last big Russian success of WWI', ru: 'Брусиловский прорыв — последний крупный успех в Первой мировой', ar: 'هجوم بروسيلوف — آخر نجاح روسي كبير في الحرب العالمية الأولى', zh: '布鲁西洛夫攻势——一战中俄军最后一次大胜' }, epochId: 'late-empire' },
+  { id: '1918-brest-litovsk', year: 1918, title: { en: 'Treaty of Brest-Litovsk — Russia exits WWI', ru: 'Брестский мир — Россия выходит из Первой мировой', ar: 'معاهدة بريست-ليتوفسك — روسيا تنسحب من الحرب العالمية الأولى', zh: '《布列斯特和约》——俄罗斯退出一战' }, epochId: 'civil-war' },
+  { id: '1920-polish-war', year: 1920, title: { en: 'End of the Polish–Soviet War', ru: 'Завершение Советско-польской войны', ar: 'انتهاء الحرب السوفيتية-البولندية', zh: '苏波战争结束' }, epochId: 'civil-war' },
+  { id: '1921-nep', year: 1921, title: { en: 'New Economic Policy (NEP) introduced', ru: 'Введение Новой экономической политики (НЭП)', ar: 'تطبيق السياسة الاقتصادية الجديدة (نيب)', zh: '新经济政策（NEP）实施' }, epochId: 'civil-war' },
+  { id: '1934-kirov-killed', year: 1934, title: { en: 'Assassination of Kirov — pretext for the Great Terror', ru: 'Убийство Кирова — повод к Большому террору', ar: 'اغتيال كيروف — ذريعة الإرهاب الكبير', zh: '基洛夫遇刺——大恐怖的借口' }, epochId: 'stalins-ussr' },
+  { id: '1949-atomic-bomb', year: 1949, title: { en: 'First Soviet atomic bomb test', ru: 'Испытание первой советской атомной бомбы', ar: 'تجربة أول قنبلة ذرية سوفيتية', zh: '苏联首次原子弹试爆' }, epochId: 'cold-war' },
+  { id: '1968-prague-spring', year: 1968, title: { en: 'Soviet tanks crush the Prague Spring', ru: 'Советские танки подавляют Пражскую весну', ar: 'الدبابات السوفيتية تسحق ربيع براغ', zh: '苏联坦克镇压布拉格之春' }, epochId: 'cold-war' },
+
+  // --- XXI век (новейшая Россия) ---
+  { id: '1993-constitution', year: 1993, title: { en: 'New Russian Constitution adopted by referendum', ru: 'Принятие новой Конституции России на референдуме', ar: 'اعتماد دستور روسي جديد عبر استفتاء', zh: '俄罗斯新宪法通过全民公投' }, epochId: 'modern-russia' },
+  { id: '1998-default', year: 1998, title: { en: 'Financial default and ruble collapse', ru: 'Дефолт и обвал рубля', ar: 'التخلّف عن السداد وانهيار الروبل', zh: '金融违约与卢布崩盘' }, epochId: 'modern-russia' },
+  { id: '1999-putin-acting', year: 1999, title: { en: 'Putin becomes acting President of Russia', ru: 'Путин становится исполняющим обязанности президента России', ar: 'بوتين يصبح رئيسًا بالنيابة لروسيا', zh: '普京出任俄罗斯代总统' }, epochId: 'modern-russia' },
+  { id: '2008-georgia-war', year: 2008, title: { en: 'Russo-Georgian War', ru: 'Война в Грузии (Южная Осетия)', ar: 'الحرب الروسية-الجورجية', zh: '俄罗斯-格鲁吉亚战争' }, epochId: 'modern-russia' },
+  { id: '2014-sochi-olympics', year: 2014, title: { en: 'Sochi Winter Olympics', ru: 'Зимняя Олимпиада в Сочи', ar: 'الألعاب الأولمبية الشتوية في سوتشي', zh: '索契冬季奥运会' }, epochId: 'modern-russia' },
 ];
 
 // Compute century for an event year. Year 862 → 9th century, 1380 → 14th, etc.
