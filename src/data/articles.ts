@@ -13,6 +13,7 @@ import { ivanIIIArticle } from './articles/ivan-iii';
 import { oprichninaArticle } from './articles/oprichnina';
 import { crimeaAnnexationArticle } from './articles/crimea-annexation';
 import { collectivizationArticle } from './articles/collectivization';
+import { yaroslavWiseArticle } from './articles/yaroslav-wise';
 
 export interface ArticleSection {
   heading: LocalizedText;
@@ -239,6 +240,7 @@ export const articles: Record<string, ArticleData> = {
   'oprichnina': oprichninaArticle,
   'crimea-annexation': crimeaAnnexationArticle,
   'collectivization': collectivizationArticle,
+  'yaroslav-wise': yaroslavWiseArticle,
 };
 
 // Generic article template for topics without specific content
