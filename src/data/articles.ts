@@ -19,6 +19,11 @@ import { saintPetersburgArticle } from './articles/saint-petersburg';
 import { pugachevArticle } from './articles/pugachev';
 import { decembristsArticle } from './articles/decembrists';
 import { borodinoArticle } from './articles/borodino';
+import { falseDmitryArticle } from './articles/false-dmitry';
+import { mininPozharskyArticle } from './articles/minin-pozharsky';
+import { battlePoltavaArticle } from './articles/battle-poltava';
+import { northernWarArticle } from './articles/northern-war';
+import { kievanRusArticle } from './articles/kievan-rus';
 
 export interface ArticleSection {
   heading: LocalizedText;
@@ -251,6 +256,11 @@ export const articles: Record<string, ArticleData> = {
   'pugachev': pugachevArticle,
   'decembrists': decembristsArticle,
   'borodino': borodinoArticle,
+  'false-dmitry': falseDmitryArticle,
+  'minin-pozharsky': mininPozharskyArticle,
+  'battle-poltava': battlePoltavaArticle,
+  'northern-war': northernWarArticle,
+  'kievan-rus': kievanRusArticle,
 };
 
 // Generic article template for topics without specific content
