@@ -24,6 +24,11 @@ import { mininPozharskyArticle } from './articles/minin-pozharsky';
 import { battlePoltavaArticle } from './articles/battle-poltava';
 import { northernWarArticle } from './articles/northern-war';
 import { kievanRusArticle } from './articles/kievan-rus';
+import { goldenHordeArticle } from './articles/golden-horde';
+import { ivanKalitaArticle } from './articles/ivan-kalita';
+import { civilWarRussiaArticle } from './articles/civil-war-russia';
+import { ussrFormationArticle } from './articles/ussr-formation';
+import { greatTerrorArticle } from './articles/great-terror';
 
 export interface ArticleSection {
   heading: LocalizedText;
@@ -261,6 +266,11 @@ export const articles: Record<string, ArticleData> = {
   'battle-poltava': battlePoltavaArticle,
   'northern-war': northernWarArticle,
   'kievan-rus': kievanRusArticle,
+  'golden-horde': goldenHordeArticle,
+  'ivan-kalita': ivanKalitaArticle,
+  'civil-war-russia': civilWarRussiaArticle,
+  'ussr-formation': ussrFormationArticle,
+  'great-terror': greatTerrorArticle,
 };
 
 // Generic article template for topics without specific content
