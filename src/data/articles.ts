@@ -18,6 +18,7 @@ import { mongolInvasionRusArticle } from './articles/mongol-invasion-rus';
 import { saintPetersburgArticle } from './articles/saint-petersburg';
 import { pugachevArticle } from './articles/pugachev';
 import { decembristsArticle } from './articles/decembrists';
+import { borodinoArticle } from './articles/borodino';
 
 export interface ArticleSection {
   heading: LocalizedText;
@@ -249,6 +250,7 @@ export const articles: Record<string, ArticleData> = {
   'saint-petersburg': saintPetersburgArticle,
   'pugachev': pugachevArticle,
   'decembrists': decembristsArticle,
+  'borodino': borodinoArticle,
 };
 
 // Generic article template for topics without specific content
