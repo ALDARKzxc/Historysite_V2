@@ -16,6 +16,8 @@ import { collectivizationArticle } from './articles/collectivization';
 import { yaroslavWiseArticle } from './articles/yaroslav-wise';
 import { mongolInvasionRusArticle } from './articles/mongol-invasion-rus';
 import { saintPetersburgArticle } from './articles/saint-petersburg';
+import { pugachevArticle } from './articles/pugachev';
+import { decembristsArticle } from './articles/decembrists';
 
 export interface ArticleSection {
   heading: LocalizedText;
@@ -245,6 +247,8 @@ export const articles: Record<string, ArticleData> = {
   'yaroslav-wise': yaroslavWiseArticle,
   'mongol-invasion-rus': mongolInvasionRusArticle,
   'saint-petersburg': saintPetersburgArticle,
+  'pugachev': pugachevArticle,
+  'decembrists': decembristsArticle,
 };
 
 // Generic article template for topics without specific content
