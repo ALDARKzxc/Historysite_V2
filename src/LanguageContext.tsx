@@ -227,7 +227,7 @@ const en: Translations = {
     "Crafted the visual identity, user interface design, and interactive frontend components.",
   role_content: "Content Research & Historical Verification",
   role_content_desc:
-    "Researched and verified all historical content using primary Russian academic sources.",
+    "Researched and verified all historical content using primary Russian academic sources. Also led the linguistic work and the translation of the articles, in particular into English.",
 
   source_orlov: "History of Russia from Ancient Times to the Present (textbook)",
   source_karamzin: "History of the Russian State",
@@ -491,7 +491,7 @@ const ru: Translations = {
     "Создал визуальный стиль, дизайн интерфейса и интерактивные компоненты фронтенда.",
   role_content: "Исследование контента и историческая проверка",
   role_content_desc:
-    "Исследовал и проверял весь исторический контент по первичным российским академическим источникам.",
+    "Исследовал и проверял весь исторический контент по первичным российским академическим источникам. Также занимался лингвистической частью и переводом статей, в частности на английский язык.",
 
   source_orlov: "История России с древнейших времён до наших дней (учебник)",
   source_karamzin: "История государства Российского",
@@ -750,7 +750,7 @@ const ar: Translations = {
     "صمّم الهوية البصرية وتصميم واجهة المستخدم ومكونات الواجهة التفاعلية.",
   role_content: "بحث المحتوى والتحقق التاريخي",
   role_content_desc:
-    "بحث وتحقق من كل المحتوى التاريخي باستخدام مصادر أكاديمية روسية أولية.",
+    "بحث وتحقق من كل المحتوى التاريخي باستخدام مصادر أكاديمية روسية أولية. كما تولّى الجانب اللغوي وترجمة المقالات، وخصوصًا إلى اللغة الإنجليزية.",
 
   source_orlov: "تاريخ روسيا من العصور القديمة حتى اليوم (كتاب مدرسي)",
   source_karamzin: "تاريخ الدولة الروسية",
@@ -1002,7 +1002,7 @@ const zh: Translations = {
   role_frontend: "前端开发与 UI 设计",
   role_frontend_desc: "打造视觉形象、用户界面设计和交互式前端组件。",
   role_content: "内容研究与历史核实",
-  role_content_desc: "使用俄罗斯第一手学术来源研究并核实所有历史内容。",
+  role_content_desc: "使用俄罗斯第一手学术来源研究并核实所有历史内容。同时负责语言方面的工作以及文章的翻译，尤其是英文翻译。",
 
   source_orlov: "从古至今的俄罗斯历史(教科书)",
   source_karamzin: "俄罗斯国家史",
