@@ -221,10 +221,10 @@ const en: Translations = {
 
   role_lead_dev: "Lead Developer & Architecture",
   role_lead_dev_desc:
-    "Responsible for the technical architecture, backend systems, and overall platform development.",
+    "Designed the technical foundation of the site and built the backend on Supabase — sign-up, login, progress saving, and the leaderboard. Also set up automatic site updates on every code change.",
   role_frontend: "Frontend Development & UI Design",
   role_frontend_desc:
-    "Crafted the visual identity, user interface design, and interactive frontend components.",
+    "Created the look of the site: pages, menus, buttons, and smooth animations. Made the interface convenient on both phone and computer and added switching between four languages.",
   role_content: "Content Research & Historical Verification",
   role_content_desc:
     "Researched and verified all historical content using primary Russian academic sources. Also led the linguistic work and the translation of the articles, in particular into English.",
@@ -485,10 +485,10 @@ const ru: Translations = {
 
   role_lead_dev: "Ведущий разработчик и архитектура",
   role_lead_dev_desc:
-    "Отвечает за техническую архитектуру, серверные системы и общую разработку платформы.",
+    "Продумал техническую основу сайта и собрал серверную часть на Supabase — регистрацию, вход, сохранение прогресса и таблицу лидеров. Настроил автоматическое обновление сайта при каждом изменении кода.",
   role_frontend: "Фронтенд-разработка и UI-дизайн",
   role_frontend_desc:
-    "Создал визуальный стиль, дизайн интерфейса и интерактивные компоненты фронтенда.",
+    "Создал внешний вид сайта: страницы, меню, кнопки и плавные анимации. Сделал интерфейс удобным на телефоне и компьютере и добавил переключение между четырьмя языками.",
   role_content: "Исследование контента и историческая проверка",
   role_content_desc:
     "Исследовал и проверял весь исторический контент по первичным российским академическим источникам. Также занимался лингвистической частью и переводом статей, в частности на английский язык.",
@@ -744,10 +744,10 @@ const ar: Translations = {
 
   role_lead_dev: "المطوّر الرئيسي والبنية المعمارية",
   role_lead_dev_desc:
-    "مسؤول عن البنية التقنية وأنظمة الخادم وتطوير المنصة بشكل عام.",
+    "صمّم الأساس التقني للموقع وبنى الجزء الخلفي على Supabase — التسجيل وتسجيل الدخول وحفظ التقدّم ولوحة المتصدّرين. كما أعدّ تحديث الموقع تلقائيًا مع كل تغيير في الكود.",
   role_frontend: "تطوير الواجهة الأمامية وتصميم الواجهة",
   role_frontend_desc:
-    "صمّم الهوية البصرية وتصميم واجهة المستخدم ومكونات الواجهة التفاعلية.",
+    "صنع المظهر العام للموقع: الصفحات والقوائم والأزرار والحركات السلسة. جعل الواجهة مريحة على الهاتف والحاسوب وأضاف التبديل بين أربع لغات.",
   role_content: "بحث المحتوى والتحقق التاريخي",
   role_content_desc:
     "بحث وتحقق من كل المحتوى التاريخي باستخدام مصادر أكاديمية روسية أولية. كما تولّى الجانب اللغوي وترجمة المقالات، وخصوصًا إلى اللغة الإنجليزية.",
@@ -998,9 +998,9 @@ const zh: Translations = {
   about_group: "1bIVTn2 班",
 
   role_lead_dev: "首席开发与架构",
-  role_lead_dev_desc: "负责技术架构、后端系统和整体平台开发。",
+  role_lead_dev_desc: "设计了网站的技术基础，并在 Supabase 上搭建了后端——注册、登录、进度保存和排行榜。还设置了每次修改代码后网站的自动更新。",
   role_frontend: "前端开发与 UI 设计",
-  role_frontend_desc: "打造视觉形象、用户界面设计和交互式前端组件。",
+  role_frontend_desc: "打造了网站的外观：页面、菜单、按钮和流畅的动画。让界面在手机和电脑上都方便使用，并加入了四种语言之间的切换。",
   role_content: "内容研究与历史核实",
   role_content_desc: "使用俄罗斯第一手学术来源研究并核实所有历史内容。同时负责语言方面的工作以及文章的翻译，尤其是英文翻译。",
 
